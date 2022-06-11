@@ -1,0 +1,73 @@
+$link-hover-transition-time: 0.25s;
+$mobile-menu-height-transition-time: 0.2s;
+
+.app-header {
+    @include flex--align-center();
+
+    &__menu {
+        @include flex--align-center--justify-center();
+        height: 100%;
+        width: 100%;
+        column-gap: 30px;
+
+        &__link {
+            height: 100%;
+            padding: 0px 10px;
+            @include flex--align-center();
+            
+            a {
+                cursor: pointer;
+                transition: color $link-hover-transition-time ease-out;
+
+                &:hover {
+                    color: $primary-blue;
+                    transition: color $link-hover-transition-time ease-in;
+                }
+            }
+
+            &--active {
+                border-bottom: 2px solid $primary-blue;
+                
+                a {
+                    opacity: 0.5;
+                    pointer-events: none;
+                }
+            }
+        }
+    }
+    
+    &__mobile-menu {
+
+        svg {
+            padding: 0px 20px;
+            fill: $primary-blue;
+        }
+
+        &__overlay {
+            z-index: 1;
+            top: 0;
+            width: 100%;
+            position: fixed;
+            background-color: $light-gray;
+            color: $primary-blue;
+
+            &--closed {
+                height: 0%;
+                visibility: collapse;
+                transition: all $mobile-menu-height-transition-time ease-out;
+            }
+
+            &--open {
+                height: 100%;
+                visibility: visible;
+                transition: all $mobile-menu-height-transition-time ease-in;
+            }
+
+            &__close-btn {
+                padding: 20px;
+                font-size: 32px;
+                font-weight: 400;
+            }
+        }
+    }
+}

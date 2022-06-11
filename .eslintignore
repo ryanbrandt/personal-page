@@ -1,0 +1,6 @@
+.package.json
+build/*
+node_modules/
+*.d.ts
+cypress/plugins/index.js
+vite.config.*

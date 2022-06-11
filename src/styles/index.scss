@@ -1,0 +1,12 @@
+@import "@ryanbrandt/react-quick-ui/dist/stylesheets/index.scss";
+@import "@ryanbrandt/react-quick-ui/dist/stylesheets/colors.scss";
+
+@import "./mixins.scss";
+
+@import "./App/RootContainer.scss";
+@import "./App/AppHeader.scss";
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+}
