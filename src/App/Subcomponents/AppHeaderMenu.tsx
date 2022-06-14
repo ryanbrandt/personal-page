@@ -1,11 +1,10 @@
 import { FunctionComponent } from "react";
 
-import AppHeaderLink, {
-  Props as AppHeaderLinkProps,
-} from "@app/App/Subcomponents/AppHeaderMenuLink";
+import AppHeaderLink from "@app/App/Subcomponents/AppHeaderMenuLink";
+import { IAppHeaderMenuLink } from "@app/App/types";
 
 interface Props {
-  links: Array<AppHeaderLinkProps>;
+  links: Array<IAppHeaderMenuLink>;
 }
 
 const AppHeaderMenu: FunctionComponent<Props> = ({

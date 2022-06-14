@@ -1,73 +1,98 @@
 $link-hover-transition-time: 0.25s;
 $mobile-menu-height-transition-time: 0.2s;
+$link-padding: 10px;
+
+@mixin link-active {
+  a {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
 
 .app-header {
-    @include flex--align-center();
+  @include flex--align-center();
 
-    &__menu {
-        @include flex--align-center--justify-center();
+  &__menu {
+    @include flex--align-center--justify-center();
+    height: 100%;
+    width: 100%;
+    column-gap: 30px;
+
+    &__link {
+      @include flex--align-center();
+      font-size: 18px;
+      font-weight: 400;
+      height: 100%;
+      padding: 0px $link-padding;
+
+      a {
+        cursor: pointer;
+        transition: color $link-hover-transition-time ease-out;
+
+        &:hover {
+          color: $primary-blue;
+          transition: color $link-hover-transition-time ease-in;
+        }
+      }
+
+      &--active {
+        @include link-active();
+        border-bottom: 2px solid $primary-blue;
+      }
+    }
+  }
+
+  &__mobile-menu {
+    svg {
+      padding: 0px 20px;
+      fill: $primary-blue;
+    }
+
+    &__overlay {
+      z-index: 1;
+      top: 0;
+      width: 100%;
+      position: fixed;
+      background-color: $light-gray;
+      color: $primary-blue;
+
+      &--closed {
+        height: 0%;
+        opacity: 0;
+        visibility: collapse;
+        transition: all $mobile-menu-height-transition-time ease-out;
+      }
+
+      &--open {
         height: 100%;
-        width: 100%;
-        column-gap: 30px;
+        opacity: 1;
+        visibility: visible;
+        transition: all $mobile-menu-height-transition-time ease-in;
+      }
+
+      &__close-btn {
+        padding: 20px;
+        font-size: 32px;
+        font-weight: 400;
+      }
+
+      &__link-container {
+        @include flex--col--align-center();
+        height: 100%;
+        row-gap: 10%;
+        padding: 50px;
 
         &__link {
-            height: 100%;
-            padding: 0px 10px;
-            @include flex--align-center();
-            
-            a {
-                cursor: pointer;
-                transition: color $link-hover-transition-time ease-out;
+          padding: $link-padding;
+          font-size: 24px;
+          font-weight: 600;
 
-                &:hover {
-                    color: $primary-blue;
-                    transition: color $link-hover-transition-time ease-in;
-                }
-            }
-
-            &--active {
-                border-bottom: 2px solid $primary-blue;
-                
-                a {
-                    opacity: 0.5;
-                    pointer-events: none;
-                }
-            }
+          &--active {
+            @include link-active();
+            border-bottom: 2px solid rgb($primary-blue, 0.2);
+          }
         }
+      }
     }
-    
-    &__mobile-menu {
-
-        svg {
-            padding: 0px 20px;
-            fill: $primary-blue;
-        }
-
-        &__overlay {
-            z-index: 1;
-            top: 0;
-            width: 100%;
-            position: fixed;
-            background-color: $light-gray;
-            color: $primary-blue;
-
-            &--closed {
-                height: 0%;
-                visibility: collapse;
-                transition: all $mobile-menu-height-transition-time ease-out;
-            }
-
-            &--open {
-                height: 100%;
-                visibility: visible;
-                transition: all $mobile-menu-height-transition-time ease-in;
-            }
-
-            &__close-btn {
-                padding: 20px;
-                font-size: 32px;
-                font-weight: 400;
-            }
-        }
-    }
+  }
 }

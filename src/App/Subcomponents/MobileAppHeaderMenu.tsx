@@ -2,8 +2,17 @@ import { FunctionComponent, useState } from "react";
 
 import MobileAppHeaderMenuOverlay from "@app/App/Subcomponents/MobileAppHeaderMenuOverlay";
 import BurgerMenuSvg from "@app/assets/svg/BurgerMenuSvg";
+import { IAppHeaderMenuLink } from "@app/App/types";
 
-const MobileAppHeaderMenu: FunctionComponent = (): JSX.Element => {
+interface Props {
+  links: Array<IAppHeaderMenuLink>;
+}
+
+const MobileAppHeaderMenu: FunctionComponent<Props> = (
+  props: Props
+): JSX.Element => {
+  const { links } = props;
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -12,6 +21,7 @@ const MobileAppHeaderMenu: FunctionComponent = (): JSX.Element => {
       <MobileAppHeaderMenuOverlay
         onClose={() => setMenuOpen(false)}
         open={menuOpen}
+        links={links}
       />
     </div>
   );

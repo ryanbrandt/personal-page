@@ -1,0 +1,9 @@
+.content-container {
+  @include desktop-only {
+    margin: 100px;
+  }
+
+  @include mobile-only {
+    margin: 25px 20px;
+  }
+}

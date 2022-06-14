@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router";
 import { BASE_ROUTES } from "@app/routes/constants";
 import { IComponentRoute } from "@app/routes/types";
 import { useScrollToTopOnRouteChange } from "@app/routes/hooks";
+import ContactPage from "@app/Contact/Components/ContactPage";
 
 export const COMPONENT_ROUTES: Array<IComponentRoute> = [
   {
@@ -20,7 +21,7 @@ export const COMPONENT_ROUTES: Array<IComponentRoute> = [
   },
   {
     route: BASE_ROUTES.contact,
-    component: <div>Contact</div>,
+    component: <ContactPage />,
   },
 ];
 

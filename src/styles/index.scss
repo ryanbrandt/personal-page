@@ -3,10 +3,16 @@
 
 @import "./mixins.scss";
 
+@import "./common/PageContainer.scss";
+
 @import "./App/RootContainer.scss";
 @import "./App/AppHeader.scss";
+@import "./App/ContentContainer.scss";
+@import "./App/AppFooter.scss";
+
+@import "./Contact/ContactPage.scss";
 
 body {
-    margin: 0;
-    overflow-x: hidden;
+  margin: 0;
+  overflow-x: hidden;
 }
