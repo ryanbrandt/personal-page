@@ -1,8 +1,6 @@
 $contact-page-default-row-col-gap: 50px;
 
 .contact-page {
-  display: flex;
-
   @include desktop-only {
     @include flex--justify-center();
     column-gap: $contact-page-default-row-col-gap;

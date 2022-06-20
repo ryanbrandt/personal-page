@@ -5,6 +5,7 @@ import { BASE_ROUTES } from "@app/routes/constants";
 import { IComponentRoute } from "@app/routes/types";
 import { useScrollToTopOnRouteChange } from "@app/routes/hooks";
 import ContactPage from "@app/Contact/Components/ContactPage";
+import ResumePage from "@app/Resume/Components/ResumePage";
 
 export const COMPONENT_ROUTES: Array<IComponentRoute> = [
   {
@@ -17,7 +18,7 @@ export const COMPONENT_ROUTES: Array<IComponentRoute> = [
   },
   {
     route: BASE_ROUTES.resumé,
-    component: <div>Resumè</div>,
+    component: <ResumePage />,
   },
   {
     route: BASE_ROUTES.contact,

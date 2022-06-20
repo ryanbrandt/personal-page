@@ -1,0 +1,65 @@
+.resume-page {
+  &__resume-display {
+    flex: 1;
+
+    @include desktop-only {
+      @include flex--justify-space-evenly();
+    }
+
+    @include mobile-only {
+      @include flex--col--align-center();
+    }
+
+    &__column {
+      padding: 0px 20px;
+      flex: 1;
+
+      h2 {
+        font-weight: 300;
+        text-align: center;
+        color: $primary-blue;
+        border-bottom: 1px solid $primary-blue;
+        padding-bottom: 20px;
+      }
+
+      &__skills {
+        text-align: center;
+
+        .badge {
+          display: inline-flex;
+          margin: 5px;
+        }
+      }
+
+      &__entry {
+        &__header {
+          @include flex--align-center();
+          column-gap: 10px;
+
+          h3 {
+            column-gap: 10px;
+            font-weight: 500;
+          }
+
+          svg {
+            fill: $primary-blue;
+          }
+        }
+
+        label {
+          font-weight: 400;
+          font-size: 14px;
+          color: $dark-gray;
+        }
+
+        &__date {
+          font-style: italic;
+        }
+
+        p {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}

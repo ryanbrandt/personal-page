@@ -39,6 +39,16 @@
   justify-content: center;
 }
 
+@mixin flex--justify-space-between {
+  @include flex();
+  justify-content: space-between;
+}
+
+@mixin flex--justify-space-evenly {
+  @include flex();
+  justify-content: space-evenly;
+}
+
 @mixin flex--col--align-center {
   @include flex--col();
   align-items: center;
