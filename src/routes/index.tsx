@@ -1,11 +1,13 @@
-import { FunctionComponent } from "react";
-import { Route, Routes } from "react-router";
+import { FunctionComponent, useContext } from "react";
+import { Route, Routes, useLocation } from "react-router";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import { BASE_ROUTES } from "@app/routes/constants";
 import { IComponentRoute } from "@app/routes/types";
 import { useScrollToTopOnRouteChange } from "@app/routes/hooks";
 import ContactPage from "@app/Contact/Components/ContactPage";
 import ResumePage from "@app/Resume/Components/ResumePage";
+import MobileContext from "@app/common/contexts/MobileContext";
 
 export const COMPONENT_ROUTES: Array<IComponentRoute> = [
   {
@@ -28,13 +30,29 @@ export const COMPONENT_ROUTES: Array<IComponentRoute> = [
 
 const ApplicationRoutes: FunctionComponent = (): JSX.Element => {
   useScrollToTopOnRouteChange();
+  const location = useLocation();
+  const isMobile = useContext(MobileContext);
+
+  if (isMobile) {
+    return (
+      <Routes>
+        {COMPONENT_ROUTES.map(({ route, component }) => (
+          <Route key={route} path={route} element={component} />
+        ))}
+      </Routes>
+    );
+  }
 
   return (
-    <Routes>
-      {COMPONENT_ROUTES.map(({ route, component }) => (
-        <Route key={route} path={route} element={component} />
-      ))}
-    </Routes>
+    <TransitionGroup>
+      <CSSTransition key={location.key} classNames="slide" timeout={500}>
+        <Routes location={location}>
+          {COMPONENT_ROUTES.map(({ route, component }) => (
+            <Route key={route} path={route} element={component} />
+          ))}
+        </Routes>
+      </CSSTransition>
+    </TransitionGroup>
   );
 };
 
