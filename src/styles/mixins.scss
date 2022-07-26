@@ -10,6 +10,12 @@
   }
 }
 
+@mixin dark-mode-only {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
 @mixin flex {
   display: flex;
 }

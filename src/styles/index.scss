@@ -1,6 +1,7 @@
 @import "@ryanbrandt/react-quick-ui/dist/stylesheets/index.scss";
 @import "@ryanbrandt/react-quick-ui/dist/stylesheets/colors.scss";
 
+@import "./variables.scss";
 @import "./mixins.scss";
 
 @import "./common/PageContainer.scss";
@@ -12,11 +13,15 @@
 
 @import "./routes/index.scss";
 
+@import "./Home/LandingPage.scss";
+
 @import "./Contact/ContactPage.scss";
 
 @import "./Resume/ResumePage.scss";
 
-body {
+html,
+body,
+#root {
   margin: 0;
   overflow-x: hidden;
 }

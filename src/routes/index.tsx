@@ -8,11 +8,12 @@ import { useScrollToTopOnRouteChange } from "@app/routes/hooks";
 import ContactPage from "@app/Contact/Components/ContactPage";
 import ResumePage from "@app/Resume/Components/ResumePage";
 import MobileContext from "@app/common/contexts/MobileContext";
+import LandingPage from "@app/Home/Components/LandingPage";
 
 export const COMPONENT_ROUTES: Array<IComponentRoute> = [
   {
     route: BASE_ROUTES.home,
-    component: <div>Home</div>,
+    component: <LandingPage />,
   },
   {
     route: BASE_ROUTES.work,

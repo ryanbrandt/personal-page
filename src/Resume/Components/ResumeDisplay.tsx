@@ -100,7 +100,7 @@ const ResumeDisplay: FunctionComponent = (): JSX.Element => {
             <Badge
               key={`${name}-${id}`}
               size="xlg"
-              variant="success"
+              variant="primary"
               text={name}
             />
           ))}

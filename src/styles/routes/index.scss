@@ -1,11 +1,14 @@
 $slide-transition-time: 500ms;
 
 .slide-enter {
-  transform: translateY(50%);
+  transform: translateY(20%);
+  transition: all $slide-transition-time ease-in-out;
+  opacity: 0;
 }
 
 .slide-enter.slide-enter-active {
   transform: translateY(0%);
+  opacity: 1;
   transition: all $slide-transition-time ease-in-out;
 }
 
@@ -15,7 +18,5 @@ $slide-transition-time: 500ms;
 }
 
 .slide-exit.slide-exit-active {
-  transform: translateY(-50%);
-  opacity: 0;
-  transition: all $slide-transition-time ease-in-out;
+  transform: translateY(-20%);
 }

@@ -1,0 +1,35 @@
+$copy-font-size: 18px;
+$icon-transition: 0.25s;
+
+.landing-page {
+  @include flex--col--align-center--justify-center();
+
+  &__copy {
+    font-size: $copy-font-size;
+    font-weight: 300;
+
+    strong {
+      font-weight: 500;
+      font-size: 20px;
+      color: $primary-blue;
+    }
+  }
+
+  &__social-links {
+    @include flex--align-center--justify-space-between();
+    column-gap: $default-column-gap;
+
+    svg {
+      fill: $dark-gray;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      transition: fill $icon-transition ease-out;
+
+      &:hover {
+        fill: $primary-blue;
+        transition: fill $icon-transition ease-in;
+      }
+    }
+  }
+}
