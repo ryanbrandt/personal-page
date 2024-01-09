@@ -20,16 +20,7 @@ $icon-transition: 0.25s;
     column-gap: $default-column-gap;
 
     svg {
-      fill: $dark-gray;
-      cursor: pointer;
-      width: 36px;
-      height: 36px;
-      transition: fill $icon-transition ease-out;
-
-      &:hover {
-        fill: $primary-blue;
-        transition: fill $icon-transition ease-in;
-      }
+      @include gray-to-primary-blue-icon();
     }
   }
 }

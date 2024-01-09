@@ -14,17 +14,19 @@ export const MENU_LINKS: Array<IAppHeaderMenuLink> = [
     route: BASE_ROUTES.home,
   },
   {
-    text: "Work",
-    route: BASE_ROUTES.work,
-  },
-  {
-    text: "Resumé",
+    text: "Résumé",
     route: BASE_ROUTES.resumé,
   },
+  {
+    text: "Personal Projects",
+    route: BASE_ROUTES.work,
+  },
+  /*
   {
     text: "Contact",
     route: BASE_ROUTES.contact,
   },
+  */
 ];
 
 const AppHeader: FunctionComponent = (): JSX.Element => {

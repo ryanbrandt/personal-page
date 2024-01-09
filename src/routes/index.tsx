@@ -9,6 +9,7 @@ import ContactPage from "@app/Contact/Components/ContactPage";
 import ResumePage from "@app/Resume/Components/ResumePage";
 import MobileContext from "@app/common/contexts/MobileContext";
 import LandingPage from "@app/Home/Components/LandingPage";
+import WorkPage from "@app/Work/Components/WorkPage";
 
 export const COMPONENT_ROUTES: Array<IComponentRoute> = [
   {
@@ -17,7 +18,7 @@ export const COMPONENT_ROUTES: Array<IComponentRoute> = [
   },
   {
     route: BASE_ROUTES.work,
-    component: <div>Work</div>,
+    component: <WorkPage />,
   },
   {
     route: BASE_ROUTES.resumé,
