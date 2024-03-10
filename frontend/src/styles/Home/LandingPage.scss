@@ -1,0 +1,30 @@
+$copy-font-size: 18px;
+$icon-transition: 0.25s;
+
+.landing-page {
+  @include flex--col--align-center--justify-center();
+
+  &__copy {
+    font-size: $copy-font-size;
+    font-weight: 300;
+
+    @include mobile-only {
+      text-align: center;
+    }
+
+    strong {
+      font-weight: 500;
+      font-size: 20px;
+      color: $primary-blue;
+    }
+  }
+
+  &__social-links {
+    @include flex--align-center--justify-space-between();
+    column-gap: $default-column-gap;
+
+    svg {
+      @include gray-to-primary-blue-icon();
+    }
+  }
+}

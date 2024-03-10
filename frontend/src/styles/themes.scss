@@ -1,0 +1,47 @@
+$primary-color: "primary-color";
+$secondary-color: "secondary-color";
+$overlay-color: "overlay-color";
+
+$toggle-color: "theme-toggle-color";
+
+$font-color: "font-color";
+
+$themes: (
+  light: (
+    $primary-color: $white,
+    $secondary-color: $primary-blue,
+    $overlay-color: $white,
+    $toggle-color: rgb($yellow, 0.5),
+    $font-color: inherit,
+  ),
+  dark: (
+    $primary-color: rgba(30, 32, 41, 0.836),
+    $secondary-color: $white,
+    $overlay-color: rgba(30, 32, 41, 1),
+    $toggle-color: $primary-blue,
+    $font-color: $white,
+  ),
+);
+
+@mixin themed() {
+  @each $theme, $map in $themes {
+    .theme--#{$theme} & {
+      $theme-map: () !global;
+      @each $key, $submap in $map {
+        $value: map-get(map-get($themes, $theme), "#{$key}");
+        $theme-map: map-merge(
+          $theme-map,
+          (
+            $key: $value,
+          )
+        ) !global;
+      }
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}
+
+@function theme-get($key) {
+  @return map-get($theme-map, $key);
+}

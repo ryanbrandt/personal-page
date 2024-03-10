@@ -1,0 +1,30 @@
+@import "@ryanbrandt/react-quick-ui/dist/stylesheets/index.scss";
+@import "@ryanbrandt/react-quick-ui/dist/stylesheets/colors.scss";
+
+@import "./themes.scss";
+@import "./variables.scss";
+@import "./mixins.scss";
+
+@import "./common/PageContainer.scss";
+
+@import "./App/RootContainer.scss";
+@import "./App/AppHeader.scss";
+@import "./App/ContentContainer.scss";
+@import "./App/AppFooter.scss";
+
+@import "./routes/index.scss";
+
+@import "./Home/LandingPage.scss";
+
+@import "./Contact/ContactPage.scss";
+
+@import "./Resume/ResumePage.scss";
+
+@import "./Work/WorkPage.scss";
+
+html,
+body,
+#root {
+  margin: 0;
+  overflow-x: hidden;
+}

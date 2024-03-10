@@ -1,0 +1,52 @@
+$contact-page-default-row-col-gap: 50px;
+
+.contact-page {
+  @include desktop-only {
+    @include flex--justify-center();
+    column-gap: $contact-page-default-row-col-gap;
+  }
+
+  @include mobile-only {
+    @include flex--col();
+    row-gap: $contact-page-default-row-col-gap;
+  }
+
+  &__form {
+    @include flex--col();
+    width: fit-content;
+    row-gap: calc($contact-page-default-row-col-gap / 2);
+
+    &__submit-btn {
+      align-self: center;
+    }
+  }
+
+  &__social-links {
+    @include flex--col--justify-center();
+    row-gap: $contact-page-default-row-col-gap;
+    padding: 50px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, $primary-blue, rgb($primary-blue, 0.3));
+
+    h2 {
+      color: $white;
+      font-weight: 400;
+      align-self: center;
+    }
+
+    &__link {
+      @include flex--align-center();
+      column-gap: 10px;
+      text-decoration: none;
+      color: $white;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      svg {
+        fill: $white;
+      }
+    }
+  }
+}
