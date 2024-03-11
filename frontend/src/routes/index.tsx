@@ -47,7 +47,7 @@ const ApplicationRoutes: FunctionComponent = (): JSX.Element => {
 
   return (
     <TransitionGroup>
-      <CSSTransition key={location.key} classNames="slide" timeout={500}>
+      <CSSTransition key={location.key} classNames="slide" timeout={400}>
         <Routes location={location}>
           {COMPONENT_ROUTES.map(({ route, component }) => (
             <Route key={route} path={route} element={component} />

@@ -1,7 +1,7 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { SearchInput, useDebounce } from "@ryanbrandt/react-quick-ui";
+import { Input, SearchInput, useDebounce } from "@ryanbrandt/react-quick-ui";
 import { workQueryChange } from "@app/Work/slice";
 
 const WorkPageSearchFilters: FunctionComponent = (): JSX.Element => {
@@ -16,10 +16,12 @@ const WorkPageSearchFilters: FunctionComponent = (): JSX.Element => {
 
   return (
     <div className="work-page__search-filters">
-      <SearchInput
+      <Input
+        inputType="search"
         placeholder="Search projects"
         value={query}
         onChange={setQuery}
+        size="xlg"
       />
     </div>
   );

@@ -7,7 +7,7 @@ $contact-page-default-row-col-gap: 50px;
   }
 
   @include mobile-only {
-    @include flex--col();
+    @include flex--col--align-center();
     row-gap: $contact-page-default-row-col-gap;
   }
 

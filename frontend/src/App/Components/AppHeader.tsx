@@ -42,7 +42,7 @@ const AppHeader: FunctionComponent = (): JSX.Element => {
   );
 
   return (
-    <TopBar className="app-header" sticky>
+    <TopBar className="app-header">
       {isMobile ? (
         <MobileAppHeaderMenu links={links} />
       ) : (

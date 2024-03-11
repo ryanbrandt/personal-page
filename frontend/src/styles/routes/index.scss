@@ -1,4 +1,4 @@
-$slide-transition-time: 500ms;
+$slide-transition-time: 400ms;
 
 .slide-enter {
   transform: translateY(20%);
@@ -7,13 +7,13 @@ $slide-transition-time: 500ms;
 }
 
 .slide-enter.slide-enter-active {
-  transform: translateY(0%);
+  transform: translateX(0%);
   opacity: 1;
   transition: all $slide-transition-time ease-in-out;
 }
 
 .slide-exit {
-  transform: translateY(0%);
+  transform: translateX(0%);
   opacity: 0;
 }
 

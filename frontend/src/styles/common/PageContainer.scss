@@ -2,6 +2,10 @@
   width: 100%;
   height: 100%;
 
+  @include mobile-only {
+    padding: 10px;
+  }
+
   &__title {
     @include themed() {
       color: theme-get($secondary-color);

@@ -2,6 +2,10 @@
   &__resume-display {
     flex: 1;
 
+    .badge {
+      font-size: 12px;
+    }
+
     @include desktop-only {
       @include flex--justify-space-evenly();
     }
