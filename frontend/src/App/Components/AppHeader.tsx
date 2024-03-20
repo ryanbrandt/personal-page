@@ -22,10 +22,12 @@ export const MENU_LINKS: Array<IAppHeaderMenuLink> = [
     text: "Personal Projects",
     route: BASE_ROUTES.work,
   },
+  /*
   {
     text: "Contact",
     route: BASE_ROUTES.contact,
   },
+  */
 ];
 
 const AppHeader: FunctionComponent = (): JSX.Element => {

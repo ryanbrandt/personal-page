@@ -24,10 +24,12 @@ export const COMPONENT_ROUTES: Array<IComponentRoute> = [
     route: BASE_ROUTES.resumé,
     component: <ResumePage />,
   },
+  /*
   {
     route: BASE_ROUTES.contact,
     component: <ContactPage />,
   },
+  */
 ];
 
 const ApplicationRoutes: FunctionComponent = (): JSX.Element => {

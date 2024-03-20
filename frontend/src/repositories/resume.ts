@@ -5,30 +5,17 @@ export const WORK_ENTRIES: Readonly<Array<IResumeEntry>> = [
     id: 1,
     name: "Senior Software Engineer, Biomeme Inc.",
     description:
-      "Biomeme is a biotechnology organization developing accessible, real-time molecular diagnostic platforms for applications in human health, defense, industrial processes and much more. As a Senior Software Engineer, I lead the development, design and architecture of software spanning from full-stack web applications to mobile and desktop applications and infrastructure.",
+      "Biomeme is a biotechnology upstart developing accessible, real-time molecular diagnostic platforms for applications in human health, defense, industrial processes and more. As a Senior Software Engineer, I lead the development, design and architecture of software spanning from full-stack web applications to mobile and desktop applications and infrastructure.",
     startDate: "Setepmber 2021",
     endDate: null,
     accomplishments:
-      "Played a key role in the architecture of Biomeme's first point of care human health platform, which consists of a regulatory compliant ASP.NET API and React Native mobile application that interfaces with proprietary laboratory hardware. Lead the design and development of a patient and provider facing patient portal consisting of multiple React micro-frontends and ASP.NET and Serverless microservices. Piloted several core React, C# and Node.JS libraries which are used organization wide. Lead devops efforts across multiple projects as a lead on all things AWS infrastructure and CI/CD pipelines.",
+      "Played a key role in the architecture of Biomeme's first point of care human health platform, which consists of a regulatory compliant ASP.NET API and React Native mobile application that interfaces with proprietary laboratory hardware. Lead the design and development of a patient and provider facing patient portal consisting of multiple React micro-frontends and ASP.NET and Serverless microservices. Piloted several core React, C# and Node.JS libraries which are used organization wide. Led devops efforts across multiple projects as a lead on all things AWS infrastructure and CI/CD pipelines.",
     created: "01/01/1970",
     modified: "01/01/1970",
     type: "Work",
   },
   {
     id: 2,
-    name: "Software Engineer, Biomeme Inc.",
-    description:
-      "Biomeme is a biotechnology organization developing accessible, real-time molecular diagnostic platforms for applications in human health, defense, industrial processes and much more. As a Software Engineer, I contributed to the development of multiple internal and customer facing full-stack web applications, mobile applications and desktop applications.",
-    startDate: "August 2019",
-    endDate: "April 2021",
-    accomplishments:
-      "Developed a suite of regulatory compliant desktop application to automate a complex clinical laboratory workflow which allowed Biomeme's subsidiary laboratory to scale from a single Philadelphia location to dozens nationwide and increased sample processing capabailities by over 1000%. Architected and designed an organization wide intranet, administrative panel and central authentication system.",
-    created: "01/01/1970",
-    modified: "01/01/1970",
-    type: "Work",
-  },
-  {
-    id: 3,
     name: "Software Engineer II, AbleTo Inc.",
     description:
       "AbleTo is a leading provider in virtual behavior healthcare, offering several web and mobile-based platforms for therapy and counseling. As a Software Engineer II on the Care Delivery team, I contributed to the full-stack development of multiple therapist and counselor facing full-stack web applications oriented around the administration of patient care services.",
@@ -36,6 +23,19 @@ export const WORK_ENTRIES: Readonly<Array<IResumeEntry>> = [
     endDate: "September 2021",
     accomplishments:
       "Piloted a new content delivery microservice which integrated with a Contentful CMS, enabling the clinical psychology team to take full ownership over the management of complex patient care plan data, drastically improving program iteration rates.",
+    created: "01/01/1970",
+    modified: "01/01/1970",
+    type: "Work",
+  },
+  {
+    id: 3,
+    name: "Software Engineer, Biomeme Inc.",
+    description:
+      "Biomeme is a biotechnology upstart developing accessible, real-time molecular diagnostic platforms for applications in human health, defense, industrial processes and much more. As a Software Engineer, I contributed to the development of multiple internal and customer facing full-stack web applications, mobile applications and desktop applications.",
+    startDate: "August 2019",
+    endDate: "April 2021",
+    accomplishments:
+      "Developed a suite of regulatory compliant desktop application to automate a complex clinical laboratory workflow which allowed Biomeme's subsidiary laboratory to scale from a single Philadelphia location to dozens nationwide and increased sample processing capabailities by over 1000%. Designed and developed an organization wide intranet and central authentication system for managing access to internal software applications. Led the development of a customer adminstrative panel which has enabled the Customer Success team to take total ownership over complex customer administration tasks without the need for engineering intervention.",
     created: "01/01/1970",
     modified: "01/01/1970",
     type: "Work",

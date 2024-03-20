@@ -775,14 +775,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ryanbrandt/react-quick-ui@npm:0.2.1":
-  version: 0.2.1
-  resolution: "@ryanbrandt/react-quick-ui@npm:0.2.1"
+"@ryanbrandt/react-quick-ui@npm:0.3.0":
+  version: 0.3.0
+  resolution: "@ryanbrandt/react-quick-ui@npm:0.3.0"
   peerDependencies:
     react: ">=18.0.0"
     react-dom: ">=18.0.0"
-    react-transition-group: ">=4.4.2"
-  checksum: 3fa794938bdbd549a31d48329ff5e3066df3eb80fe60aada600891528fa438a14a9e27cc8328d6d6a6351bb01bf1a246f2df13edc6be4f98872730f503cfdd4b
+    react-transition-group: ">=4.4.5"
+  checksum: fd7d517301b2d3c4fbb2eee43ed5dab7151b88804f9fa1130500c0c49d47458341143904aa98569857e0d82bd81b1cb10753ba80904cb7a177b74f1e429de438
   languageName: node
   linkType: hard
 
@@ -3881,7 +3881,7 @@ __metadata:
   resolution: "personal-page@workspace:."
   dependencies:
     "@reduxjs/toolkit": "npm:^2.0.1"
-    "@ryanbrandt/react-quick-ui": "npm:0.2.1"
+    "@ryanbrandt/react-quick-ui": "npm:0.3.0"
     "@types/jest": "npm:^29.5.11"
     "@types/node": "npm:^20.10.7"
     "@types/react": "npm:^18.2.47"

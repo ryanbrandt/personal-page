@@ -1,4 +1,12 @@
 .resume-page {
+  &__download {
+    @include flex--align-center--justify-center();
+
+    svg {
+      @include gray-to-primary-blue-icon();
+    }
+  }
+
   &__resume-display {
     flex: 1;
 
