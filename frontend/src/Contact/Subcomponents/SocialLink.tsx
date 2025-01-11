@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, JSX } from "react";
 
 interface Props {
   label: string;

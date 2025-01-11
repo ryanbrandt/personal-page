@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, JSX } from "react";
 import { Badge } from "@ryanbrandt/react-quick-ui";
 
 import ResumeWorkEntry from "@app/Resume/Subcomponents/ResumeEntry";

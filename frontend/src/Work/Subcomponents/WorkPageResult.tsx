@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, JSX, useState } from "react";
 
 import { IWorkEntry } from "@app/types/work";
 import WorkPageResultDetailsOverlay from "@app/Work/Subcomponents/WorkPageResultDetailsOverlay";

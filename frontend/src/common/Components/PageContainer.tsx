@@ -1,4 +1,4 @@
-import { FunctionComponent, PropsWithChildren } from "react";
+import { FunctionComponent, JSX, PropsWithChildren } from "react";
 
 interface BaseProps {
   title: string;

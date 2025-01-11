@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, JSX } from "react";
 
 import { Modal } from "@ryanbrandt/react-quick-ui";
 import { IWorkEntry } from "@app/types/work";

@@ -1,4 +1,4 @@
-import { FunctionComponent, PropsWithChildren } from "react";
+import { FunctionComponent, JSX, PropsWithChildren } from "react";
 
 import MobileContext from "@app/common/contexts/MobileContext";
 import { useAppTheme, useIsMobile } from "@app/App/hooks";

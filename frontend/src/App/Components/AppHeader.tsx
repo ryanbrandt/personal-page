@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext, useMemo } from "react";
+import { FunctionComponent, JSX, useContext, useMemo } from "react";
 import { useLocation } from "react-router";
 import { TopBar } from "@ryanbrandt/react-quick-ui";
 

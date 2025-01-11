@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, JSX } from "react";
 
 import PageContainer from "@app/common/Components/PageContainer";
 import WorkPageSearchFilters from "@app/Work/Components/WorkPageSearchFilters";

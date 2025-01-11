@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext } from "react";
+import { FunctionComponent, JSX, useContext } from "react";
 
 import AppHeader from "@app/App/Components/AppHeader";
 import ContentContainer from "@app/App/Components/ContentContainer";

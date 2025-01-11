@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, JSX, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { Input, SearchInput, useDebounce } from "@ryanbrandt/react-quick-ui";

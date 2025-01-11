@@ -1,6 +1,5 @@
-import { FunctionComponent, useContext } from "react";
+import { FunctionComponent, JSX, useContext, useRef } from "react";
 import { Route, Routes, useLocation } from "react-router";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import { BASE_ROUTES } from "@app/routes/constants";
 import { IComponentRoute } from "@app/routes/types";
@@ -34,6 +33,7 @@ export const COMPONENT_ROUTES: Array<IComponentRoute> = [
 
 const ApplicationRoutes: FunctionComponent = (): JSX.Element => {
   useScrollToTopOnRouteChange();
+
   const location = useLocation();
   const isMobile = useContext(MobileContext);
 
@@ -48,15 +48,11 @@ const ApplicationRoutes: FunctionComponent = (): JSX.Element => {
   }
 
   return (
-    <TransitionGroup>
-      <CSSTransition key={location.key} classNames="slide" timeout={400}>
-        <Routes location={location}>
-          {COMPONENT_ROUTES.map(({ route, component }) => (
-            <Route key={route} path={route} element={component} />
-          ))}
-        </Routes>
-      </CSSTransition>
-    </TransitionGroup>
+    <Routes location={location}>
+      {COMPONENT_ROUTES.map(({ route, component }) => (
+        <Route key={route} path={route} element={component} />
+      ))}
+    </Routes>
   );
 };
 

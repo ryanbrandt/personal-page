@@ -86,10 +86,6 @@ $link-padding: 10px;
       color: $primary-blue;
       overscroll-behavior: contain;
 
-      @include themed() {
-        background-color: theme-get($overlay-color);
-      }
-
       &--closed {
         height: 0%;
         opacity: 0;
@@ -98,7 +94,11 @@ $link-padding: 10px;
       }
 
       &--open {
-        height: 100%;
+        @include themed() {
+          background-color: theme-get($overlay-color);
+        }
+
+        height: 100vh;
         opacity: 1;
         visibility: visible;
         transition: all $mobile-menu-height-transition-time ease-in;
