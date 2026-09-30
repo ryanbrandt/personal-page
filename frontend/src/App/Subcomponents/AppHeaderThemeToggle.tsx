@@ -1,10 +1,10 @@
 import { FunctionComponent, useContext } from "react";
-
-import ThemeToggleSvg from "@app/assets/svg/ThemeToggleSvg";
 import { useDispatch } from "react-redux";
-import ThemeContext from "@app/common/contexts/ThemeContext";
-import { manualThemePreferenceChange } from "../slice";
+
+import { manualThemePreferenceChange } from "@app/App/slice";
+import ThemeToggleSvg from "@app/assets/svg/ThemeToggleSvg";
 import { Theme } from "@app/common/constants/themes";
+import ThemeContext from "@app/common/contexts/ThemeContext";
 
 const AppHeaderThemeToggle: FunctionComponent = (): JSX.Element => {
   const theme = useContext(ThemeContext);

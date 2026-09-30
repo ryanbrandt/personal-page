@@ -1,7 +1,7 @@
 import { FunctionComponent, JSX, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { Input, SearchInput, useDebounce } from "@ryanbrandt/react-quick-ui";
+import { Input, useDebounce } from "@ryanbrandt/react-quick-ui";
 import { workQueryChange } from "@app/Work/slice";
 
 const WorkPageSearchFilters: FunctionComponent = (): JSX.Element => {
