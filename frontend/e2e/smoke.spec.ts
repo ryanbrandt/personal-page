@@ -22,6 +22,23 @@ test.describe("desktop", () => {
     });
   }
 
+  test("exactly the current route's nav link is marked current", async ({
+    page,
+  }) => {
+    const current = page.locator('.app-header__menu [aria-current="page"]');
+
+    for (const [path, label] of [
+      ["/", "Home"],
+      ["/resume", "Résumé"],
+      ["/resume/", "Résumé"],
+      ["/work", "Personal Projects"],
+    ]) {
+      await page.goto(path);
+      await expect(current).toHaveCount(1);
+      await expect(current).toHaveText(label);
+    }
+  });
+
   test("nav links navigate between routes", async ({ page }) => {
     await page.goto("/");
     const nav = page.locator(".app-header__menu");
@@ -101,6 +118,17 @@ test.describe("desktop", () => {
       await expect(pageTitle(page, "Hello, World!")).toBeVisible();
     });
   }
+
+  test("back after a redirect returns to the previous page", async ({
+    page,
+  }) => {
+    await page.goto("/resume");
+    await page.goto("/does-not-exist");
+    await expect(page).toHaveURL("/");
+
+    await page.goBack();
+    await expect(page).toHaveURL("/resume");
+  });
 
   test("nav links work from the keyboard", async ({ page }) => {
     await page.goto("/");

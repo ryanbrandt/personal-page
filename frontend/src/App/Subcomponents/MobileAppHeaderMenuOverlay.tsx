@@ -31,12 +31,7 @@ const MobileAppHeaderMenuOverlay: FunctionComponent<Props> = ({
       </div>
       <div className="app-header__mobile-menu__overlay__link-container">
         {links.map(({ text, route }) => (
-          <MobileAppheaderMenuLink
-            key={text}
-            text={text}
-            route={route}
-            onClose={onClose}
-          />
+          <MobileAppheaderMenuLink key={text} text={text} route={route} />
         ))}
       </div>
     </div>

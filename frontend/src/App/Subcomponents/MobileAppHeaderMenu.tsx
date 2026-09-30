@@ -1,4 +1,5 @@
 import { type FunctionComponent, useState } from "react";
+import { useLocation } from "react-router";
 
 import MobileAppHeaderMenuOverlay from "@app/App/Subcomponents/MobileAppHeaderMenuOverlay";
 import BurgerMenuSvg from "@app/assets/svg/BurgerMenuSvg";
@@ -8,17 +9,19 @@ interface Props {
   links: Array<IAppHeaderMenuLink>;
 }
 
-const MobileAppHeaderMenu: FunctionComponent<Props> = (props) => {
-  const { links } = props;
-
-  const [menuOpen, setMenuOpen] = useState(false);
+const MobileAppHeaderMenu: FunctionComponent<Props> = ({ links }) => {
+  // The menu stays open only at the location it was opened from, so any
+  // navigation (a link, back/forward) closes it. Modifier-clicks that open a
+  // new tab don't navigate, so they leave it open.
+  const { key } = useLocation();
+  const [openedAt, setOpenedAt] = useState<string | null>(null);
 
   return (
     <div className="app-header__mobile-menu">
-      <BurgerMenuSvg onClick={() => setMenuOpen(true)} />
+      <BurgerMenuSvg onClick={() => setOpenedAt(key)} />
       <MobileAppHeaderMenuOverlay
-        onClose={() => setMenuOpen(false)}
-        open={menuOpen}
+        onClose={() => setOpenedAt(null)}
+        open={openedAt === key}
         links={links}
       />
     </div>

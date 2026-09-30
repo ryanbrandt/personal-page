@@ -1,5 +1,5 @@
 import type { FunctionComponent } from "react";
-import { NavLink, useMatch } from "react-router";
+import { Link, useMatch } from "react-router";
 import { createCompositeClassName } from "@ryanbrandt/react-quick-ui";
 
 import type { IAppHeaderMenuLink } from "@app/App/types";
@@ -14,17 +14,15 @@ const AppHeaderMenuLink: FunctionComponent<Props> = ({ text, route }) => {
     "app-header__menu__link--active": active,
   });
 
-  // The wrapper carries the active modifier. A function className stops
-  // NavLink from adding its own `active` class to the anchor.
   return (
     <div className={classNames}>
-      <NavLink
+      <Link
         to={route}
-        end
-        className={() => "app-header__menu__link__anchor"}
+        aria-current={active ? "page" : undefined}
+        className="app-header__menu__link__anchor"
       >
         {text}
-      </NavLink>
+      </Link>
     </div>
   );
 };

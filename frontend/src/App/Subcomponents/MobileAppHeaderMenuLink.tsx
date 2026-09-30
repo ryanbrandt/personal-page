@@ -1,18 +1,12 @@
 import type { FunctionComponent } from "react";
-import { NavLink, useMatch } from "react-router";
+import { Link, useMatch } from "react-router";
 import { createCompositeClassName } from "@ryanbrandt/react-quick-ui";
 
 import type { IAppHeaderMenuLink } from "@app/App/types";
 
-interface Props extends IAppHeaderMenuLink {
-  onClose: () => void;
-}
+type Props = IAppHeaderMenuLink;
 
-const MobileAppheaderMenuLink: FunctionComponent<Props> = ({
-  text,
-  route,
-  onClose,
-}) => {
+const MobileAppheaderMenuLink: FunctionComponent<Props> = ({ text, route }) => {
   const active = useMatch(route) !== null;
 
   const classNames = createCompositeClassName({
@@ -20,19 +14,15 @@ const MobileAppheaderMenuLink: FunctionComponent<Props> = ({
     "app-header__mobile-menu__overlay__link-container__link--active": active,
   });
 
-  // See AppHeaderMenuLink for why className is a function.
   return (
     <div className={classNames}>
-      <NavLink
+      <Link
         to={route}
-        end
-        className={() =>
-          "app-header__mobile-menu__overlay__link-container__link__anchor"
-        }
-        onClick={onClose}
+        aria-current={active ? "page" : undefined}
+        className="app-header__mobile-menu__overlay__link-container__link__anchor"
       >
         {text}
-      </NavLink>
+      </Link>
     </div>
   );
 };
