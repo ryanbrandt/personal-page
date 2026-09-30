@@ -1,0 +1,56 @@
+import { expect, test } from "@playwright/test";
+
+import {
+  gotoAndSettle,
+  mobileMenuBurger,
+  openMobileMenu,
+  projectDetails,
+  ROUTES,
+  VIEWPORTS,
+  waitForFontsAndImages,
+} from "./helpers";
+
+const COLOR_SCHEMES = ["light", "dark"] as const;
+
+for (const colorScheme of COLOR_SCHEMES) {
+  for (const [viewportName, viewport] of Object.entries(VIEWPORTS)) {
+    const variant = `${viewportName}-${colorScheme}`;
+
+    test.describe(variant, () => {
+      test.use({ viewport, colorScheme });
+
+      for (const route of ROUTES) {
+        test(route.name, async ({ page }) => {
+          await gotoAndSettle(page, route.path);
+          await expect(page).toHaveScreenshot(`${route.name}-${variant}.png`, {
+            fullPage: true,
+          });
+        });
+      }
+
+      test("work modal open", async ({ page }) => {
+        await gotoAndSettle(page, "/work");
+        await page.getByText("Open FEC GraphQL Server").click();
+        await expect(projectDetails(page)).toBeVisible();
+        await waitForFontsAndImages(page);
+        await expect(page).toHaveScreenshot(`work-modal-open-${variant}.png`, {
+          fullPage: true,
+        });
+      });
+    });
+  }
+
+  test.describe(`mobile-menu-${colorScheme}`, () => {
+    test.use({ viewport: VIEWPORTS.mobile, colorScheme });
+
+    test("mobile menu open", async ({ page }) => {
+      await gotoAndSettle(page, "/");
+      await mobileMenuBurger(page).click();
+      await expect(openMobileMenu(page)).toBeVisible();
+      await expect(page).toHaveScreenshot(
+        `mobile-menu-open-mobile-${colorScheme}.png`,
+        { fullPage: true }
+      );
+    });
+  });
+}
