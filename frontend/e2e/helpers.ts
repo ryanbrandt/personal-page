@@ -27,7 +27,7 @@ export const openMobileMenu = (page: Page) =>
   page.locator(".app-header__mobile-menu__overlay--open");
 
 const REMOTE_IMAGES = "https://resume-work-images.s3.amazonaws.com/**";
-const FIXTURES_DIR = path.join(__dirname, "fixtures");
+const FIXTURES_DIR = path.join(import.meta.dirname, "fixtures");
 
 /** Serves project images from committed copies so S3 can't flake the suite. */
 async function stubRemoteImages(page: Page): Promise<void> {

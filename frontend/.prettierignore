@@ -1,0 +1,6 @@
+dist/
+playwright-report/
+test-results/
+.yarn/
+yarn.lock
+e2e/**/*-snapshots/
