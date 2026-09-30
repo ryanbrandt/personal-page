@@ -7,7 +7,7 @@ import { ALT_WORK_IMG_SRC } from "@app/Work/constants";
 interface Props {
   entry: IWorkEntry;
 }
-const WorkPageResult: FunctionComponent<Props> = (props: Props) => {
+const WorkPageResult: FunctionComponent<Props> = (props) => {
   const { entry } = props;
   const { title, primaryMediaLink } = entry;
 

@@ -7,7 +7,7 @@ interface Props {
   links: Array<IAppHeaderMenuLink>;
 }
 
-const AppHeaderMenu: FunctionComponent<Props> = ({ links }: Props) => (
+const AppHeaderMenu: FunctionComponent<Props> = ({ links }) => (
   <div className="app-header__menu">
     {links.map(({ text, route, active }) => (
       <AppHeaderLink key={text} text={text} route={route} active={active} />

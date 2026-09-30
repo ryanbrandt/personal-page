@@ -6,7 +6,7 @@ interface Props {
   icon: ReactElement;
 }
 
-const SocialLink: FunctionComponent<Props> = ({ label, link, icon }: Props) => (
+const SocialLink: FunctionComponent<Props> = ({ label, link, icon }) => (
   <a href={link} className="contact-page__social-links__link">
     {icon}
     {label}

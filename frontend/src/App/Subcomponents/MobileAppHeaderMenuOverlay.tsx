@@ -14,7 +14,7 @@ const MobileAppHeaderMenuOverlay: FunctionComponent<Props> = ({
   open,
   onClose,
   links,
-}: Props) => {
+}) => {
   const classNames = createCompositeClassName({
     "app-header__mobile-menu__overlay": true,
     "app-header__mobile-menu__overlay--closed": !open,
