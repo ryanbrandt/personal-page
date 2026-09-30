@@ -1,0 +1,7 @@
+# Read by Netlify only when the site's base directory is `frontend`.
+[build]
+  command = "yarn build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24"
