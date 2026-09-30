@@ -1,5 +1,4 @@
 import { FunctionComponent, JSX } from "react";
-import { Button } from "@ryanbrandt/react-quick-ui";
 
 import PageContainer from "@app/common/Components/PageContainer";
 import ResumeDisplay from "@app/Resume/Components/ResumeDisplay";

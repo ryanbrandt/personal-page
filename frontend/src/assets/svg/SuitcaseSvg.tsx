@@ -4,7 +4,6 @@ const SuitcaseSvg = (props: React.SVGProps<SVGSVGElement>): JSX.Element => (
     viewBox="0 0 240 192"
     width={20}
     height={20}
-    // eslint-disable-next-line react/jsx-props-no-spreading
     {...props}
   >
     <path

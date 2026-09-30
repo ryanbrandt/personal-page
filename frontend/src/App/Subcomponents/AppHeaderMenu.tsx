@@ -2,7 +2,6 @@ import { FunctionComponent } from "react";
 
 import AppHeaderLink from "@app/App/Subcomponents/AppHeaderMenuLink";
 import { IAppHeaderMenuLink } from "@app/App/types";
-import AppHeaderThemeToggle from "./AppHeaderThemeToggle";
 
 interface Props {
   links: Array<IAppHeaderMenuLink>;

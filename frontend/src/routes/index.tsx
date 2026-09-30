@@ -8,7 +8,7 @@ import ResumePage from "@app/Resume/Components/ResumePage";
 import LandingPage from "@app/Home/Components/LandingPage";
 import WorkPage from "@app/Work/Components/WorkPage";
 
-export const COMPONENT_ROUTES: Array<IComponentRoute> = [
+const COMPONENT_ROUTES: Array<IComponentRoute> = [
   {
     route: BASE_ROUTES.home,
     component: <LandingPage />,

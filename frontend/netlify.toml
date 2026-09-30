@@ -1,6 +1,6 @@
-# Read by Netlify only when the site's base directory is `frontend`.
+# Netlify's base directory is `frontend`. `yarn build` already type-checks.
 [build]
-  command = "yarn build"
+  command = "yarn lint && yarn build"
   publish = "dist"
 
 [build.environment]

@@ -3,7 +3,6 @@ import { FunctionComponent, useState } from "react";
 import MobileAppHeaderMenuOverlay from "@app/App/Subcomponents/MobileAppHeaderMenuOverlay";
 import BurgerMenuSvg from "@app/assets/svg/BurgerMenuSvg";
 import { IAppHeaderMenuLink } from "@app/App/types";
-import AppHeaderThemeToggle from "./AppHeaderThemeToggle";
 
 interface Props {
   links: Array<IAppHeaderMenuLink>;
