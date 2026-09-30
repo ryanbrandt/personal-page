@@ -28,3 +28,8 @@ dist-ssr
 */.yarn/install-state.gz
 
 */dist/
+# Playwright
+*/test-results/
+*/playwright-report/
+*/blob-report/
+*/playwright/.cache/
