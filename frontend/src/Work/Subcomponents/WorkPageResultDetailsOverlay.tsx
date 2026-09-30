@@ -12,9 +12,7 @@ interface Props {
   onClose: () => void;
 }
 
-const WorkPageResultDetailsOverlay: FunctionComponent<Props> = (
-  props: Props
-) => {
+const WorkPageResultDetailsOverlay: FunctionComponent<Props> = (props) => {
   const {
     entry: { title, start, end, description, secondaryMediaLink, url },
     show,

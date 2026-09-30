@@ -13,7 +13,7 @@ const MobileAppheaderMenuLink: FunctionComponent<Props> = ({
   route,
   active = false,
   onClose,
-}: Props) => {
+}) => {
   const navigate = useNavigate();
 
   const handleLinkClick = (): void => {

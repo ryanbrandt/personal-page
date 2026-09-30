@@ -10,7 +10,7 @@ interface Props {
 const ResumeEntry: FunctionComponent<Props> = ({
   entry: { name, description, startDate, endDate, accomplishments },
   icon,
-}: Props) => (
+}) => (
   <div className="resume-page__resume-display__column__entry">
     <div className="resume-page__resume-display__column__entry__header">
       {icon}

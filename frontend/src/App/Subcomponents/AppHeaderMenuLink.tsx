@@ -10,7 +10,7 @@ const AppHeaderMenuLink: FunctionComponent<Props> = ({
   text,
   route,
   active = false,
-}: Props) => {
+}) => {
   const navigate = useNavigate();
 
   const classNames = createCompositeClassName({

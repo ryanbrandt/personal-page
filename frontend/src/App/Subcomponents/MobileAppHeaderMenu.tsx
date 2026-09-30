@@ -8,7 +8,7 @@ interface Props {
   links: Array<IAppHeaderMenuLink>;
 }
 
-const MobileAppHeaderMenu: FunctionComponent<Props> = (props: Props) => {
+const MobileAppHeaderMenu: FunctionComponent<Props> = (props) => {
   const { links } = props;
 
   const [menuOpen, setMenuOpen] = useState(false);
