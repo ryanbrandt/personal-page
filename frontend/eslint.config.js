@@ -13,8 +13,10 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-// eslint-plugin-react's `version: "detect"` calls an API that ESLint 10
-// removed, so pass the installed React version ourselves.
+// eslint-plugin-react doesn't support ESLint 10 yet. Its `version: "detect"`
+// calls an API ESLint 10 removed, so pass the installed React version
+// ourselves. `react/jsx-filename-extension` and `react/forward-ref-uses-ref`
+// hit removed APIs too; keep them off until the plugin supports ESLint 10.
 const reactVersion = createRequire(import.meta.url)(
   "react/package.json"
 ).version;
@@ -32,7 +34,6 @@ export default defineConfig(
       "import-x/resolver-next": [createTypeScriptImportResolver()],
     },
     rules: {
-      curly: ["error", "multi-line"],
       // TypeScript already checks default imports.
       "import-x/default": "off",
       "import-x/no-named-as-default": "off",
@@ -86,6 +87,14 @@ export default defineConfig(
         },
       ],
       "react/jsx-max-depth": ["error", { max: 3 }],
+      // Function components only (replaces react-prefer-function-component).
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "ClassDeclaration[superClass]",
+          message: "Use a function component instead of a class.",
+        },
+      ],
       // Types replace prop-types.
       "react/prop-types": "off",
       "react/no-unescaped-entities": "off",
@@ -103,7 +112,8 @@ export default defineConfig(
       ],
       // Known a11y debt: `<a onClick>` nav links and clickable divs are
       // replaced in P5 (NavLinks) and R2 (app shell), the work cards in R5,
-      // and the résumé `<label>`s in R4. Restore "error" once those land.
+      // and the résumé `<label>`s in R4. Restore "error" once those land, and
+      // lower `--max-warnings` in package.json as each one is fixed.
       "jsx-a11y-x/anchor-is-valid": "warn",
       "jsx-a11y-x/click-events-have-key-events": "warn",
       "jsx-a11y-x/no-static-element-interactions": "warn",
@@ -111,6 +121,10 @@ export default defineConfig(
     },
   },
 
-  // Must stay last: turns off rules that conflict with Prettier.
-  prettier
+  // Turns off rules that conflict with Prettier; keep it after the rule sets.
+  prettier,
+
+  // eslint-config-prettier disables `curly`, but "multi-line" is compatible
+  // with Prettier, so re-enable it.
+  { rules: { curly: ["error", "multi-line"] } }
 );
