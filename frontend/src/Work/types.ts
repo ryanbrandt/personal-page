@@ -1,4 +1,4 @@
-import { IWorkEntry } from "@app/types/work";
+import type { IWorkEntry } from "@app/types/work";
 
 export interface IWorkSlice {
   entries: Array<IWorkEntry>;

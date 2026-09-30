@@ -1,8 +1,8 @@
-import { FunctionComponent, JSX, useContext, useMemo } from "react";
+import { type FunctionComponent, useContext, useMemo } from "react";
 import { useLocation } from "react-router";
 import { TopBar } from "@ryanbrandt/react-quick-ui";
 
-import { IAppHeaderMenuLink } from "@app/App/types";
+import type { IAppHeaderMenuLink } from "@app/App/types";
 import MobileContext from "@app/common/contexts/MobileContext";
 import { BASE_ROUTES } from "@app/routes/constants";
 import AppHeaderMenu from "@app/App/Subcomponents/AppHeaderMenu";
@@ -30,7 +30,7 @@ const MENU_LINKS: Array<IAppHeaderMenuLink> = [
   */
 ];
 
-const AppHeader: FunctionComponent = (): JSX.Element => {
+const AppHeader: FunctionComponent = () => {
   const isMobile = useContext(MobileContext);
   const { pathname } = useLocation();
 

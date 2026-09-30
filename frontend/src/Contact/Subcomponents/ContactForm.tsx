@@ -1,7 +1,7 @@
-import { FunctionComponent, JSX } from "react";
+import type { FunctionComponent } from "react";
 import { TextInput, TextArea, Button } from "@ryanbrandt/react-quick-ui";
 
-const ContactForm: FunctionComponent = (): JSX.Element => (
+const ContactForm: FunctionComponent = () => (
   <form className="contact-page__form">
     <TextInput size="xlg2" placeholder="Your full name" label="Name" />
     <TextInput size="xlg2" placeholder="Your email address" label="Email" />

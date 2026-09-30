@@ -1,4 +1,4 @@
-import { SVGProps } from "react";
+import type { SVGProps } from "react";
 
 const BurgerMenuSvg = (props: SVGProps<SVGSVGElement>) => (
   <svg width={32} height={32} viewBox="0 0 25 25" {...props}>

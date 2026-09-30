@@ -1,11 +1,11 @@
-import { FunctionComponent, JSX } from "react";
+import type { FunctionComponent } from "react";
 
 import PageContainer from "@app/common/Components/PageContainer";
 import ResumeDisplay from "@app/Resume/Components/ResumeDisplay";
 import DownloadSvg from "@app/assets/DownloadSvg";
 import { safeOpenWindow } from "@app/common/utils/browser";
 
-const ResumePage: FunctionComponent = (): JSX.Element => (
+const ResumePage: FunctionComponent = () => (
   <PageContainer title="Résumé">
     <div className="resume-page">
       <div className="resume-page__download">

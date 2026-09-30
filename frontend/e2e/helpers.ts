@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { expect, Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 
 export const ROUTES = [
   { name: "home", path: "/", title: "Hello, World!" },

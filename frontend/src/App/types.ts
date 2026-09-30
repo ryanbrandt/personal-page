@@ -1,4 +1,4 @@
-import { Theme } from "@app/common/constants/themes";
+import type { Theme } from "@app/common/constants/themes";
 
 export interface IAppHeaderMenuLink {
   text: string;

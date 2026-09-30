@@ -1,4 +1,4 @@
-import { FunctionComponent, JSX, PropsWithChildren } from "react";
+import type { FunctionComponent, PropsWithChildren } from "react";
 
 import MobileContext from "@app/common/contexts/MobileContext";
 import { useAppTheme, useIsMobile } from "@app/App/hooks";
@@ -6,7 +6,7 @@ import ThemeContext from "@app/common/contexts/ThemeContext";
 
 const AppContextProvider: FunctionComponent<PropsWithChildren> = ({
   children,
-}: PropsWithChildren): JSX.Element => {
+}: PropsWithChildren) => {
   const isMobile = useIsMobile();
   const theme = useAppTheme();
 

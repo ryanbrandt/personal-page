@@ -1,7 +1,7 @@
-import { FunctionComponent, JSX } from "react";
+import type { FunctionComponent } from "react";
 
 import { Modal } from "@ryanbrandt/react-quick-ui";
-import { IWorkEntry } from "@app/types/work";
+import type { IWorkEntry } from "@app/types/work";
 import { ALT_WORK_IMG_SRC } from "@app/Work/constants";
 import GithubSvg from "@app/assets/svg/GithubSvg";
 import { safeOpenWindow } from "@app/common/utils/browser";
@@ -14,7 +14,7 @@ interface Props {
 
 const WorkPageResultDetailsOverlay: FunctionComponent<Props> = (
   props: Props
-): JSX.Element => {
+) => {
   const {
     entry: { title, start, end, description, secondaryMediaLink, url },
     show,
