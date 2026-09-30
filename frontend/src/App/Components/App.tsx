@@ -8,7 +8,9 @@ import AppContextProvider from "@app/App/Components/AppContextProvider";
 
 const App: FunctionComponent = () => (
   <Provider store={store}>
-    <BrowserRouter>
+    <BrowserRouter
+      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+    >
       <AppContextProvider>
         <RootContainer />
       </AppContextProvider>
