@@ -1,4 +1,4 @@
-import { FunctionComponent, JSX } from "react";
+import type { FunctionComponent } from "react";
 import { Badge } from "@ryanbrandt/react-quick-ui";
 
 import ResumeWorkEntry from "@app/Resume/Subcomponents/ResumeEntry";
@@ -11,7 +11,7 @@ import {
   SKILL_ENTRIES,
 } from "@app/repositories/resume";
 
-const ResumeDisplay: FunctionComponent = (): JSX.Element => (
+const ResumeDisplay: FunctionComponent = () => (
   <div className="resume-page__resume-display">
     <ResumeColumn title="Experience">
       {WORK_ENTRIES.map((entry) => (

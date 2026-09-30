@@ -1,4 +1,4 @@
-import { FunctionComponent, JSX } from "react";
+import type { FunctionComponent } from "react";
 
 import PageContainer from "@app/common/Components/PageContainer";
 import LinkedinSvg from "@app/assets/svg/LinkedInSvg";
@@ -6,7 +6,7 @@ import GithubSvg from "@app/assets/svg/GithubSvg";
 import { safeOpenWindow } from "@app/common/utils/browser";
 import { GITHUB_URL, LINKEDIN_URL } from "@app/common/constants/urls";
 
-const LandingPage: FunctionComponent = (): JSX.Element => (
+const LandingPage: FunctionComponent = () => (
   <PageContainer title="Hello, World!">
     <div className="landing-page">
       <p className="landing-page__copy">

@@ -1,10 +1,10 @@
-import { FunctionComponent, JSX } from "react";
+import type { FunctionComponent } from "react";
 
 import ContactForm from "@app/Contact/Subcomponents/ContactForm";
 import PageContainer from "@app/common/Components/PageContainer";
 import SocialLinks from "@app/Contact/Subcomponents/SocialLinks";
 
-const ContactPage: FunctionComponent = (): JSX.Element => (
+const ContactPage: FunctionComponent = () => (
   <PageContainer title="Get in Touch">
     <div className="contact-page">
       <ContactForm />

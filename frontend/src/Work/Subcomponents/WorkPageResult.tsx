@@ -1,15 +1,13 @@
-import { FunctionComponent, JSX, useState } from "react";
+import { type FunctionComponent, useState } from "react";
 
-import { IWorkEntry } from "@app/types/work";
+import type { IWorkEntry } from "@app/types/work";
 import WorkPageResultDetailsOverlay from "@app/Work/Subcomponents/WorkPageResultDetailsOverlay";
 import { ALT_WORK_IMG_SRC } from "@app/Work/constants";
 
 interface Props {
   entry: IWorkEntry;
 }
-const WorkPageResult: FunctionComponent<Props> = (
-  props: Props
-): JSX.Element => {
+const WorkPageResult: FunctionComponent<Props> = (props: Props) => {
   const { entry } = props;
   const { title, primaryMediaLink } = entry;
 

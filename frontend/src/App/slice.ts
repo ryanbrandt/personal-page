@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-import { IAppSlice } from "@app/App/types";
-import { Theme } from "@app/common/constants/themes";
+import type { IAppSlice } from "@app/App/types";
+import type { Theme } from "@app/common/constants/themes";
 
 export const APP_SLICE_NAME = "app";
 

@@ -1,4 +1,4 @@
-import { IIdentityResource } from "@app/types/common";
+import type { IIdentityResource } from "@app/types/common";
 
 export interface IWorkEntry extends IIdentityResource {
   title: string;

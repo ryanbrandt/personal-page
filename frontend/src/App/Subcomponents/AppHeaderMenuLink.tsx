@@ -1,8 +1,8 @@
-import { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
 import { useNavigate } from "react-router";
 import { createCompositeClassName } from "@ryanbrandt/react-quick-ui";
 
-import { IAppHeaderMenuLink } from "@app/App/types";
+import type { IAppHeaderMenuLink } from "@app/App/types";
 
 type Props = IAppHeaderMenuLink;
 
@@ -10,7 +10,7 @@ const AppHeaderMenuLink: FunctionComponent<Props> = ({
   text,
   route,
   active = false,
-}: Props): JSX.Element => {
+}: Props) => {
   const navigate = useNavigate();
 
   const classNames = createCompositeClassName({

@@ -1,10 +1,10 @@
-import { FunctionComponent, JSX } from "react";
+import type { FunctionComponent } from "react";
 import { useSelector } from "react-redux";
 
 import WorkPageResult from "@app/Work/Subcomponents/WorkPageResult";
 import { selectFilteredWorkEntries } from "@app/Work/memoizedSelectors";
 
-const WorkPageResultsDisplay: FunctionComponent = (): JSX.Element => {
+const WorkPageResultsDisplay: FunctionComponent = () => {
   const filteredWorkEntries = useSelector(selectFilteredWorkEntries);
 
   return (

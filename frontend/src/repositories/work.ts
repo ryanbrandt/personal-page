@@ -1,4 +1,4 @@
-import { IWorkEntry } from "@app/types/work";
+import type { IWorkEntry } from "@app/types/work";
 
 export const WORK_ENTRIES: Readonly<Array<IWorkEntry>> = Object.freeze([
   {

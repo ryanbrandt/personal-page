@@ -1,16 +1,14 @@
-import { FunctionComponent, useState } from "react";
+import { type FunctionComponent, useState } from "react";
 
 import MobileAppHeaderMenuOverlay from "@app/App/Subcomponents/MobileAppHeaderMenuOverlay";
 import BurgerMenuSvg from "@app/assets/svg/BurgerMenuSvg";
-import { IAppHeaderMenuLink } from "@app/App/types";
+import type { IAppHeaderMenuLink } from "@app/App/types";
 
 interface Props {
   links: Array<IAppHeaderMenuLink>;
 }
 
-const MobileAppHeaderMenu: FunctionComponent<Props> = (
-  props: Props
-): JSX.Element => {
+const MobileAppHeaderMenu: FunctionComponent<Props> = (props: Props) => {
   const { links } = props;
 
   const [menuOpen, setMenuOpen] = useState(false);

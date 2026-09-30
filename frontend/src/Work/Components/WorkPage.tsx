@@ -1,10 +1,10 @@
-import { FunctionComponent, JSX } from "react";
+import type { FunctionComponent } from "react";
 
 import PageContainer from "@app/common/Components/PageContainer";
 import WorkPageSearchFilters from "@app/Work/Components/WorkPageSearchFilters";
 import WorkPageResultsDisplay from "@app/Work/Components/WorkPageResultsDisplay";
 
-const WorkPage: FunctionComponent = (): JSX.Element => (
+const WorkPage: FunctionComponent = () => (
   <PageContainer title="Recent Personal Projects">
     <div className="work-page">
       <WorkPageSearchFilters />

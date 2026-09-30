@@ -1,4 +1,6 @@
-const SuitcaseSvg = (props: React.SVGProps<SVGSVGElement>): JSX.Element => (
+import type { SVGProps } from "react";
+
+const SuitcaseSvg = (props: SVGProps<SVGSVGElement>) => (
   <svg
     id="prefix__suitcase_icon"
     viewBox="0 0 240 192"

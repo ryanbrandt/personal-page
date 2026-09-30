@@ -1,4 +1,4 @@
-import { IResumeEntry, IResumeSkill } from "@app/types/resume";
+import type { IResumeEntry, IResumeSkill } from "@app/types/resume";
 
 export const WORK_ENTRIES: Readonly<Array<IResumeEntry>> = [
   {

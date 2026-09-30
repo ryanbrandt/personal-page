@@ -1,8 +1,10 @@
+// Tooling that runs in Node: configs and the Playwright tests. The DOM lib
+// inherited from tsconfig.json covers the tests' `page.evaluate` callbacks.
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "composite": true,
-    "module": "esnext",
-    "moduleResolution": "node"
+    "types": ["node"],
+    "allowJs": true
   },
-  "include": ["vite.config.ts"]
+  "include": ["*.config.ts", "*.config.js", "e2e"]
 }

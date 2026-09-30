@@ -1,16 +1,16 @@
-import { FunctionComponent, JSX } from "react";
+import type { FunctionComponent, ReactElement } from "react";
 
-import { IResumeEntry } from "@app/types/resume";
+import type { IResumeEntry } from "@app/types/resume";
 
 interface Props {
   entry: IResumeEntry;
-  icon?: JSX.Element;
+  icon?: ReactElement;
 }
 
 const ResumeEntry: FunctionComponent<Props> = ({
   entry: { name, description, startDate, endDate, accomplishments },
   icon,
-}: Props): JSX.Element => (
+}: Props) => (
   <div className="resume-page__resume-display__column__entry">
     <div className="resume-page__resume-display__column__entry__header">
       {icon}

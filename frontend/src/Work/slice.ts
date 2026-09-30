@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-import { IWorkSlice } from "@app/Work/types";
+import type { IWorkSlice } from "@app/Work/types";
 import { WORK_ENTRIES } from "@app/repositories/work";
 
 export const WORK_SLICE_NAME = "work";

@@ -1,8 +1,8 @@
-import { FunctionComponent, JSX } from "react";
+import type { FunctionComponent } from "react";
 import { Route, Routes } from "react-router";
 
 import { BASE_ROUTES } from "@app/routes/constants";
-import { IComponentRoute } from "@app/routes/types";
+import type { IComponentRoute } from "@app/routes/types";
 import { useScrollToTopOnRouteChange } from "@app/routes/hooks";
 import ResumePage from "@app/Resume/Components/ResumePage";
 import LandingPage from "@app/Home/Components/LandingPage";
@@ -25,7 +25,7 @@ const COMPONENT_ROUTES: Array<IComponentRoute> = [
   // { route: BASE_ROUTES.contact, component: <ContactPage /> },
 ];
 
-const ApplicationRoutes: FunctionComponent = (): JSX.Element => {
+const ApplicationRoutes: FunctionComponent = () => {
   useScrollToTopOnRouteChange();
 
   return (

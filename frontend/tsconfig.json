@@ -1,26 +1,23 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
-    "skipLibCheck": false,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
+    "moduleResolution": "bundler",
     "jsx": "react-jsx",
-    "baseUrl": ".",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    // Check our own code, not third-party .d.ts files that churn between releases.
+    "skipLibCheck": true,
     "paths": {
-      "@app/*": ["src/*"],
-      "@styles/*": ["src/styles/*"]
+      "@app/*": ["./src/*"],
+      "@styles/*": ["./src/styles/*"]
     }
   },
-  "include": ["src", "__tests__"],
-  "exclude": ["cypress"]
+  "include": ["src"]
 }

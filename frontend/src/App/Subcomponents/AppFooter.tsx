@@ -1,6 +1,6 @@
-import { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
 
-const AppFooter: FunctionComponent = (): JSX.Element => (
+const AppFooter: FunctionComponent = () => (
   <footer className="app-footer">
     © {new Date().getFullYear()} Ryan Brandt. All rights reserved.
   </footer>

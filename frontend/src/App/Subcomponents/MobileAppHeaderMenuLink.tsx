@@ -1,8 +1,8 @@
-import { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
 import { useNavigate } from "react-router";
 import { createCompositeClassName } from "@ryanbrandt/react-quick-ui";
 
-import { IAppHeaderMenuLink } from "@app/App/types";
+import type { IAppHeaderMenuLink } from "@app/App/types";
 
 interface Props extends IAppHeaderMenuLink {
   onClose: () => void;
@@ -13,7 +13,7 @@ const MobileAppheaderMenuLink: FunctionComponent<Props> = ({
   route,
   active = false,
   onClose,
-}: Props): JSX.Element => {
+}: Props) => {
   const navigate = useNavigate();
 
   const handleLinkClick = (): void => {

@@ -1,7 +1,7 @@
 import { createCompositeClassName } from "@ryanbrandt/react-quick-ui";
-import { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
 
-import { IAppHeaderMenuLink } from "@app/App/types";
+import type { IAppHeaderMenuLink } from "@app/App/types";
 import MobileAppheaderMenuLink from "@app/App/Subcomponents/MobileAppHeaderMenuLink";
 
 interface Props {
@@ -14,7 +14,7 @@ const MobileAppHeaderMenuOverlay: FunctionComponent<Props> = ({
   open,
   onClose,
   links,
-}: Props): JSX.Element => {
+}: Props) => {
   const classNames = createCompositeClassName({
     "app-header__mobile-menu__overlay": true,
     "app-header__mobile-menu__overlay--closed": !open,

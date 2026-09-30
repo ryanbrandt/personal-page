@@ -1,10 +1,10 @@
-import { FunctionComponent, JSX, useEffect, useState } from "react";
+import { type FunctionComponent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { Input, useDebounce } from "@ryanbrandt/react-quick-ui";
 import { workQueryChange } from "@app/Work/slice";
 
-const WorkPageSearchFilters: FunctionComponent = (): JSX.Element => {
+const WorkPageSearchFilters: FunctionComponent = () => {
   const dispatch = useDispatch();
 
   const [query, setQuery] = useState("");
