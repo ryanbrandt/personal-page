@@ -1,12 +1,10 @@
-import { FunctionComponent, JSX, useContext, useRef } from "react";
-import { Route, Routes, useLocation } from "react-router";
+import { FunctionComponent, JSX } from "react";
+import { Route, Routes } from "react-router";
 
 import { BASE_ROUTES } from "@app/routes/constants";
 import { IComponentRoute } from "@app/routes/types";
 import { useScrollToTopOnRouteChange } from "@app/routes/hooks";
-import ContactPage from "@app/Contact/Components/ContactPage";
 import ResumePage from "@app/Resume/Components/ResumePage";
-import MobileContext from "@app/common/contexts/MobileContext";
 import LandingPage from "@app/Home/Components/LandingPage";
 import WorkPage from "@app/Work/Components/WorkPage";
 
@@ -23,32 +21,15 @@ export const COMPONENT_ROUTES: Array<IComponentRoute> = [
     route: BASE_ROUTES.resumé,
     component: <ResumePage />,
   },
-  /*
-  {
-    route: BASE_ROUTES.contact,
-    component: <ContactPage />,
-  },
-  */
+  // Contact page is disabled until R9 (Netlify Forms):
+  // { route: BASE_ROUTES.contact, component: <ContactPage /> },
 ];
 
 const ApplicationRoutes: FunctionComponent = (): JSX.Element => {
   useScrollToTopOnRouteChange();
 
-  const location = useLocation();
-  const isMobile = useContext(MobileContext);
-
-  if (isMobile) {
-    return (
-      <Routes>
-        {COMPONENT_ROUTES.map(({ route, component }) => (
-          <Route key={route} path={route} element={component} />
-        ))}
-      </Routes>
-    );
-  }
-
   return (
-    <Routes location={location}>
+    <Routes>
       {COMPONENT_ROUTES.map(({ route, component }) => (
         <Route key={route} path={route} element={component} />
       ))}
