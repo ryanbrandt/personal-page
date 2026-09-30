@@ -92,15 +92,48 @@ test.describe("desktop", () => {
     await expect(details).toBeHidden();
   });
 
-  test("unknown route renders the app shell with no page content", async ({
-    page,
-  }) => {
-    // Recorded as-is: there is no 404 page, the content area is just empty.
-    await page.goto("/does-not-exist");
-    await expect(page.locator(".app-header")).toBeVisible();
-    await expect(page.locator(".app-footer")).toBeVisible();
-    await expect(page.locator(".content-container")).toBeEmpty();
+  // Until R2 adds a 404 page (and R9 brings back /contact), these redirect
+  // home instead of rendering an empty content area.
+  for (const path of ["/does-not-exist", "/contact"]) {
+    test(`${path} redirects home`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page).toHaveURL("/");
+      await expect(pageTitle(page, "Hello, World!")).toBeVisible();
+    });
+  }
+
+  test("nav links work from the keyboard", async ({ page }) => {
+    await page.goto("/");
+    const resumeLink = page
+      .locator(".app-header__menu")
+      .getByRole("link", { name: "Résumé" });
+
+    // Home is the first tab stop, Résumé the second.
+    await page.keyboard.press("Tab");
+    await page.keyboard.press("Tab");
+    await expect(resumeLink).toBeFocused();
+
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL("/resume");
+    await expect(pageTitle(page, "Résumé")).toBeVisible();
   });
+
+  for (const route of ROUTES) {
+    test(`${route.path} loads without console warnings or errors`, async ({
+      page,
+    }) => {
+      const messages: Array<string> = [];
+      page.on("console", (message) => {
+        if (message.type() === "warning" || message.type() === "error") {
+          messages.push(`${message.type()}: ${message.text()}`);
+        }
+      });
+      page.on("pageerror", (error) => messages.push(`pageerror: ${error}`));
+
+      await gotoAndSettle(page, route.path);
+      expect(messages).toEqual([]);
+    });
+  }
 });
 
 test.describe("mobile", () => {
