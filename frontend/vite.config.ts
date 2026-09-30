@@ -11,7 +11,10 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: "@app", replacement: path.resolve(import.meta.dirname, "src") },
-      { find: "@styles", replacement: path.resolve(import.meta.dirname, "src/styles") },
+      {
+        find: "@styles",
+        replacement: path.resolve(import.meta.dirname, "src/styles"),
+      },
     ],
   },
   build: {
