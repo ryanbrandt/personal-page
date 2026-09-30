@@ -79,7 +79,7 @@ test.describe("desktop", () => {
     );
 
     await details.getByText("x", { exact: true }).click();
-    await expect(details).toHaveCount(0);
+    await expect(details).toBeHidden();
   });
 
   test("unknown route renders the app shell with no page content", async ({
@@ -100,17 +100,17 @@ test.describe("mobile", () => {
     await page.goto("/");
     const overlay = page.locator(".app-header__mobile-menu__overlay");
 
-    await expect(page.locator(".app-header__menu")).toHaveCount(0);
+    await expect(page.locator(".app-header__menu")).toBeHidden();
 
     await mobileMenuBurger(page).click();
     await expect(openMobileMenu(page)).toBeVisible();
     await overlay.getByText("x", { exact: true }).click();
-    await expect(openMobileMenu(page)).toHaveCount(0);
+    await expect(openMobileMenu(page)).toBeHidden();
 
     await mobileMenuBurger(page).click();
     await overlay.getByText("Résumé").click();
     await expect(page).toHaveURL("/resume");
     await expect(pageTitle(page, "Résumé")).toBeVisible();
-    await expect(openMobileMenu(page)).toHaveCount(0);
+    await expect(openMobileMenu(page)).toBeHidden();
   });
 });

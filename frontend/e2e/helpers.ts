@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import { expect, Page } from "@playwright/test";
 
 export const ROUTES = [
@@ -24,14 +26,29 @@ export const mobileMenuBurger = (page: Page) =>
 export const openMobileMenu = (page: Page) =>
   page.locator(".app-header__mobile-menu__overlay--open");
 
+const REMOTE_IMAGES = "https://resume-work-images.s3.amazonaws.com/**";
+const FIXTURES_DIR = path.join(__dirname, "fixtures");
+
+/** Serves project images from committed copies so S3 can't flake the suite. */
+async function stubRemoteImages(page: Page): Promise<void> {
+  await page.route(REMOTE_IMAGES, (route) => {
+    const fileName = decodeURIComponent(
+      new URL(route.request().url()).pathname.slice(1).replaceAll("+", " ")
+    );
+    return route.fulfill({ path: path.join(FIXTURES_DIR, fileName) });
+  });
+}
+
 /**
  * Navigates to `path` and waits until the page is visually settled: the
- * clock is frozen (the footer shows the current year), the theme from
+ * clock is frozen (the footer shows the current year), remote images are
+ * served locally, the theme from
  * `prefers-color-scheme` is applied (it is set in an effect after the first
  * render), web fonts are loaded and all images have decoded.
  */
 export async function gotoAndSettle(page: Page, path: string): Promise<void> {
   await page.clock.setFixedTime(new Date("2026-01-01T12:00:00Z"));
+  await stubRemoteImages(page);
   await page.goto(path);
   const scheme = await page.evaluate(() =>
     window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"

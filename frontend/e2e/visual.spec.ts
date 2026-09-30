@@ -40,7 +40,7 @@ for (const colorScheme of COLOR_SCHEMES) {
     });
   }
 
-  test.describe(`mobile-${colorScheme}`, () => {
+  test.describe(`mobile-menu-${colorScheme}`, () => {
     test.use({ viewport: VIEWPORTS.mobile, colorScheme });
 
     test("mobile menu open", async ({ page }) => {

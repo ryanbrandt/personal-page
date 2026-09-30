@@ -6,6 +6,9 @@ export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
   reporter: [["list"], ["html", { open: "never" }]],
+  // Compare pixels exactly: the default tolerance lets subtle colour changes
+  // (e.g. a brand colour shifting after a Sass upgrade) pass unnoticed.
+  expect: { toHaveScreenshot: { threshold: 0 } },
   use: {
     baseURL: BASE_URL,
     trace: "retain-on-failure",
