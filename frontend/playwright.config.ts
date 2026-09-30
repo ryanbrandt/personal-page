@@ -1,32 +1,23 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig } from "@playwright/test";
 
-const PORT = 4173;
+const BASE_URL = "http://localhost:4173";
 
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: 0,
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
-    baseURL: `http://localhost:${PORT}`,
+    baseURL: BASE_URL,
     trace: "retain-on-failure",
   },
-  expect: {
-    toHaveScreenshot: {
-      animations: "disabled",
-    },
-  },
-  projects: [
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
-  ],
+  // Snapshot names include the project name, so keep it "chromium".
+  projects: [{ name: "chromium", use: { browserName: "chromium" } }],
   webServer: {
-    command: `yarn build && yarn preview --port ${PORT} --strictPort`,
-    url: `http://localhost:${PORT}`,
-    reuseExistingServer: !process.env.CI,
+    // Always build and serve fresh so upgrades are never compared against a
+    // stale preview server.
+    command: "yarn build && yarn preview --port 4173 --strictPort",
+    url: BASE_URL,
+    reuseExistingServer: false,
     timeout: 120_000,
   },
 });

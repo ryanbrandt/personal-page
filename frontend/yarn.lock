@@ -823,7 +823,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.63.0":
+"@playwright/test@npm:1.63.0":
   version: 1.63.0
   resolution: "@playwright/test@npm:1.63.0"
   dependencies:
@@ -4237,7 +4237,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "personal-page@workspace:."
   dependencies:
-    "@playwright/test": "npm:^1.63.0"
+    "@playwright/test": "npm:1.63.0"
     "@reduxjs/toolkit": "npm:^2.5.0"
     "@ryanbrandt/react-quick-ui": "npm:0.5.1"
     "@types/jest": "npm:^29.5.14"

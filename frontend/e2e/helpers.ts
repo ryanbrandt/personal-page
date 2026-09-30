@@ -6,22 +6,32 @@ export const ROUTES = [
   { name: "work", path: "/work", title: "Recent Personal Projects" },
 ] as const;
 
-// The app switches to its mobile layout at widths <= 1024px.
+// The app switches to its mobile layout at widths <= MOBILE_WIDTH_UPPER_BOUND (1024px).
 export const VIEWPORTS = {
   desktop: { width: 1440, height: 900 },
   mobile: { width: 390, height: 844 },
 } as const;
 
-export const COLOR_SCHEMES = ["light", "dark"] as const;
+export const pageTitle = (page: Page, title: string) =>
+  page.getByRole("heading", { level: 2, name: title, exact: true });
 
-export const PROJECT_COUNT = 5;
+export const projectDetails = (page: Page) =>
+  page.locator(".work-page__results-display__result__details-overlay");
+
+export const mobileMenuBurger = (page: Page) =>
+  page.locator(".app-header__mobile-menu > svg");
+
+export const openMobileMenu = (page: Page) =>
+  page.locator(".app-header__mobile-menu__overlay--open");
 
 /**
- * Navigates to `path` and waits until the page is visually settled:
- * the theme from `prefers-color-scheme` is applied (it is set in an effect
- * after the first render), web fonts are loaded and all images have decoded.
+ * Navigates to `path` and waits until the page is visually settled: the
+ * clock is frozen (the footer shows the current year), the theme from
+ * `prefers-color-scheme` is applied (it is set in an effect after the first
+ * render), web fonts are loaded and all images have decoded.
  */
 export async function gotoAndSettle(page: Page, path: string): Promise<void> {
+  await page.clock.setFixedTime(new Date("2026-01-01T12:00:00Z"));
   await page.goto(path);
   const scheme = await page.evaluate(() =>
     window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"

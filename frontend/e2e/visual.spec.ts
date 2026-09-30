@@ -1,18 +1,16 @@
-import { expect, Page, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 import {
-  COLOR_SCHEMES,
   gotoAndSettle,
+  mobileMenuBurger,
+  openMobileMenu,
+  projectDetails,
   ROUTES,
   VIEWPORTS,
   waitForFontsAndImages,
 } from "./helpers";
 
-// The footer shows the current year, so it is masked in every screenshot.
-const screenshotOptions = (page: Page) => ({
-  fullPage: true,
-  mask: [page.locator(".app-footer")],
-});
+const COLOR_SCHEMES = ["light", "dark"] as const;
 
 for (const colorScheme of COLOR_SCHEMES) {
   for (const [viewportName, viewport] of Object.entries(VIEWPORTS)) {
@@ -24,37 +22,35 @@ for (const colorScheme of COLOR_SCHEMES) {
       for (const route of ROUTES) {
         test(route.name, async ({ page }) => {
           await gotoAndSettle(page, route.path);
-          await expect(page).toHaveScreenshot(
-            `${route.name}-${variant}.png`,
-            screenshotOptions(page)
-          );
+          await expect(page).toHaveScreenshot(`${route.name}-${variant}.png`, {
+            fullPage: true,
+          });
         });
       }
 
       test("work modal open", async ({ page }) => {
         await gotoAndSettle(page, "/work");
         await page.getByText("Open FEC GraphQL Server").click();
-        await expect(page.locator(".modal")).toBeVisible();
+        await expect(projectDetails(page)).toBeVisible();
         await waitForFontsAndImages(page);
-        await expect(page).toHaveScreenshot(
-          `work-modal-open-${variant}.png`,
-          screenshotOptions(page)
-        );
-      });
-
-      if (viewportName === "mobile") {
-        test("mobile menu open", async ({ page }) => {
-          await gotoAndSettle(page, "/");
-          await page.locator(".app-header__mobile-menu > svg").click();
-          await expect(
-            page.locator(".app-header__mobile-menu__overlay--open")
-          ).toBeVisible();
-          await expect(page).toHaveScreenshot(
-            `mobile-menu-open-${variant}.png`,
-            screenshotOptions(page)
-          );
+        await expect(page).toHaveScreenshot(`work-modal-open-${variant}.png`, {
+          fullPage: true,
         });
-      }
+      });
     });
   }
+
+  test.describe(`mobile-${colorScheme}`, () => {
+    test.use({ viewport: VIEWPORTS.mobile, colorScheme });
+
+    test("mobile menu open", async ({ page }) => {
+      await gotoAndSettle(page, "/");
+      await mobileMenuBurger(page).click();
+      await expect(openMobileMenu(page)).toBeVisible();
+      await expect(page).toHaveScreenshot(
+        `mobile-menu-open-mobile-${colorScheme}.png`,
+        { fullPage: true }
+      );
+    });
+  });
 }

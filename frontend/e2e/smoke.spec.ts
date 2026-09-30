@@ -1,16 +1,24 @@
-import { expect, Page, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
-import { gotoAndSettle, PROJECT_COUNT, ROUTES, VIEWPORTS } from "./helpers";
+import {
+  gotoAndSettle,
+  mobileMenuBurger,
+  openMobileMenu,
+  pageTitle,
+  projectDetails,
+  ROUTES,
+  VIEWPORTS,
+} from "./helpers";
 
-const pageTitle = (page: Page) => page.locator(".page-container__title");
+const PROJECT_COUNT = 5;
 
 test.describe("desktop", () => {
-  test.use({ viewport: VIEWPORTS.desktop, colorScheme: "light" });
+  test.use({ viewport: VIEWPORTS.desktop });
 
   for (const route of ROUTES) {
     test(`${route.path} renders its title`, async ({ page }) => {
       await page.goto(route.path);
-      await expect(pageTitle(page)).toHaveText(route.title);
+      await expect(pageTitle(page, route.title)).toBeVisible();
     });
   }
 
@@ -20,15 +28,15 @@ test.describe("desktop", () => {
 
     await nav.getByText("Résumé").click();
     await expect(page).toHaveURL("/resume");
-    await expect(pageTitle(page)).toHaveText("Résumé");
+    await expect(pageTitle(page, "Résumé")).toBeVisible();
 
     await nav.getByText("Personal Projects").click();
     await expect(page).toHaveURL("/work");
-    await expect(pageTitle(page)).toHaveText("Recent Personal Projects");
+    await expect(pageTitle(page, "Recent Personal Projects")).toBeVisible();
 
     await nav.getByText("Home").click();
     await expect(page).toHaveURL("/");
-    await expect(pageTitle(page)).toHaveText("Hello, World!");
+    await expect(pageTitle(page, "Hello, World!")).toBeVisible();
   });
 
   test("theme toggle flips the theme", async ({ page }) => {
@@ -60,18 +68,18 @@ test.describe("desktop", () => {
     await expect(results).toHaveCount(PROJECT_COUNT);
   });
 
-  test("project card opens and closes its modal", async ({ page }) => {
+  test("project card opens and closes its details", async ({ page }) => {
     await page.goto("/work");
-    const modal = page.locator(".modal");
+    const details = projectDetails(page);
 
     await page.getByText("Informed Voter").click();
-    await expect(modal).toBeVisible();
-    await expect(modal.getByRole("heading", { level: 3 })).toHaveText(
+    await expect(details).toBeVisible();
+    await expect(details.getByRole("heading", { level: 3 })).toHaveText(
       "Informed Voter"
     );
 
-    await modal.getByText("x", { exact: true }).click();
-    await expect(modal).toHaveCount(0);
+    await details.getByText("x", { exact: true }).click();
+    await expect(details).toHaveCount(0);
   });
 
   test("unknown route renders the app shell with no page content", async ({
@@ -86,25 +94,23 @@ test.describe("desktop", () => {
 });
 
 test.describe("mobile", () => {
-  test.use({ viewport: VIEWPORTS.mobile, colorScheme: "light" });
+  test.use({ viewport: VIEWPORTS.mobile });
 
   test("burger menu opens, navigates and closes", async ({ page }) => {
     await page.goto("/");
     const overlay = page.locator(".app-header__mobile-menu__overlay");
-    const openOverlay = page.locator(".app-header__mobile-menu__overlay--open");
-    const burger = page.locator(".app-header__mobile-menu > svg");
 
     await expect(page.locator(".app-header__menu")).toHaveCount(0);
 
-    await burger.click();
-    await expect(openOverlay).toBeVisible();
+    await mobileMenuBurger(page).click();
+    await expect(openMobileMenu(page)).toBeVisible();
     await overlay.getByText("x", { exact: true }).click();
-    await expect(openOverlay).toHaveCount(0);
+    await expect(openMobileMenu(page)).toHaveCount(0);
 
-    await burger.click();
+    await mobileMenuBurger(page).click();
     await overlay.getByText("Résumé").click();
     await expect(page).toHaveURL("/resume");
-    await expect(pageTitle(page)).toHaveText("Résumé");
-    await expect(openOverlay).toHaveCount(0);
+    await expect(pageTitle(page, "Résumé")).toBeVisible();
+    await expect(openMobileMenu(page)).toHaveCount(0);
   });
 });
