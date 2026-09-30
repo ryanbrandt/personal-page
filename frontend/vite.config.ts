@@ -7,7 +7,9 @@ export default defineConfig({
   server: {
     open: true,
   },
-  // Aliases (@app, @styles) come from `paths` in tsconfig.json.
+  // Aliases (@app, @styles) come from `paths` in tsconfig.json. They only apply
+  // to files matched by its `include`, so add "src/**/*.scss" there before
+  // using the aliases inside stylesheets.
   resolve: {
     tsconfigPaths: true,
   },

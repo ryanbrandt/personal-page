@@ -39,6 +39,16 @@ test.describe("desktop", () => {
     await expect(pageTitle(page, "Hello, World!")).toBeVisible();
   });
 
+  // Screenshots can't see this blur (nothing scrolls under the fixed header),
+  // and a CSS minifier change once dropped it silently.
+  test("header keeps its backdrop blur", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator(".app-header")).toHaveCSS(
+      "backdrop-filter",
+      "blur(10px)"
+    );
+  });
+
   test("theme toggle flips the theme", async ({ page }) => {
     await gotoAndSettle(page, "/");
     const toggle = page.locator(".app-header__theme-toggle");
