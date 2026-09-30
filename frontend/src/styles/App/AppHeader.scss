@@ -13,8 +13,8 @@ $link-padding: 10px;
   @include flex--align-center();
   width: 100%;
   position: fixed;
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 
   @include themed() {
     background-color: theme-get($primary-color);
