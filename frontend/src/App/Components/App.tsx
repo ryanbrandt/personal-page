@@ -1,5 +1,5 @@
 import type { FunctionComponent } from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router";
 import { Provider } from "react-redux";
 
 import RootContainer from "@app/App/Components/RootContainer";
@@ -8,9 +8,7 @@ import AppContextProvider from "@app/App/Components/AppContextProvider";
 
 const App: FunctionComponent = () => (
   <Provider store={store}>
-    <BrowserRouter
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <BrowserRouter>
       <AppContextProvider>
         <RootContainer />
       </AppContextProvider>
