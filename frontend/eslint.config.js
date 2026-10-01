@@ -98,10 +98,19 @@ export default defineConfig(
       // Types replace prop-types.
       "react/prop-types": "off",
       "react/no-unescaped-entities": "off",
-      // Import through the `@app/*` alias instead of relative paths.
+      // Import through the `@app/*` alias instead of relative paths, and use
+      // the typed Redux hooks.
       "no-restricted-imports": [
         "error",
         {
+          paths: [
+            {
+              name: "react-redux",
+              importNames: ["useDispatch", "useSelector"],
+              message:
+                "Use useAppDispatch/useAppSelector from @app/store/hooks.",
+            },
+          ],
           patterns: [
             {
               regex: "^\\.{1,2}/",

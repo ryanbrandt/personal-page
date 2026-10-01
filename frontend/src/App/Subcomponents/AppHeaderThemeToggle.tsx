@@ -1,14 +1,14 @@
 import { type FunctionComponent, useContext } from "react";
-import { useDispatch } from "react-redux";
 
 import { manualThemePreferenceChange } from "@app/App/slice";
 import ThemeToggleSvg from "@app/assets/svg/ThemeToggleSvg";
 import { Theme } from "@app/common/constants/themes";
 import ThemeContext from "@app/common/contexts/ThemeContext";
+import { useAppDispatch } from "@app/store/hooks";
 
 const AppHeaderThemeToggle: FunctionComponent = () => {
   const theme = useContext(ThemeContext);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onThemeToggleClick = () => {
     const newTheme = theme === Theme.DARK ? Theme.LIGHT : Theme.DARK;
