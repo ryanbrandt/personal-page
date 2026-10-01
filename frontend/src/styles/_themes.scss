@@ -1,0 +1,45 @@
+@use "sass:map";
+@use "@ryanbrandt/react-quick-ui/stylesheets/sass" as rq;
+
+$primary-color: "primary-color";
+$secondary-color: "secondary-color";
+$overlay-color: "overlay-color";
+
+$toggle-color: "theme-toggle-color";
+
+$font-color: "font-color";
+
+$themes: (
+  light: (
+    $primary-color: rq.$white,
+    $secondary-color: rq.$primary-blue,
+    $overlay-color: rq.$white,
+    $toggle-color: rq.$yellow,
+    $font-color: inherit,
+  ),
+  dark: (
+    $primary-color: rgba(30, 32, 41, 0.836),
+    $secondary-color: rq.$white,
+    $overlay-color: rgba(30, 32, 41, 1),
+    $toggle-color: rq.$primary-blue,
+    $font-color: rq.$white,
+  ),
+);
+
+// The theme being emitted by `themed`; read it with `theme-get`.
+$-current: null;
+
+// Emits the content once per theme, under `.theme--<name>`.
+@mixin themed() {
+  @each $theme, $map in $themes {
+    .theme--#{$theme} & {
+      $-current: $map !global;
+      @content;
+      $-current: null !global;
+    }
+  }
+}
+
+@function theme-get($key) {
+  @return map.get($-current, $key);
+}

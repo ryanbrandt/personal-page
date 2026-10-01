@@ -1,19 +1,22 @@
+@use "../mixins";
+@use "../themes";
+
 .page-container {
   width: 100%;
   height: 100%;
 
-  @include mobile-only {
+  @include mixins.mobile-only {
     padding: 10px;
   }
 
   &__title {
-    @include themed() {
-      color: theme-get($secondary-color);
-    }
-
     font-size: 42px;
     font-weight: 400;
     margin-bottom: 50px;
     text-align: center;
+
+    @include themes.themed() {
+      color: themes.theme-get(themes.$secondary-color);
+    }
   }
 }

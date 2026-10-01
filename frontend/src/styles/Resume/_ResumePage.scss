@@ -1,9 +1,12 @@
+@use "@ryanbrandt/react-quick-ui/stylesheets/sass" as rq;
+@use "../mixins";
+
 .resume-page {
   &__download {
-    @include flex--align-center--justify-center();
+    @include mixins.flex--align-center--justify-center();
 
     svg {
-      @include gray-to-primary-blue-icon();
+      @include mixins.gray-to-primary-blue-icon();
     }
   }
 
@@ -14,12 +17,12 @@
       font-size: 12px;
     }
 
-    @include desktop-only {
-      @include flex--justify-space-evenly();
+    @include mixins.desktop-only {
+      @include mixins.flex--justify-space-evenly();
     }
 
-    @include mobile-only {
-      @include flex--col--align-center();
+    @include mixins.mobile-only {
+      @include mixins.flex--col--align-center();
     }
 
     &__column {
@@ -29,8 +32,8 @@
       h2 {
         font-weight: 300;
         text-align: center;
-        color: $primary-blue;
-        border-bottom: 1px solid $primary-blue;
+        color: rq.$primary-blue;
+        border-bottom: 1px solid rq.$primary-blue;
         padding-bottom: 20px;
       }
 
@@ -45,7 +48,7 @@
 
       &__entry {
         &__header {
-          @include flex--align-center();
+          @include mixins.flex--align-center();
           column-gap: 10px;
 
           h3 {
@@ -54,14 +57,14 @@
           }
 
           svg {
-            fill: $primary-blue;
+            fill: rq.$primary-blue;
           }
         }
 
         label {
           font-weight: 400;
           font-size: 14px;
-          color: $dark-gray;
+          color: rq.$dark-gray;
         }
 
         &__date {

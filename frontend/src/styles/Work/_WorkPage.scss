@@ -1,41 +1,44 @@
-.work-page {
-  @include flex--col();
+@use "@ryanbrandt/react-quick-ui/stylesheets/sass" as rq;
+@use "../mixins";
+@use "../themes";
+@use "../variables";
 
-  @include mobile-only {
+.work-page {
+  @include mixins.flex--col();
+  row-gap: calc(variables.$default-row-gap * 2);
+
+  @include mixins.mobile-only {
     align-items: center;
   }
 
-  row-gap: calc($default-row-gap * 2);
-
   &__search-filters {
-    @include flex--align-center--justify-space-between();
+    @include mixins.flex--align-center--justify-space-between();
 
     &__categories {
-      @include flex--align-center--justify-space-between();
-      column-gap: $default-column-gap;
+      @include mixins.flex--align-center--justify-space-between();
+      column-gap: variables.$default-column-gap;
     }
   }
 
   &__results-display {
-    @include flex();
+    @include mixins.flex();
+    flex-wrap: wrap;
+    row-gap: variables.$default-row-gap;
+    column-gap: variables.$default-column-gap;
 
-    @include mobile-only {
+    @include mixins.mobile-only {
       flex-direction: column;
     }
 
-    flex-wrap: wrap;
-    row-gap: $default-row-gap;
-    column-gap: $default-column-gap;
-
     &__result {
-      @include flex--col--align-center();
+      @include mixins.flex--col--align-center();
 
-      @include desktop-only {
+      @include mixins.desktop-only {
         opacity: 0.5;
         transition: 0.25s ease-out;
       }
 
-      @include desktop-only {
+      @include mixins.desktop-only {
         &:hover {
           opacity: 1;
           cursor: pointer;
@@ -54,47 +57,47 @@
         padding: 0.5em;
         font-weight: 500;
 
-        @include themed() {
-          color: theme-get($secondary-color);
+        @include themes.themed() {
+          color: themes.theme-get(themes.$secondary-color);
         }
       }
 
       &__details-overlay {
-        @include flex--col--align-center();
+        @include mixins.flex--col--align-center();
         width: 100vw;
         height: 100vh;
         border: none;
         overscroll-behavior: contain;
 
-        @include themed() {
-          background-color: theme-get($overlay-color);
+        @include themes.themed() {
+          background-color: themes.theme-get(themes.$overlay-color);
         }
 
         &__title {
           font-weight: 400;
           font-size: 28px;
 
-          @include themed() {
-            color: theme-get($secondary-color);
+          @include themes.themed() {
+            color: themes.theme-get(themes.$secondary-color);
           }
         }
 
         &__text {
-          color: $dark-gray;
+          color: rq.$dark-gray;
           padding: 1em;
         }
 
         svg {
-          @include gray-to-primary-blue-icon();
+          @include mixins.gray-to-primary-blue-icon();
         }
 
         &__img {
-          @include mobile-only {
+          @include mixins.mobile-only {
             width: 80vw;
             height: 35vh;
           }
 
-          @include desktop-only {
+          @include mixins.desktop-only {
             width: 45vw;
             height: 50vh;
           }
@@ -106,9 +109,9 @@
           font-size: 32px;
           font-weight: 400;
           cursor: pointer;
-          color: $primary-blue;
+          color: rq.$primary-blue;
 
-          @include desktop-only {
+          @include mixins.desktop-only {
             opacity: 0.5;
             transition: 0.25s ease-out;
 

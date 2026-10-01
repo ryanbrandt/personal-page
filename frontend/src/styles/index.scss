@@ -1,26 +1,23 @@
-@import "@ryanbrandt/react-quick-ui/dist/stylesheets/index.scss";
-@import "@ryanbrandt/react-quick-ui/dist/stylesheets/colors.scss";
+// Page styles. The library's compiled CSS is imported in main.tsx, before
+// this file; partials take its tokens from its Sass API (`as rq`).
+@use "mixins";
 
-@import "./themes.scss";
-@import "./variables.scss";
-@import "./mixins.scss";
+@use "common/PageContainer";
 
-@import "./common/PageContainer.scss";
+@use "App/RootContainer";
+@use "App/AppHeader";
+@use "App/ContentContainer";
+@use "App/AppFooter";
 
-@import "./App/RootContainer.scss";
-@import "./App/AppHeader.scss";
-@import "./App/ContentContainer.scss";
-@import "./App/AppFooter.scss";
+@use "routes";
 
-@import "./routes/index.scss";
+@use "Home/LandingPage";
 
-@import "./Home/LandingPage.scss";
+@use "Contact/ContactPage";
 
-@import "./Contact/ContactPage.scss";
+@use "Resume/ResumePage";
 
-@import "./Resume/ResumePage.scss";
-
-@import "./Work/WorkPage.scss";
+@use "Work/WorkPage";
 
 html,
 body,
@@ -29,7 +26,7 @@ body,
   overflow-x: hidden;
 }
 
-@include mobile-only {
+@include mixins.mobile-only {
   input[type="color"],
   input[type="date"],
   input[type="datetime"],
