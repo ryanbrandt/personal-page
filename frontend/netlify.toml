@@ -1,7 +1,0 @@
-# Netlify's base directory is `frontend`. `yarn build` already type-checks.
-[build]
-  command = "yarn lint && yarn build"
-  publish = "dist"
-
-[build.environment]
-  NODE_VERSION = "24"
