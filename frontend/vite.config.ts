@@ -18,6 +18,8 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         // Every deprecation the installed Sass warns about fails the build.
+        // The list follows the installed `sass` version, so a Sass bump that
+        // adds a deprecation fails the build on purpose.
         fatalDeprecations: Object.values(deprecations).filter(
           (deprecation) => deprecation.status === "active"
         ),
