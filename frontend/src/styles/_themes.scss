@@ -26,9 +26,11 @@ $-current: null;
 @mixin themed {
   @each $theme, $map in $themes {
     .theme--#{$theme} & {
+      // Restore (not clear) afterwards so a nested `themed` keeps working.
+      $previous: $-current;
       $-current: $map !global;
       @content;
-      $-current: null !global;
+      $-current: $previous !global;
     }
   }
 }
