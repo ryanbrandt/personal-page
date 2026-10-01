@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useWindowSize } from "@ryanbrandt/react-quick-ui";
 
 import { Theme } from "@app/common/constants/themes";
 import { selectManualAppThemePreference } from "@app/App/selectors";
+import { useAppSelector } from "@app/store/hooks";
 
 export const MOBILE_WIDTH_UPPER_BOUND = 1024;
 
@@ -18,7 +18,7 @@ export const useIsMobile = (): boolean => {
 };
 
 export const useAppTheme = (): Theme => {
-  const manualThemePreference = useSelector(selectManualAppThemePreference);
+  const manualThemePreference = useAppSelector(selectManualAppThemePreference);
   const [theme, setTheme] = useState(Theme.LIGHT);
 
   useEffect(() => {
