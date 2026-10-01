@@ -6,10 +6,10 @@ export const WORK_ENTRIES: Readonly<Array<IResumeEntry>> = [
     name: "Senior Software Engineer, Biomeme Inc.",
     description:
       "Biomeme is a biotechnology upstart developing accessible, real-time molecular diagnostic platforms for applications in human health, defense, industrial processes and more. As a Senior Software Engineer, I lead the development, design and architecture of software spanning from full-stack web applications to mobile and desktop applications and infrastructure.",
-    startDate: "Setepmber 2021",
+    startDate: "September 2021",
     endDate: null,
     accomplishments:
-      "Played a key role in the architecture of Biomeme's first point of care human health platform, which consists of a regulatory compliant ASP.NET API and React Native mobile application that interfaces with proprietary laboratory hardware. Lead the design and development of a patient and provider facing patient portal consisting of multiple React micro-frontends and ASP.NET and Serverless microservices. Piloted several core React, C# and Node.JS libraries which are used organization wide. Led devops efforts across multiple projects as a lead on all things AWS infrastructure and CI/CD pipelines.",
+      "Played a key role in the architecture of Biomeme's first point of care human health platform, which consists of a regulatory compliant ASP.NET API and React Native mobile application that interfaces with proprietary laboratory hardware. Led the design and development of a patient and provider facing patient portal consisting of multiple React micro-frontends and ASP.NET and Serverless microservices. Piloted several core React, C# and Node.JS libraries which are used organization wide. Led devops efforts across multiple projects as a lead on all things AWS infrastructure and CI/CD pipelines.",
     created: "01/01/1970",
     modified: "01/01/1970",
     type: "Work",
@@ -35,7 +35,7 @@ export const WORK_ENTRIES: Readonly<Array<IResumeEntry>> = [
     startDate: "August 2019",
     endDate: "April 2021",
     accomplishments:
-      "Developed a suite of regulatory compliant desktop application to automate a complex clinical laboratory workflow which allowed Biomeme's subsidiary laboratory to scale from a single Philadelphia location to dozens nationwide and increased sample processing capabailities by over 1000%. Designed and developed an organization wide intranet and central authentication system for managing access to internal software applications. Led the development of a customer adminstrative panel which has enabled the Customer Success team to take total ownership over complex customer administration tasks without the need for engineering intervention.",
+      "Developed a suite of regulatory compliant desktop applications to automate a complex clinical laboratory workflow which allowed Biomeme's subsidiary laboratory to scale from a single Philadelphia location to dozens nationwide and increased sample processing capabilities by over 1000%. Designed and developed an organization wide intranet and central authentication system for managing access to internal software applications. Led the development of a customer administrative panel which has enabled the Customer Success team to take total ownership over complex customer administration tasks without the need for engineering intervention.",
     created: "01/01/1970",
     modified: "01/01/1970",
     type: "Work",
@@ -58,7 +58,7 @@ export const EDUCATION_ENTRIES: Readonly<Array<IResumeEntry>> = [
     id: 5,
     name: "Certificate, Rutgers Data Science Bootcamp",
     description:
-      "While finishing up my undergraduate degree at Rutgers I simaltaneously completed a 12 week intensive data science bootcamp focused on exploratory data analysis and machine learning.",
+      "While finishing up my undergraduate degree at Rutgers I simultaneously completed a 12 week intensive data science bootcamp focused on exploratory data analysis and machine learning.",
     startDate: "August 2019",
     accomplishments: null,
     endDate: "December 2019",

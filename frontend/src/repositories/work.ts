@@ -11,7 +11,7 @@ export const WORK_ENTRIES: Readonly<Array<IWorkEntry>> = Object.freeze([
     secondaryMediaLink:
       "https://resume-work-images.s3.amazonaws.com/graphql_image.png",
     description:
-      "A GraphQL wrapper around the Open Federal Election Comittee's REST API for simplifying the retrieval of complex and deeply nested data structures.",
+      "A GraphQL wrapper around the Open Federal Election Commission's REST API for simplifying the retrieval of complex and deeply nested data structures.",
     url: "https://github.com/ryanbrandt/open-fec-graphql",
   },
   {
@@ -35,7 +35,7 @@ export const WORK_ENTRIES: Readonly<Array<IWorkEntry>> = Object.freeze([
     secondaryMediaLink:
       "https://resume-work-images.s3.amazonaws.com/Screen+Shot+2021-01-11+at+11.30.39+PM.png",
     description:
-      "A dashboard for analyzing data furnished by the Open Federal Election Comittee API.",
+      "A dashboard for analyzing data furnished by the Open Federal Election Commission API.",
     url: "https://github.com/ryanbrandt/informed-voter",
   },
   {
