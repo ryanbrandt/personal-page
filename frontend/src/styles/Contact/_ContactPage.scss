@@ -1,21 +1,20 @@
-@use "@ryanbrandt/react-quick-ui/stylesheets/sass" as rq;
-@use "../mixins";
+@use "../tools" as *;
 
 $contact-page-default-row-col-gap: 50px;
 
 .contact-page {
-  @include mixins.desktop-only {
-    @include mixins.flex--justify-center();
+  @include desktop-only {
+    @include flex--justify-center;
     column-gap: $contact-page-default-row-col-gap;
   }
 
-  @include mixins.mobile-only {
-    @include mixins.flex--col--align-center();
+  @include mobile-only {
+    @include flex--col--align-center;
     row-gap: $contact-page-default-row-col-gap;
   }
 
   &__form {
-    @include mixins.flex--col();
+    @include flex--col;
     width: fit-content;
     row-gap: calc($contact-page-default-row-col-gap / 2);
 
@@ -25,34 +24,30 @@ $contact-page-default-row-col-gap: 50px;
   }
 
   &__social-links {
-    @include mixins.flex--col--justify-center();
+    @include flex--col--justify-center;
     row-gap: $contact-page-default-row-col-gap;
     padding: 50px;
     border-radius: 10px;
-    background: linear-gradient(
-      135deg,
-      rq.$primary-blue,
-      rgb(rq.$primary-blue, 0.3)
-    );
+    background: linear-gradient(135deg, $primary-blue, rgb($primary-blue, 0.3));
 
     h2 {
-      color: rq.$white;
+      color: $white;
       font-weight: 400;
       align-self: center;
     }
 
     &__link {
-      @include mixins.flex--align-center();
+      @include flex--align-center;
       column-gap: 10px;
       text-decoration: none;
-      color: rq.$white;
+      color: $white;
 
       &:hover {
         text-decoration: underline;
       }
 
       svg {
-        fill: rq.$white;
+        fill: $white;
       }
     }
   }

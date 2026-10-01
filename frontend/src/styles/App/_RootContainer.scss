@@ -1,4 +1,4 @@
-@use "../themes";
+@use "../tools" as *;
 
 .root-container {
   position: relative;
@@ -7,8 +7,8 @@
   width: 100vw;
   min-height: 100vh;
 
-  @include themes.themed() {
-    background-color: themes.theme-get(themes.$primary-color);
-    color: themes.theme-get(themes.$font-color);
+  @include themed {
+    background-color: theme-get(primary-color);
+    color: theme-get(font-color);
   }
 }

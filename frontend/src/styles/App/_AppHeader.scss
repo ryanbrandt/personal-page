@@ -1,6 +1,4 @@
-@use "@ryanbrandt/react-quick-ui/stylesheets/sass" as rq;
-@use "../mixins";
-@use "../themes";
+@use "../tools" as *;
 
 $link-hover-transition-time: 0.25s;
 $mobile-menu-height-transition-time: 0.2s;
@@ -17,20 +15,19 @@ $link-padding: 10px;
 
 @mixin link-active {
   a {
-    opacity: 0.5;
-    pointer-events: none;
+    @include user-control-disabled;
   }
 }
 
 .app-header {
-  @include mixins.flex--align-center();
+  @include flex--align-center;
   width: 100%;
   position: fixed;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 
-  @include themes.themed() {
-    background-color: themes.theme-get(themes.$primary-color);
+  @include themed {
+    background-color: theme-get(primary-color);
   }
 
   &__theme-toggle {
@@ -38,10 +35,10 @@ $link-padding: 10px;
     padding: 0px 20px;
 
     svg {
-      @include themes.themed() {
-        fill: themes.theme-get(themes.$toggle-color);
+      @include themed {
+        fill: theme-get(toggle-color);
 
-        @include mixins.desktop-only {
+        @include desktop-only {
           opacity: 0.5;
           transition: opacity 0.25s ease-out;
 
@@ -55,31 +52,31 @@ $link-padding: 10px;
   }
 
   &__menu {
-    @include mixins.flex--align-center--justify-center();
+    @include flex--align-center--justify-center;
     height: 100%;
     width: 100%;
     column-gap: 30px;
 
     &__link {
-      @include mixins.flex--align-center();
+      @include flex--align-center;
       font-size: 18px;
       font-weight: 400;
       height: 100%;
       padding: 0px $link-padding;
-      @include link-reset();
+      @include link-reset;
 
       a {
         transition: color $link-hover-transition-time ease-out;
 
         &:hover {
-          color: rq.$primary-blue;
+          color: $primary-blue;
           transition: color $link-hover-transition-time ease-in;
         }
       }
 
       &--active {
-        border-bottom: 2px solid rq.$primary-blue;
-        @include link-active();
+        border-bottom: 2px solid $primary-blue;
+        @include link-active;
       }
     }
   }
@@ -89,14 +86,14 @@ $link-padding: 10px;
 
     svg {
       padding: 0px 20px;
-      fill: rq.$primary-blue;
+      fill: $primary-blue;
     }
 
     &__overlay {
       top: 0;
       width: 100%;
       position: fixed;
-      color: rq.$primary-blue;
+      color: $primary-blue;
       overscroll-behavior: contain;
 
       &--closed {
@@ -112,8 +109,8 @@ $link-padding: 10px;
         visibility: visible;
         transition: all $mobile-menu-height-transition-time ease-in;
 
-        @include themes.themed() {
-          background-color: themes.theme-get(themes.$overlay-color);
+        @include themed {
+          background-color: theme-get(overlay-color);
         }
       }
 
@@ -124,7 +121,7 @@ $link-padding: 10px;
       }
 
       &__link-container {
-        @include mixins.flex--col--align-center();
+        @include flex--col--align-center;
         height: 100%;
         row-gap: 10%;
         padding: 50px;
@@ -133,15 +130,15 @@ $link-padding: 10px;
           padding: $link-padding;
           font-size: 24px;
           font-weight: 600;
-          @include link-reset();
+          @include link-reset;
 
-          @include themes.themed() {
-            color: themes.theme-get(themes.$secondary-color);
+          @include themed {
+            color: theme-get(secondary-color);
           }
 
           &--active {
-            border-bottom: 2px solid rgb(rq.$primary-blue, 0.2);
-            @include link-active();
+            border-bottom: 2px solid rgb($primary-blue, 0.2);
+            @include link-active;
           }
         }
       }

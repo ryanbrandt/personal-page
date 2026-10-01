@@ -1,28 +1,21 @@
 @use "sass:map";
+@use "sass:meta";
 @use "@ryanbrandt/react-quick-ui/stylesheets/sass" as rq;
-
-$primary-color: "primary-color";
-$secondary-color: "secondary-color";
-$overlay-color: "overlay-color";
-
-$toggle-color: "theme-toggle-color";
-
-$font-color: "font-color";
 
 $themes: (
   light: (
-    $primary-color: rq.$white,
-    $secondary-color: rq.$primary-blue,
-    $overlay-color: rq.$white,
-    $toggle-color: rq.$yellow,
-    $font-color: inherit,
+    primary-color: rq.$white,
+    secondary-color: rq.$primary-blue,
+    overlay-color: rq.$white,
+    toggle-color: rq.$yellow,
+    font-color: inherit,
   ),
   dark: (
-    $primary-color: rgba(30, 32, 41, 0.836),
-    $secondary-color: rq.$white,
-    $overlay-color: rgba(30, 32, 41, 1),
-    $toggle-color: rq.$primary-blue,
-    $font-color: rq.$white,
+    primary-color: rgba(30, 32, 41, 0.836),
+    secondary-color: rq.$white,
+    overlay-color: rgba(30, 32, 41, 1),
+    toggle-color: rq.$primary-blue,
+    font-color: rq.$white,
   ),
 );
 
@@ -30,7 +23,7 @@ $themes: (
 $-current: null;
 
 // Emits the content once per theme, under `.theme--<name>`.
-@mixin themed() {
+@mixin themed {
   @each $theme, $map in $themes {
     .theme--#{$theme} & {
       $-current: $map !global;
@@ -40,6 +33,13 @@ $-current: null;
   }
 }
 
+// The current theme's value for `$key`, e.g. `theme-get(secondary-color)`.
 @function theme-get($key) {
+  @if $-current == null {
+    @error "theme-get(#{meta.inspect($key)}) must be called inside `@include themed { ... }`.";
+  }
+  @if not map.has-key($-current, $key) {
+    @error "Unknown theme key #{meta.inspect($key)}; expected one of #{map.keys($-current)}.";
+  }
   @return map.get($-current, $key);
 }

@@ -1,0 +1,11 @@
+// Everything a page partial needs, in one load: the library's Sass API plus
+// the page's own variables, mixins and themes.
+//
+//   @use "../tools" as *;
+//
+// Loading it emits no CSS. `_mixins.scss` and `_themes.scss` are forwarded
+// here, so they must not `@use` this file (that would be a module loop).
+@forward "@ryanbrandt/react-quick-ui/stylesheets/sass";
+@forward "variables";
+@forward "mixins";
+@forward "themes";

@@ -1,33 +1,31 @@
-@use "@ryanbrandt/react-quick-ui/stylesheets/sass" as rq;
-@use "../mixins";
-@use "../variables";
+@use "../tools" as *;
 
 $copy-font-size: 18px;
 
 .landing-page {
-  @include mixins.flex--col--align-center--justify-center();
+  @include flex--col--align-center--justify-center;
 
   &__copy {
     font-size: $copy-font-size;
     font-weight: 300;
 
-    @include mixins.mobile-only {
+    @include mobile-only {
       text-align: center;
     }
 
     strong {
       font-weight: 500;
       font-size: 20px;
-      color: rq.$primary-blue;
+      color: $primary-blue;
     }
   }
 
   &__social-links {
-    @include mixins.flex--align-center--justify-space-between();
-    column-gap: variables.$default-column-gap;
+    @include flex--align-center--justify-space-between;
+    column-gap: $default-column-gap;
 
     svg {
-      @include mixins.gray-to-primary-blue-icon();
+      @include gray-to-primary-blue-icon;
     }
   }
 }

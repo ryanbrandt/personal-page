@@ -1,6 +1,7 @@
-// Page styles. The library's compiled CSS is imported in main.tsx, before
-// this file; partials take its tokens from its Sass API (`as rq`).
-@use "mixins";
+// Page styles. main.tsx owns the load order: it imports the library's compiled
+// CSS before this file, so these rules win ties against the library's.
+// Partials take the library's tokens and mixins from its Sass API via `tools`.
+@use "tools" as *;
 
 @use "common/PageContainer";
 
@@ -26,7 +27,7 @@ body,
   overflow-x: hidden;
 }
 
-@include mixins.mobile-only {
+@include mobile-only {
   input[type="color"],
   input[type="date"],
   input[type="datetime"],
