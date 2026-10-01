@@ -44,7 +44,7 @@ async function stubRemoteImages(page: Page): Promise<void> {
  * clock is frozen (the footer shows the current year), remote images are
  * served locally, the theme from
  * `prefers-color-scheme` is applied (it is set in an effect after the first
- * render), web fonts are loaded and all images have decoded.
+ * render), and the page has a stable render (see waitForStableRender).
  */
 export async function gotoAndSettle(page: Page, path: string): Promise<void> {
   await page.clock.setFixedTime(new Date("2026-01-01T12:00:00Z"));
@@ -54,12 +54,41 @@ export async function gotoAndSettle(page: Page, path: string): Promise<void> {
     window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
   );
   await expect(page.locator(`.theme--${scheme}`)).toBeVisible();
-  await waitForFontsAndImages(page);
+  await waitForStableRender(page);
 }
 
-export async function waitForFontsAndImages(page: Page): Promise<void> {
+/**
+ * Waits until nothing on the page is still changing: web fonts are loaded,
+ * images have decoded, CSS animations (e.g. the project modal's fade/scale)
+ * have finished, and the browser has painted the final frame.
+ */
+export async function waitForStableRender(page: Page): Promise<void> {
   await page.evaluate(() => document.fonts.ready);
   await page.waitForFunction(() =>
     Array.from(document.images).every((img) => img.complete)
   );
+  await page.evaluate(async () => {
+    // Infinite animations (e.g. a loading spinner) never finish, so only wait
+    // on ones that end. Re-check a few times: finishing one can start another
+    // (react-transition-group swaps -enter for -enter-active).
+    const runningFinite = () =>
+      document
+        .getAnimations()
+        .filter(
+          (a) =>
+            a.playState === "running" &&
+            a.effect?.getComputedTiming().endTime !== Infinity
+        );
+    for (let round = 0; round < 5 && runningFinite().length > 0; round++) {
+      // A cancelled animation rejects `finished`; it has stopped either way.
+      await Promise.all(
+        runningFinite().map((a) => a.finished.catch(() => undefined))
+      );
+    }
+
+    const nextFrame = () =>
+      new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    await nextFrame();
+    await nextFrame();
+  });
 }

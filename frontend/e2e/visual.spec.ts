@@ -7,7 +7,7 @@ import {
   projectDetails,
   ROUTES,
   VIEWPORTS,
-  waitForFontsAndImages,
+  waitForStableRender,
 } from "./helpers";
 
 const COLOR_SCHEMES = ["light", "dark"] as const;
@@ -32,7 +32,7 @@ for (const colorScheme of COLOR_SCHEMES) {
         await gotoAndSettle(page, "/work");
         await page.getByText("Open FEC GraphQL Server").click();
         await expect(projectDetails(page)).toBeVisible();
-        await waitForFontsAndImages(page);
+        await waitForStableRender(page);
         await expect(page).toHaveScreenshot(`work-modal-open-${variant}.png`, {
           fullPage: true,
         });
