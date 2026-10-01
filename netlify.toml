@@ -1,0 +1,10 @@
+# Netlify reads this file from the repository root; the app lives in frontend/.
+# Settings here override the Netlify UI.
+[build]
+  base = "frontend"
+  command = "yarn install --immutable && yarn lint && yarn build"
+  publish = "dist"
+
+[build.environment]
+  # Matches frontend/.nvmrc (Vite 8 needs Node >= 20.19).
+  NODE_VERSION = "24"

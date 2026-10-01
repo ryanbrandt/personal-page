@@ -1,23 +1,16 @@
-import * as path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vitejs.dev/config/
+// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
     open: true,
   },
+  // Aliases (@app, @styles) come from `paths` in tsconfig.json. They only apply
+  // to files matched by its `include`, so add "src/**/*.scss" there before
+  // using the aliases inside stylesheets.
   resolve: {
-    alias: [
-      { find: "@app", replacement: path.resolve(import.meta.dirname, "src") },
-      {
-        find: "@styles",
-        replacement: path.resolve(import.meta.dirname, "src/styles"),
-      },
-    ],
-  },
-  build: {
-    emptyOutDir: true,
+    tsconfigPaths: true,
   },
 });

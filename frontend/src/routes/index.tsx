@@ -1,5 +1,5 @@
 import type { FunctionComponent } from "react";
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 
 import { BASE_ROUTES } from "@app/routes/constants";
 import type { IComponentRoute } from "@app/routes/types";
@@ -33,6 +33,8 @@ const ApplicationRoutes: FunctionComponent = () => {
       {COMPONENT_ROUTES.map(({ route, component }) => (
         <Route key={route} path={route} element={component} />
       ))}
+      {/* Unknown paths (and /contact until R9) go home until R2 adds a 404 page. */}
+      <Route path="*" element={<Navigate to={BASE_ROUTES.home} replace />} />
     </Routes>
   );
 };

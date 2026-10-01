@@ -1,5 +1,4 @@
-import { type FunctionComponent, useContext, useMemo } from "react";
-import { useLocation } from "react-router";
+import { type FunctionComponent, useContext } from "react";
 import { TopBar } from "@ryanbrandt/react-quick-ui";
 
 import type { IAppHeaderMenuLink } from "@app/App/types";
@@ -32,23 +31,13 @@ const MENU_LINKS: Array<IAppHeaderMenuLink> = [
 
 const AppHeader: FunctionComponent = () => {
   const isMobile = useContext(MobileContext);
-  const { pathname } = useLocation();
-
-  const links = useMemo(
-    () =>
-      MENU_LINKS.map((menuLink) => ({
-        ...menuLink,
-        active: pathname === menuLink.route,
-      })),
-    [pathname]
-  );
 
   return (
     <TopBar className="app-header">
       {isMobile ? (
-        <MobileAppHeaderMenu links={links} />
+        <MobileAppHeaderMenu links={MENU_LINKS} />
       ) : (
-        <AppHeaderMenu links={links} />
+        <AppHeaderMenu links={MENU_LINKS} />
       )}
       <AppHeaderThemeToggle />
     </TopBar>

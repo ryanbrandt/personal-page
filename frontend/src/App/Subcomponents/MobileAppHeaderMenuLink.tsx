@@ -1,25 +1,13 @@
 import type { FunctionComponent } from "react";
-import { useNavigate } from "react-router";
+import { Link, useMatch } from "react-router";
 import { createCompositeClassName } from "@ryanbrandt/react-quick-ui";
 
 import type { IAppHeaderMenuLink } from "@app/App/types";
 
-interface Props extends IAppHeaderMenuLink {
-  onClose: () => void;
-}
+type Props = IAppHeaderMenuLink;
 
-const MobileAppheaderMenuLink: FunctionComponent<Props> = ({
-  text,
-  route,
-  active = false,
-  onClose,
-}) => {
-  const navigate = useNavigate();
-
-  const handleLinkClick = (): void => {
-    navigate(route);
-    onClose();
-  };
+const MobileAppheaderMenuLink: FunctionComponent<Props> = ({ text, route }) => {
+  const active = useMatch(route) !== null;
 
   const classNames = createCompositeClassName({
     "app-header__mobile-menu__overlay__link-container__link": true,
@@ -28,12 +16,13 @@ const MobileAppheaderMenuLink: FunctionComponent<Props> = ({
 
   return (
     <div className={classNames}>
-      <a
+      <Link
+        to={route}
+        aria-current={active ? "page" : undefined}
         className="app-header__mobile-menu__overlay__link-container__link__anchor"
-        onClick={handleLinkClick}
       >
         {text}
-      </a>
+      </Link>
     </div>
   );
 };
