@@ -68,11 +68,24 @@ export async function waitForStableRender(page: Page): Promise<void> {
     Array.from(document.images).every((img) => img.complete)
   );
   await page.evaluate(async () => {
-    // A cancelled animation (e.g. a transition class swapped mid-way) rejects
-    // `finished`; it has stopped either way.
-    await Promise.all(
-      document.getAnimations().map((a) => a.finished.catch(() => undefined))
-    );
+    // Infinite animations (e.g. a loading spinner) never finish, so only wait
+    // on ones that end. Re-check a few times: finishing one can start another
+    // (react-transition-group swaps -enter for -enter-active).
+    const runningFinite = () =>
+      document
+        .getAnimations()
+        .filter(
+          (a) =>
+            a.playState === "running" &&
+            a.effect?.getComputedTiming().endTime !== Infinity
+        );
+    for (let round = 0; round < 5 && runningFinite().length > 0; round++) {
+      // A cancelled animation rejects `finished`; it has stopped either way.
+      await Promise.all(
+        runningFinite().map((a) => a.finished.catch(() => undefined))
+      );
+    }
+
     const nextFrame = () =>
       new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
     await nextFrame();
