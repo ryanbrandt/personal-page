@@ -1,34 +1,34 @@
+@use "../tools" as *;
+
 .work-page {
-  @include flex--col();
+  @include flex--col;
+  row-gap: calc($default-row-gap * 2);
 
   @include mobile-only {
     align-items: center;
   }
 
-  row-gap: calc($default-row-gap * 2);
-
   &__search-filters {
-    @include flex--align-center--justify-space-between();
+    @include flex--align-center--justify-space-between;
 
     &__categories {
-      @include flex--align-center--justify-space-between();
+      @include flex--align-center--justify-space-between;
       column-gap: $default-column-gap;
     }
   }
 
   &__results-display {
-    @include flex();
+    @include flex;
+    flex-wrap: wrap;
+    row-gap: $default-row-gap;
+    column-gap: $default-column-gap;
 
     @include mobile-only {
       flex-direction: column;
     }
 
-    flex-wrap: wrap;
-    row-gap: $default-row-gap;
-    column-gap: $default-column-gap;
-
     &__result {
-      @include flex--col--align-center();
+      @include flex--col--align-center;
 
       @include desktop-only {
         opacity: 0.5;
@@ -54,28 +54,28 @@
         padding: 0.5em;
         font-weight: 500;
 
-        @include themed() {
-          color: theme-get($secondary-color);
+        @include themed {
+          color: theme-get(secondary-color);
         }
       }
 
       &__details-overlay {
-        @include flex--col--align-center();
+        @include flex--col--align-center;
         width: 100vw;
         height: 100vh;
         border: none;
         overscroll-behavior: contain;
 
-        @include themed() {
-          background-color: theme-get($overlay-color);
+        @include themed {
+          background-color: theme-get(overlay-color);
         }
 
         &__title {
           font-weight: 400;
           font-size: 28px;
 
-          @include themed() {
-            color: theme-get($secondary-color);
+          @include themed {
+            color: theme-get(secondary-color);
           }
         }
 
@@ -85,7 +85,7 @@
         }
 
         svg {
-          @include gray-to-primary-blue-icon();
+          @include gray-to-primary-blue-icon;
         }
 
         &__img {

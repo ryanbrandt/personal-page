@@ -1,18 +1,20 @@
+@use "../tools" as *;
+
 $contact-page-default-row-col-gap: 50px;
 
 .contact-page {
   @include desktop-only {
-    @include flex--justify-center();
+    @include flex--justify-center;
     column-gap: $contact-page-default-row-col-gap;
   }
 
   @include mobile-only {
-    @include flex--col--align-center();
+    @include flex--col--align-center;
     row-gap: $contact-page-default-row-col-gap;
   }
 
   &__form {
-    @include flex--col();
+    @include flex--col;
     width: fit-content;
     row-gap: calc($contact-page-default-row-col-gap / 2);
 
@@ -22,7 +24,7 @@ $contact-page-default-row-col-gap: 50px;
   }
 
   &__social-links {
-    @include flex--col--justify-center();
+    @include flex--col--justify-center;
     row-gap: $contact-page-default-row-col-gap;
     padding: 50px;
     border-radius: 10px;
@@ -35,7 +37,7 @@ $contact-page-default-row-col-gap: 50px;
     }
 
     &__link {
-      @include flex--align-center();
+      @include flex--align-center;
       column-gap: 10px;
       text-decoration: none;
       color: $white;

@@ -1,3 +1,6 @@
+@use "@ryanbrandt/react-quick-ui/stylesheets/sass" as rq;
+@use "variables";
+
 @mixin mobile-only {
   @media only screen and (max-width: 1040px) {
     @content;
@@ -10,75 +13,65 @@
   }
 }
 
-@mixin dark-mode-only {
-  @media (prefers-color-scheme: dark) {
-    @content;
-  }
-}
-
+// Not the lib's `%flex…` placeholders: `@extend` can't reach into `@media` (mobile-only/desktop-only).
 @mixin flex {
   display: flex;
 }
 
 @mixin flex--col {
-  @include flex();
+  @include flex;
   flex-direction: column;
 }
 
 @mixin flex--align-center {
-  @include flex();
+  @include flex;
   align-items: center;
 }
 
 @mixin flex--align-center--justify-center {
-  @include flex--align-center();
+  @include flex--align-center;
   justify-content: center;
 }
 
 @mixin flex--align-center--justify-space-between {
-  @include flex--align-center();
+  @include flex--align-center;
   justify-content: space-between;
 }
 
 @mixin flex--justify-center {
-  @include flex();
+  @include flex;
   justify-content: center;
 }
 
-@mixin flex--justify-space-between {
-  @include flex();
-  justify-content: space-between;
-}
-
 @mixin flex--justify-space-evenly {
-  @include flex();
+  @include flex;
   justify-content: space-evenly;
 }
 
 @mixin flex--col--align-center {
-  @include flex--col();
+  @include flex--col;
   align-items: center;
 }
 
 @mixin flex--col--align-center--justify-center {
-  @include flex--col--align-center();
+  @include flex--col--align-center;
   justify-content: center;
 }
 
 @mixin flex--col--justify-center {
-  @include flex--col();
+  @include flex--col;
   justify-content: center;
 }
 
 @mixin gray-to-primary-blue-icon {
-  fill: $dark-gray;
+  fill: rq.$dark-gray;
   cursor: pointer;
   width: 36px;
   height: 36px;
-  transition: fill $icon-transition ease-out;
+  transition: fill variables.$icon-transition ease-out;
 
   &:hover {
-    fill: $primary-blue;
-    transition: fill $icon-transition ease-in;
+    fill: rq.$primary-blue;
+    transition: fill variables.$icon-transition ease-in;
   }
 }

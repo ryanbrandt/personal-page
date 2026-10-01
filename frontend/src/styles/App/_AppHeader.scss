@@ -1,3 +1,5 @@
+@use "../tools" as *;
+
 $link-hover-transition-time: 0.25s;
 $mobile-menu-height-transition-time: 0.2s;
 $link-padding: 10px;
@@ -13,20 +15,19 @@ $link-padding: 10px;
 
 @mixin link-active {
   a {
-    opacity: 0.5;
-    pointer-events: none;
+    @include user-control-disabled;
   }
 }
 
 .app-header {
-  @include flex--align-center();
+  @include flex--align-center;
   width: 100%;
   position: fixed;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 
-  @include themed() {
-    background-color: theme-get($primary-color);
+  @include themed {
+    background-color: theme-get(primary-color);
   }
 
   &__theme-toggle {
@@ -34,8 +35,8 @@ $link-padding: 10px;
     padding: 0px 20px;
 
     svg {
-      @include themed() {
-        fill: theme-get($toggle-color);
+      @include themed {
+        fill: theme-get(toggle-color);
 
         @include desktop-only {
           opacity: 0.5;
@@ -51,18 +52,18 @@ $link-padding: 10px;
   }
 
   &__menu {
-    @include flex--align-center--justify-center();
+    @include flex--align-center--justify-center;
     height: 100%;
     width: 100%;
     column-gap: 30px;
 
     &__link {
-      @include flex--align-center();
+      @include flex--align-center;
       font-size: 18px;
       font-weight: 400;
       height: 100%;
       padding: 0px $link-padding;
-      @include link-reset();
+      @include link-reset;
 
       a {
         transition: color $link-hover-transition-time ease-out;
@@ -74,8 +75,8 @@ $link-padding: 10px;
       }
 
       &--active {
-        @include link-active();
         border-bottom: 2px solid $primary-blue;
+        @include link-active;
       }
     }
   }
@@ -103,14 +104,14 @@ $link-padding: 10px;
       }
 
       &--open {
-        @include themed() {
-          background-color: theme-get($overlay-color);
-        }
-
         height: 100vh;
         opacity: 1;
         visibility: visible;
         transition: all $mobile-menu-height-transition-time ease-in;
+
+        @include themed {
+          background-color: theme-get(overlay-color);
+        }
       }
 
       &__close-btn {
@@ -120,7 +121,7 @@ $link-padding: 10px;
       }
 
       &__link-container {
-        @include flex--col--align-center();
+        @include flex--col--align-center;
         height: 100%;
         row-gap: 10%;
         padding: 50px;
@@ -129,15 +130,15 @@ $link-padding: 10px;
           padding: $link-padding;
           font-size: 24px;
           font-weight: 600;
-          @include link-reset();
+          @include link-reset;
 
-          @include themed() {
-            color: theme-get($secondary-color);
+          @include themed {
+            color: theme-get(secondary-color);
           }
 
           &--active {
-            @include link-active();
             border-bottom: 2px solid rgb($primary-blue, 0.2);
+            @include link-active;
           }
         }
       }

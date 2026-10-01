@@ -1,8 +1,9 @@
+@use "../tools" as *;
+
 $copy-font-size: 18px;
-$icon-transition: 0.25s;
 
 .landing-page {
-  @include flex--col--align-center--justify-center();
+  @include flex--col--align-center--justify-center;
 
   &__copy {
     font-size: $copy-font-size;
@@ -20,11 +21,11 @@ $icon-transition: 0.25s;
   }
 
   &__social-links {
-    @include flex--align-center--justify-space-between();
+    @include flex--align-center--justify-space-between;
     column-gap: $default-column-gap;
 
     svg {
-      @include gray-to-primary-blue-icon();
+      @include gray-to-primary-blue-icon;
     }
   }
 }
