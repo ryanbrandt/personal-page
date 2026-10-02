@@ -5,7 +5,7 @@
     @include flex--align-center--justify-center;
 
     svg {
-      @include gray-to-primary-blue-icon;
+      @include muted-to-accent-icon;
     }
   }
 
@@ -21,7 +21,7 @@
     }
 
     @include mobile-only {
-      @include flex--col--align-center;
+      @include flex--column--align-center;
     }
 
     &__column {
@@ -31,8 +31,8 @@
       h2 {
         font-weight: 300;
         text-align: center;
-        color: $primary-blue;
-        border-bottom: 1px solid $primary-blue;
+        color: var(--rq-color-accent-text);
+        border-bottom: 1px solid var(--rq-color-accent-text);
         padding-bottom: 20px;
       }
 
@@ -56,14 +56,14 @@
           }
 
           svg {
-            fill: $primary-blue;
+            fill: var(--rq-color-accent-text);
           }
         }
 
         label {
           font-weight: 400;
           font-size: 14px;
-          color: $dark-gray;
+          color: var(--rq-color-muted);
         }
 
         &__date {

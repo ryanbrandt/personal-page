@@ -1,4 +1,3 @@
-@use "@ryanbrandt/react-quick-ui/stylesheets/sass" as rq;
 @use "variables";
 
 @mixin mobile-only {
@@ -13,65 +12,15 @@
   }
 }
 
-// Not the lib's `%flex…` placeholders: `@extend` can't reach into `@media` (mobile-only/desktop-only).
-@mixin flex {
-  display: flex;
-}
-
-@mixin flex--col {
-  @include flex;
-  flex-direction: column;
-}
-
-@mixin flex--align-center {
-  @include flex;
-  align-items: center;
-}
-
-@mixin flex--align-center--justify-center {
-  @include flex--align-center;
-  justify-content: center;
-}
-
-@mixin flex--align-center--justify-space-between {
-  @include flex--align-center;
-  justify-content: space-between;
-}
-
-@mixin flex--justify-center {
-  @include flex;
-  justify-content: center;
-}
-
-@mixin flex--justify-space-evenly {
-  @include flex;
-  justify-content: space-evenly;
-}
-
-@mixin flex--col--align-center {
-  @include flex--col;
-  align-items: center;
-}
-
-@mixin flex--col--align-center--justify-center {
-  @include flex--col--align-center;
-  justify-content: center;
-}
-
-@mixin flex--col--justify-center {
-  @include flex--col;
-  justify-content: center;
-}
-
-@mixin gray-to-primary-blue-icon {
-  fill: rq.$dark-gray;
+@mixin muted-to-accent-icon {
+  fill: var(--rq-color-muted);
   cursor: pointer;
   width: 36px;
   height: 36px;
   transition: fill variables.$icon-transition ease-out;
 
   &:hover {
-    fill: rq.$primary-blue;
+    fill: var(--rq-color-accent-text);
     transition: fill variables.$icon-transition ease-in;
   }
 }

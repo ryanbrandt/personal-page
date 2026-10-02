@@ -1,8 +1,7 @@
-import { type FunctionComponent, useContext } from "react";
+import type { FunctionComponent } from "react";
 import { TopBar } from "@ryanbrandt/react-quick-ui";
 
 import type { IAppHeaderMenuLink } from "@app/App/types";
-import MobileContext from "@app/common/contexts/MobileContext";
 import { BASE_ROUTES } from "@app/routes/constants";
 import AppHeaderMenu from "@app/App/Subcomponents/AppHeaderMenu";
 import MobileAppHeaderMenu from "@app/App/Subcomponents/MobileAppHeaderMenu";
@@ -29,19 +28,13 @@ const MENU_LINKS: Array<IAppHeaderMenuLink> = [
   */
 ];
 
-const AppHeader: FunctionComponent = () => {
-  const isMobile = useContext(MobileContext);
-
-  return (
-    <TopBar className="app-header">
-      {isMobile ? (
-        <MobileAppHeaderMenu links={MENU_LINKS} />
-      ) : (
-        <AppHeaderMenu links={MENU_LINKS} />
-      )}
-      <AppHeaderThemeToggle />
-    </TopBar>
-  );
-};
+// Both menus render; the stylesheet shows the one that fits the viewport.
+const AppHeader: FunctionComponent = () => (
+  <TopBar className="app-header">
+    <AppHeaderMenu links={MENU_LINKS} />
+    <MobileAppHeaderMenu links={MENU_LINKS} />
+    <AppHeaderThemeToggle />
+  </TopBar>
+);
 
 export default AppHeader;

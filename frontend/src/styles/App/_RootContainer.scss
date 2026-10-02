@@ -6,9 +6,4 @@
   overflow-x: hidden;
   width: 100vw;
   min-height: 100vh;
-
-  @include themed {
-    background-color: theme-get(primary-color);
-    color: theme-get(font-color);
-  }
 }

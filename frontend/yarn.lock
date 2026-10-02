@@ -782,9 +782,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ryanbrandt/react-quick-ui@npm:0.6.0-next.0":
-  version: 0.6.0-next.0
-  resolution: "@ryanbrandt/react-quick-ui@npm:0.6.0-next.0"
+"@ryanbrandt/react-quick-ui@npm:1.0.0-next.0":
+  version: 1.0.0-next.0
+  resolution: "@ryanbrandt/react-quick-ui@npm:1.0.0-next.0"
   peerDependencies:
     "@types/react": ">=18.2.6"
     react: ^18.0.0 || ^19.0.0
@@ -793,7 +793,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/0c12c78eab777472d84e4f09401d06dc047af9eb9704a415f856d7b84ccc04dea6eb6794d439797e5781a2151b25b12b4ee3bf922d66a0484cf85485b6ffee97
+  checksum: 10/e5a9535e1a3a59698b6f93bdb5d23daf5de64c32eef2ee4251174877c57494a564a4d0e8190816d816141ae829e9c3ab88da94c423a06ff05bd2699251ccca37
   languageName: node
   linkType: hard
 
@@ -3686,7 +3686,7 @@ __metadata:
     "@eslint/js": "npm:^10.0.1"
     "@playwright/test": "npm:1.63.0"
     "@reduxjs/toolkit": "npm:^2.13.0"
-    "@ryanbrandt/react-quick-ui": "npm:0.6.0-next.0"
+    "@ryanbrandt/react-quick-ui": "npm:1.0.0-next.0"
     "@types/node": "npm:^24.19.0"
     "@types/react": "npm:^19.3.0"
     "@types/react-dom": "npm:^19.3.0"

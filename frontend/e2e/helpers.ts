@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { expect, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 export const ROUTES = [
   { name: "home", path: "/", title: "Hello, World!" },
@@ -8,7 +8,8 @@ export const ROUTES = [
   { name: "work", path: "/work", title: "Recent Personal Projects" },
 ] as const;
 
-// The app switches to its mobile layout at widths <= MOBILE_WIDTH_UPPER_BOUND (1024px).
+// The app switches to its mobile layout at widths <= 1040px (`mobile-only` in
+// src/styles/_mixins.scss).
 export const VIEWPORTS = {
   desktop: { width: 1440, height: 900 },
   mobile: { width: 390, height: 844 },
@@ -42,18 +43,13 @@ async function stubRemoteImages(page: Page): Promise<void> {
 /**
  * Navigates to `path` and waits until the page is visually settled: the
  * clock is frozen (the footer shows the current year), remote images are
- * served locally, the theme from
- * `prefers-color-scheme` is applied (it is set in an effect after the first
- * render), and the page has a stable render (see waitForStableRender).
+ * served locally, and the page has a stable render (see waitForStableRender).
+ * The theme needs no wait: index.html applies it before the first paint.
  */
 export async function gotoAndSettle(page: Page, path: string): Promise<void> {
   await page.clock.setFixedTime(new Date("2026-01-01T12:00:00Z"));
   await stubRemoteImages(page);
   await page.goto(path);
-  const scheme = await page.evaluate(() =>
-    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
-  );
-  await expect(page.locator(`.theme--${scheme}`)).toBeVisible();
   await waitForStableRender(page);
 }
 
