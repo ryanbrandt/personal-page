@@ -28,10 +28,12 @@ $contact-page-default-row-col-gap: 50px;
     row-gap: $contact-page-default-row-col-gap;
     padding: 50px;
     border-radius: 10px;
+    // Darkens from accent-fill, so on-accent text keeps AA contrast (4.5:1)
+    // across the whole gradient in both themes.
     background: linear-gradient(
       135deg,
-      var(--rq-color-brand),
-      color-mix(in srgb, var(--rq-color-brand) 30%, transparent)
+      var(--rq-color-accent-fill),
+      color-mix(in srgb, var(--rq-color-accent-fill) 70%, black)
     );
 
     h2 {
