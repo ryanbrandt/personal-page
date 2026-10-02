@@ -1,10 +1,28 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { deprecations } from "sass";
 
+import { applyTheme, THEME_STORAGE_KEY } from "./src/common/utils/theme";
+
+// Runs applyTheme from a script in index.html's <head>, ahead of the app's
+// script and stylesheet, so the stored theme is set before the first paint.
+const themeScript = (): Plugin => ({
+  name: "theme-script",
+  transformIndexHtml: {
+    order: "pre",
+    handler: () => [
+      {
+        tag: "script",
+        children: `(${applyTheme.toString()})(${JSON.stringify(THEME_STORAGE_KEY)});`,
+        injectTo: "head",
+      },
+    ],
+  },
+});
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [themeScript(), react()],
   server: {
     open: true,
   },

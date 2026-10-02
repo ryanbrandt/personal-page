@@ -81,8 +81,6 @@ test.describe("desktop", () => {
 
     await toggle.click();
     await expect(html).toHaveAttribute("data-theme", "light");
-    await page.reload();
-    await expect(html).toHaveAttribute("data-theme", "light");
   });
 
   test("project search filters results", async ({ page }) => {

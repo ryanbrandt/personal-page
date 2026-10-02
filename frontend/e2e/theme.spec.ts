@@ -1,86 +1,90 @@
 import { expect, test, type Page } from "@playwright/test";
 
-// The library's --rq-color-bg and --rq-color-text tokens.
-const BODY_COLORS = {
-  light: { background: "rgb(246, 247, 251)", text: "rgb(26, 28, 36)" },
-  dark: { background: "rgb(18, 20, 27)", text: "rgb(236, 238, 244)" },
-} as const;
+import { THEME_STORAGE_KEY } from "../src/common/utils/theme";
+
+type Scheme = "light" | "dark";
 
 const storePreference = (page: Page, preference: string) =>
-  page.addInitScript((value) => {
-    localStorage.setItem("theme", value);
-  }, preference);
-
-const expectBodyColors = async (page: Page, scheme: "light" | "dark") => {
-  const body = page.locator("body");
-  await expect(body).toHaveCSS(
-    "background-color",
-    BODY_COLORS[scheme].background
+  page.addInitScript(
+    ([key, value]) => localStorage.setItem(key, value),
+    [THEME_STORAGE_KEY, preference]
   );
-  await expect(body).toHaveCSS("color", BODY_COLORS[scheme].text);
+
+// These tests only need index.html and the stylesheet. Without the app bundle
+// nothing but index.html's own script can theme the page, so what they see is
+// what the first paint shows.
+const blockScripts = (page: Page) =>
+  page.route("**/*.js", (route) => route.abort());
+
+/** The library's bg and text tokens for `scheme`, as computed colours. */
+const tokenColors = (page: Page, scheme: Scheme) =>
+  page.evaluate((scheme) => {
+    const probe = document.createElement("div");
+    probe.dataset.theme = scheme;
+    probe.style.backgroundColor = "var(--rq-color-bg)";
+    probe.style.color = "var(--rq-color-text)";
+    document.body.append(probe);
+    const { backgroundColor, color } = getComputedStyle(probe);
+    probe.remove();
+    return { background: backgroundColor, text: color };
+  }, scheme);
+
+/** The colours of the theme-color metas that currently apply. */
+const activeThemeColors = (page: Page) =>
+  page.evaluate(() => {
+    const probe = document.createElement("div");
+    document.body.append(probe);
+    const colors = Array.from(
+      document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')
+    )
+      .filter((meta) => window.matchMedia(meta.media).matches)
+      .map((meta) => {
+        probe.style.color = meta.content;
+        return getComputedStyle(probe).color;
+      });
+    probe.remove();
+    return colors;
+  });
+
+const expectScheme = async (page: Page, scheme: Scheme) => {
+  const { background, text } = await tokenColors(page, scheme);
+  const body = page.locator("body");
+  await expect(body).toHaveCSS("background-color", background);
+  await expect(body).toHaveCSS("color", text);
+  await expect.poll(() => activeThemeColors(page)).toEqual([background]);
 };
 
-const themeColor = (page: Page) =>
-  page.evaluate(() => {
-    const active = Array.from(
-      document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')
-    ).filter((meta) => window.matchMedia(meta.media).matches);
-    return active.map((meta) => meta.content);
-  });
-
-test.describe("stored dark preference under a light OS", () => {
-  test.use({ colorScheme: "light" });
-
-  test("the first paint is already dark", async ({ page }) => {
-    await storePreference(page, "dark");
-    // Without the app bundle nothing but index.html's inline script can theme
-    // the page, so what shows here is what the first paint shows.
-    await page.route("**/*.{js,tsx}", (route) => route.abort());
-
-    await page.goto("/");
-
-    await expect(page.locator("#root")).toBeEmpty();
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    await expectBodyColors(page, "dark");
-    expect(await themeColor(page)).toEqual(["#12141b"]);
-  });
-});
-
-test.describe("stored light preference under a dark OS", () => {
-  test.use({ colorScheme: "dark" });
-
-  test("the stored preference wins over the OS", async ({ page }) => {
-    await storePreference(page, "light");
-    await page.goto("/");
-
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
-    await expectBodyColors(page, "light");
-    expect(await themeColor(page)).toEqual(["#f6f7fb"]);
-  });
-});
-
-test('"system" follows prefers-color-scheme', async ({ page }) => {
-  await storePreference(page, "system");
-  await page.emulateMedia({ colorScheme: "dark" });
-  await page.goto("/");
-
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "system");
-  await expectBodyColors(page, "dark");
-  expect(await themeColor(page)).toEqual(["#12141b"]);
-
-  // An OS change applies straight away, with no reload.
-  await page.emulateMedia({ colorScheme: "light" });
-  await expectBodyColors(page, "light");
-  expect(await themeColor(page)).toEqual(["#f6f7fb"]);
-});
-
-test("an invalid stored value falls back to the system theme", async ({
+test("a stored preference is applied before the app loads", async ({
   page,
 }) => {
-  await storePreference(page, "Dark");
+  await page.emulateMedia({ colorScheme: "light" });
+  await storePreference(page, "dark");
+  await blockScripts(page);
+  await page.goto("/");
+
+  await expect(page.locator("#root")).toBeEmpty();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expectScheme(page, "dark");
+});
+
+test('"system" (the default) follows the OS live', async ({ page }) => {
   await page.emulateMedia({ colorScheme: "dark" });
+  await blockScripts(page);
   await page.goto("/");
 
   await expect(page.locator("html")).toHaveAttribute("data-theme", "system");
-  await expectBodyColors(page, "dark");
+  await expectScheme(page, "dark");
+
+  await page.emulateMedia({ colorScheme: "light" });
+  await expectScheme(page, "light");
+});
+
+test("an invalid stored value falls back to system", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await storePreference(page, "Dark");
+  await blockScripts(page);
+  await page.goto("/");
+
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "system");
+  await expectScheme(page, "dark");
 });

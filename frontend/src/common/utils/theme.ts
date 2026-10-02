@@ -1,57 +1,62 @@
 import type { ThemePreference } from "@ryanbrandt/react-quick-ui";
 
-// The inline script in index.html applies the stored preference before the
-// page first renders (so it never flashes the wrong theme). It repeats this
-// module's logic because it runs before any bundle loads: keep the two in sync.
-
-const THEME_STORAGE_KEY = "theme";
-const DEFAULT_THEME_PREFERENCE: ThemePreference = "system";
-const THEME_PREFERENCES: ReadonlyArray<string> = ["light", "dark", "system"];
-
-const isThemePreference = (value?: string | null): value is ThemePreference =>
-  value != null && THEME_PREFERENCES.includes(value);
-
-/** The preference the inline script applied to `<html>` on load. */
-export const getAppliedThemePreference = (): ThemePreference => {
-  const { theme } = document.documentElement.dataset;
-  return isThemePreference(theme) ? theme : DEFAULT_THEME_PREFERENCE;
-};
-
-/** Whether `preference` currently shows the dark theme. */
-export const isDarkTheme = (preference: ThemePreference): boolean =>
-  preference === "system"
-    ? window.matchMedia("(prefers-color-scheme: dark)").matches
-    : preference === "dark";
-
-// index.html has one `<meta name="theme-color">` per scheme. "system" lets
-// each follow the OS; an explicit choice enables only its own.
-const themeColorMedia = (
-  scheme: string | undefined,
-  preference: ThemePreference
-): string => {
-  if (preference === "system") {
-    return `(prefers-color-scheme: ${scheme})`;
-  }
-  return scheme === preference ? "all" : "not all";
-};
+export const THEME_STORAGE_KEY = "theme";
 
 /**
- * Themes the page (the library's tokens follow `data-theme` on `<html>`),
- * points `<meta name="theme-color">` at the matching scheme and remembers the
- * choice for the next visit.
+ * Themes the page: sets `data-theme` on `<html>` (the library's tokens follow
+ * it) and points `<meta name="theme-color">` at the matching scheme. With a
+ * `preference`, also stores it; without one, applies the stored preference
+ * (default "system").
+ *
+ * vite.config.ts inlines this function's source into index.html, where it runs
+ * before the page first renders so a stored preference never flashes the
+ * wrong theme. So it must stay self-contained: no references to anything
+ * outside its body, only plain JavaScript once the types are stripped.
  */
-export const applyThemePreference = (preference: ThemePreference): void => {
-  document.documentElement.dataset.theme = preference;
-
-  document
-    .querySelectorAll<HTMLMetaElement>("meta[data-color-scheme]")
-    .forEach((meta) => {
-      meta.media = themeColorMedia(meta.dataset.colorScheme, preference);
-    });
+export function applyTheme(
+  storageKey: string,
+  preference?: ThemePreference
+): void {
+  const preferences = ["light", "dark", "system"];
+  let applied: ThemePreference = preference ?? "system";
 
   try {
-    localStorage.setItem(THEME_STORAGE_KEY, preference);
+    if (preference) {
+      localStorage.setItem(storageKey, preference);
+    } else {
+      const stored = localStorage.getItem(storageKey);
+      if (stored && preferences.includes(stored)) {
+        applied = stored as ThemePreference;
+      }
+    }
   } catch {
     // Storage can be unavailable (e.g. blocked); the choice lasts this visit.
   }
+
+  document.documentElement.dataset.theme = applied;
+
+  // One theme-color meta per scheme: "system" lets each follow the OS, an
+  // explicit choice enables only its own.
+  document
+    .querySelectorAll<HTMLMetaElement>("meta[data-color-scheme]")
+    .forEach((meta) => {
+      const scheme = meta.dataset.colorScheme;
+      if (applied === "system") {
+        meta.media = `(prefers-color-scheme: ${scheme})`;
+      } else {
+        meta.media = scheme === applied ? "all" : "not all";
+      }
+    });
+}
+
+/** Themes the page with `preference` and stores it for the next visit. */
+export const applyThemePreference = (preference: ThemePreference): void =>
+  applyTheme(THEME_STORAGE_KEY, preference);
+
+/** Whether the page currently shows the dark theme. */
+export const isDarkThemeShown = (): boolean => {
+  const { theme } = document.documentElement.dataset;
+  return theme === "system"
+    ? window.matchMedia("(prefers-color-scheme: dark)").matches
+    : theme === "dark";
 };

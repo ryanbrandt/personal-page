@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- The --rq-color-bg token of each scheme. -->
+    <!-- The --rq-color-bg token of each scheme; applyTheme in
+         src/common/utils/theme.ts switches between them. -->
     <meta
       name="theme-color"
       content="#f6f7fb"
@@ -17,31 +18,6 @@
       media="(prefers-color-scheme: dark)"
       data-color-scheme="dark"
     />
-    <script>
-      // Applies the stored theme preference before the page first renders, so
-      // it never flashes the wrong theme. React takes over from the attribute
-      // this sets; keep in sync with src/common/utils/theme.ts.
-      (() => {
-        let preference = "system";
-        try {
-          const stored = localStorage.getItem("theme");
-          if (["light", "dark", "system"].includes(stored)) {
-            preference = stored;
-          }
-        } catch {
-          // Storage can be unavailable (e.g. blocked); use the default.
-        }
-        document.documentElement.dataset.theme = preference;
-        if (preference !== "system") {
-          document
-            .querySelectorAll("meta[data-color-scheme]")
-            .forEach((meta) => {
-              meta.media =
-                meta.dataset.colorScheme === preference ? "all" : "not all";
-            });
-        }
-      })();
-    </script>
     <title>Ryan Brandt | Software Engineer</title>
   </head>
   <body>
