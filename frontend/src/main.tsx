@@ -9,6 +9,11 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import App from "@app/App/Components/App";
+import { applyTheme, THEME_STORAGE_KEY } from "@app/common/utils/theme";
+
+// index.html's inline script normally themes the page before it paints. If it
+// didn't run (e.g. blocked), theme it now rather than ignore the preference.
+if (!document.documentElement.dataset.theme) applyTheme(THEME_STORAGE_KEY);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

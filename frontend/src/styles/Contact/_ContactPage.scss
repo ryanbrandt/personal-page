@@ -30,6 +30,7 @@ $contact-page-default-row-col-gap: 50px;
     border-radius: 10px;
     // Darkens from accent-fill, so on-accent text keeps AA contrast (4.5:1)
     // across the whole gradient in both themes.
+    background: var(--rq-color-accent-fill);
     background: linear-gradient(
       135deg,
       var(--rq-color-accent-fill),

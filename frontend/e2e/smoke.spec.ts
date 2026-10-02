@@ -67,11 +67,12 @@ test.describe("desktop", () => {
   });
 
   test("theme toggle flips the theme and remembers it", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light" });
     await page.goto("/");
     const html = page.locator("html");
     const toggle = page.locator(".app-header__theme-toggle");
 
-    // No stored preference: follow the OS, which Playwright reports as light.
+    // No stored preference: follow the (light) OS.
     await expect(html).toHaveAttribute("data-theme", "system");
 
     await toggle.click();

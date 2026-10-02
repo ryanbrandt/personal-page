@@ -6,19 +6,18 @@ import { applyTheme, THEME_STORAGE_KEY } from "./src/common/utils/theme";
 
 // Runs applyTheme from a script in index.html's <head>, ahead of the app's
 // script and stylesheet, so the stored theme is set before the first paint.
-const themeScript = (): Plugin => ({
-  name: "theme-script",
-  transformIndexHtml: {
-    order: "pre",
-    handler: () => [
-      {
-        tag: "script",
-        children: `(${applyTheme.toString()})(${JSON.stringify(THEME_STORAGE_KEY)});`,
-        injectTo: "head",
-      },
-    ],
-  },
-});
+const themeScript = (): Plugin => {
+  const children = `(${applyTheme.toString()})(${JSON.stringify(THEME_STORAGE_KEY)});`;
+  // Fail the build, not the browser, if the source stops being plain JS.
+  new Function(children);
+  return {
+    name: "theme-script",
+    transformIndexHtml: {
+      order: "pre",
+      handler: () => [{ tag: "script", children, injectTo: "head" }],
+    },
+  };
+};
 
 // https://vite.dev/config/
 export default defineConfig({

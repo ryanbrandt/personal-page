@@ -88,3 +88,15 @@ test("an invalid stored value falls back to system", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theme", "system");
   await expectScheme(page, "dark");
 });
+
+test("the toggle flips away from what the OS shows under system", async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/");
+
+  await page.locator(".app-header__theme-toggle").click();
+
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expectScheme(page, "light");
+});
