@@ -1,4 +1,3 @@
-@use "@ryanbrandt/react-quick-ui/stylesheets/sass" as rq;
 @use "variables";
 
 @mixin mobile-only {
@@ -14,14 +13,14 @@
 }
 
 @mixin gray-to-primary-blue-icon {
-  fill: rq.$dark-gray;
+  fill: var(--rq-color-muted);
   cursor: pointer;
   width: 36px;
   height: 36px;
   transition: fill variables.$icon-transition ease-out;
 
   &:hover {
-    fill: rq.$primary-blue;
+    fill: var(--rq-color-accent-text);
     transition: fill variables.$icon-transition ease-in;
   }
 }

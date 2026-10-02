@@ -1,4 +1,4 @@
-import type { Theme } from "@app/common/constants/themes";
+import type { ThemePreference } from "@ryanbrandt/react-quick-ui";
 
 export interface IAppHeaderMenuLink {
   text: string;
@@ -6,5 +6,5 @@ export interface IAppHeaderMenuLink {
 }
 
 export interface IAppSlice {
-  manualThemePreference?: Theme;
+  themePreference: ThemePreference;
 }

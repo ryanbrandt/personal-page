@@ -27,6 +27,11 @@ body,
   overflow-x: hidden;
 }
 
+body {
+  background-color: var(--rq-color-bg);
+  color: var(--rq-color-text);
+}
+
 @include mobile-only {
   input[type="color"],
   input[type="date"],

@@ -25,27 +25,22 @@ $link-padding: 10px;
   position: fixed;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-
-  @include themed {
-    background-color: theme-get(primary-color);
-  }
+  background-color: var(--rq-color-overlay);
 
   &__theme-toggle {
     cursor: pointer;
     padding: 0px 20px;
 
     svg {
-      @include themed {
-        fill: theme-get(toggle-color);
+      fill: var(--rq-color-accent-text);
 
-        @include desktop-only {
-          opacity: 0.5;
-          transition: opacity 0.25s ease-out;
+      @include desktop-only {
+        opacity: 0.5;
+        transition: opacity 0.25s ease-out;
 
-          &:hover {
-            opacity: 1;
-            transition: opacity 0.25s ease-in;
-          }
+        &:hover {
+          opacity: 1;
+          transition: opacity 0.25s ease-in;
         }
       }
     }
@@ -69,13 +64,13 @@ $link-padding: 10px;
         transition: color $link-hover-transition-time ease-out;
 
         &:hover {
-          color: $primary-blue;
+          color: var(--rq-color-accent-text);
           transition: color $link-hover-transition-time ease-in;
         }
       }
 
       &--active {
-        border-bottom: 2px solid $primary-blue;
+        border-bottom: 2px solid var(--rq-color-accent-text);
         @include link-active;
       }
     }
@@ -86,14 +81,14 @@ $link-padding: 10px;
 
     svg {
       padding: 0px 20px;
-      fill: $primary-blue;
+      fill: var(--rq-color-accent-text);
     }
 
     &__overlay {
       top: 0;
       width: 100%;
       position: fixed;
-      color: $primary-blue;
+      color: var(--rq-color-accent-text);
       overscroll-behavior: contain;
 
       &--closed {
@@ -108,10 +103,7 @@ $link-padding: 10px;
         opacity: 1;
         visibility: visible;
         transition: all $mobile-menu-height-transition-time ease-in;
-
-        @include themed {
-          background-color: theme-get(overlay-color);
-        }
+        background-color: var(--rq-color-bg);
       }
 
       &__close-btn {
@@ -131,13 +123,10 @@ $link-padding: 10px;
           font-size: 24px;
           font-weight: 600;
           @include link-reset;
-
-          @include themed {
-            color: theme-get(secondary-color);
-          }
+          color: var(--rq-color-accent-text);
 
           &--active {
-            border-bottom: 2px solid rgb($primary-blue, 0.2);
+            border-bottom: 2px solid var(--rq-color-tint);
             @include link-active;
           }
         }

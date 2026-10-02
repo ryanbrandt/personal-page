@@ -13,9 +13,6 @@
     font-weight: 400;
     margin-bottom: 50px;
     text-align: center;
-
-    @include themed {
-      color: theme-get(secondary-color);
-    }
+    color: var(--rq-color-accent-text);
   }
 }

@@ -66,15 +66,23 @@ test.describe("desktop", () => {
     );
   });
 
-  test("theme toggle flips the theme", async ({ page }) => {
-    await gotoAndSettle(page, "/");
+  test("theme toggle flips the theme and remembers it", async ({ page }) => {
+    await page.goto("/");
+    const html = page.locator("html");
     const toggle = page.locator(".app-header__theme-toggle");
 
-    await toggle.click();
-    await expect(page.locator(".theme--dark")).toBeVisible();
+    // No stored preference: follow the OS, which Playwright reports as light.
+    await expect(html).toHaveAttribute("data-theme", "system");
 
     await toggle.click();
-    await expect(page.locator(".theme--light")).toBeVisible();
+    await expect(html).toHaveAttribute("data-theme", "dark");
+    await page.reload();
+    await expect(html).toHaveAttribute("data-theme", "dark");
+
+    await toggle.click();
+    await expect(html).toHaveAttribute("data-theme", "light");
+    await page.reload();
+    await expect(html).toHaveAttribute("data-theme", "light");
   });
 
   test("project search filters results", async ({ page }) => {

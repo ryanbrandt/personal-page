@@ -1,18 +1,19 @@
-import { type FunctionComponent, useContext } from "react";
+import type { FunctionComponent } from "react";
 
-import { manualThemePreferenceChange } from "@app/App/slice";
+import { changeThemePreference } from "@app/App/slice";
+import { selectThemePreference } from "@app/App/selectors";
 import ThemeToggleSvg from "@app/assets/svg/ThemeToggleSvg";
-import { Theme } from "@app/common/constants/themes";
-import ThemeContext from "@app/common/contexts/ThemeContext";
-import { useAppDispatch } from "@app/store/hooks";
+import { isDarkTheme } from "@app/common/utils/theme";
+import { useAppDispatch, useAppSelector } from "@app/store/hooks";
 
+// Flips between light and dark; a light/dark/system control comes with R2.
 const AppHeaderThemeToggle: FunctionComponent = () => {
-  const theme = useContext(ThemeContext);
+  const themePreference = useAppSelector(selectThemePreference);
   const dispatch = useAppDispatch();
 
   const onThemeToggleClick = () => {
-    const newTheme = theme === Theme.DARK ? Theme.LIGHT : Theme.DARK;
-    dispatch(manualThemePreferenceChange(newTheme));
+    const newTheme = isDarkTheme(themePreference) ? "light" : "dark";
+    dispatch(changeThemePreference(newTheme));
   };
 
   return (

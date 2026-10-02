@@ -1,4 +1,4 @@
 import type { RootState } from "@app/store";
 
-export const selectManualAppThemePreference = (state: RootState) =>
-  state.app.manualThemePreference;
+export const selectThemePreference = (state: RootState) =>
+  state.app.themePreference;

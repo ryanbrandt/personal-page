@@ -28,10 +28,14 @@ $contact-page-default-row-col-gap: 50px;
     row-gap: $contact-page-default-row-col-gap;
     padding: 50px;
     border-radius: 10px;
-    background: linear-gradient(135deg, $primary-blue, rgb($primary-blue, 0.3));
+    background: linear-gradient(
+      135deg,
+      var(--rq-color-brand),
+      color-mix(in srgb, var(--rq-color-brand) 30%, transparent)
+    );
 
     h2 {
-      color: $white;
+      color: var(--rq-color-on-accent);
       font-weight: 400;
       align-self: center;
     }
@@ -40,14 +44,14 @@ $contact-page-default-row-col-gap: 50px;
       @include flex--align-center;
       column-gap: 10px;
       text-decoration: none;
-      color: $white;
+      color: var(--rq-color-on-accent);
 
       &:hover {
         text-decoration: underline;
       }
 
       svg {
-        fill: $white;
+        fill: var(--rq-color-on-accent);
       }
     }
   }

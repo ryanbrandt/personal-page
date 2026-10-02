@@ -53,10 +53,7 @@
         font-size: 16px;
         padding: 0.5em;
         font-weight: 500;
-
-        @include themed {
-          color: theme-get(secondary-color);
-        }
+        color: var(--rq-color-accent-text);
       }
 
       &__details-overlay {
@@ -65,22 +62,16 @@
         height: 100vh;
         border: none;
         overscroll-behavior: contain;
-
-        @include themed {
-          background-color: theme-get(overlay-color);
-        }
+        background-color: var(--rq-color-bg);
 
         &__title {
           font-weight: 400;
           font-size: 28px;
-
-          @include themed {
-            color: theme-get(secondary-color);
-          }
+          color: var(--rq-color-accent-text);
         }
 
         &__text {
-          color: $dark-gray;
+          color: var(--rq-color-muted);
           padding: 1em;
         }
 
@@ -106,7 +97,7 @@
           font-size: 32px;
           font-weight: 400;
           cursor: pointer;
-          color: $primary-blue;
+          color: var(--rq-color-accent-text);
 
           @include desktop-only {
             opacity: 0.5;
