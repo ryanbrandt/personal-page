@@ -121,7 +121,7 @@ $link-padding: 10px;
       }
 
       &__link-container {
-        @include flex--col--align-center;
+        @include flex--column--align-center;
         height: 100%;
         row-gap: 10%;
         padding: 50px;

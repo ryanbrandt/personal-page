@@ -3,7 +3,7 @@
 $copy-font-size: 18px;
 
 .landing-page {
-  @include flex--col--align-center--justify-center;
+  @include flex--column--align-center--justify-center;
 
   &__copy {
     font-size: $copy-font-size;

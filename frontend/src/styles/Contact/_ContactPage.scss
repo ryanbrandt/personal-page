@@ -9,12 +9,12 @@ $contact-page-default-row-col-gap: 50px;
   }
 
   @include mobile-only {
-    @include flex--col--align-center;
+    @include flex--column--align-center;
     row-gap: $contact-page-default-row-col-gap;
   }
 
   &__form {
-    @include flex--col;
+    @include flex--column;
     width: fit-content;
     row-gap: calc($contact-page-default-row-col-gap / 2);
 
@@ -24,7 +24,7 @@ $contact-page-default-row-col-gap: 50px;
   }
 
   &__social-links {
-    @include flex--col--justify-center;
+    @include flex--column--justify-center;
     row-gap: $contact-page-default-row-col-gap;
     padding: 50px;
     border-radius: 10px;

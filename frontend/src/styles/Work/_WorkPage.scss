@@ -1,7 +1,7 @@
 @use "../tools" as *;
 
 .work-page {
-  @include flex--col;
+  @include flex--column;
   row-gap: calc($default-row-gap * 2);
 
   @include mobile-only {
@@ -28,7 +28,7 @@
     }
 
     &__result {
-      @include flex--col--align-center;
+      @include flex--column--align-center;
 
       @include desktop-only {
         opacity: 0.5;
@@ -60,7 +60,7 @@
       }
 
       &__details-overlay {
-        @include flex--col--align-center;
+        @include flex--column--align-center;
         width: 100vw;
         height: 100vh;
         border: none;

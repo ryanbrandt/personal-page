@@ -21,7 +21,7 @@
     }
 
     @include mobile-only {
-      @include flex--col--align-center;
+      @include flex--column--align-center;
     }
 
     &__column {
