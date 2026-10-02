@@ -25,7 +25,7 @@ $copy-font-size: 18px;
     column-gap: $default-column-gap;
 
     svg {
-      @include gray-to-primary-blue-icon;
+      @include muted-to-accent-icon;
     }
   }
 }

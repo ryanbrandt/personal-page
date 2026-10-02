@@ -12,7 +12,7 @@
   }
 }
 
-@mixin gray-to-primary-blue-icon {
+@mixin muted-to-accent-icon {
   fill: var(--rq-color-muted);
   cursor: pointer;
   width: 36px;

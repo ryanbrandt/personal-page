@@ -5,7 +5,7 @@
     @include flex--align-center--justify-center;
 
     svg {
-      @include gray-to-primary-blue-icon;
+      @include muted-to-accent-icon;
     }
   }
 

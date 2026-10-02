@@ -76,7 +76,7 @@
         }
 
         svg {
-          @include gray-to-primary-blue-icon;
+          @include muted-to-accent-icon;
         }
 
         &__img {
