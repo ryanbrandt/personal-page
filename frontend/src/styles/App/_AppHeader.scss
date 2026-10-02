@@ -52,6 +52,10 @@ $link-padding: 10px;
     width: 100%;
     column-gap: 30px;
 
+    @include mobile-only {
+      display: none;
+    }
+
     &__link {
       @include flex--align-center;
       font-size: 18px;
@@ -78,6 +82,10 @@ $link-padding: 10px;
 
   &__mobile-menu {
     width: 100%;
+
+    @include desktop-only {
+      display: none;
+    }
 
     svg {
       padding: 0px 20px;

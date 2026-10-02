@@ -8,7 +8,8 @@ export const ROUTES = [
   { name: "work", path: "/work", title: "Recent Personal Projects" },
 ] as const;
 
-// The app switches to its mobile layout at widths <= MOBILE_WIDTH_UPPER_BOUND (1024px).
+// The app switches to its mobile layout at widths <= 1040px (`mobile-only` in
+// src/styles/_mixins.scss).
 export const VIEWPORTS = {
   desktop: { width: 1440, height: 900 },
   mobile: { width: 390, height: 844 },
