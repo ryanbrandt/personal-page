@@ -25,13 +25,14 @@ const MENU_LINKS: Array<IAppHeaderMenuLink> = [
 const AppHeader: FunctionComponent = () => {
   const [theme, setTheme] = useThemePreference();
   // NavBar closes its narrow-screen menu when a link in it is chosen, but
-  // not on other navigation (e.g. back/forward). A new key for every
-  // location resets it, so any navigation closes the menu.
-  const { key } = useLocation();
+  // not on other navigation (e.g. back/forward). Keying it on the path
+  // resets it whenever the page changes, and only then: a remount drops
+  // focus, which the route change hook only restores for a new path.
+  const { pathname } = useLocation();
 
   return (
     <NavBar
-      key={key}
+      key={pathname}
       className="app-header"
       brand={
         <Link to={BASE_ROUTES.home} className="app-header__brand">
