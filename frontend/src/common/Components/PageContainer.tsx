@@ -1,4 +1,6 @@
-import type { FunctionComponent, PropsWithChildren } from "react";
+import { type FunctionComponent, type PropsWithChildren, useRef } from "react";
+
+import { useFocusHeadingOnPageMount } from "@app/common/hooks";
 
 interface BaseProps {
   /** The page's heading, its one `<h1>` */
@@ -13,21 +15,27 @@ interface BaseProps {
 
 type Props = PropsWithChildren<BaseProps>;
 
-// The heading takes focus after a route change (see routes/hooks.ts), so
-// screen readers announce the new page; tabIndex={-1} keeps it out of the
-// tab order.
+// Every routed page renders this (or uses useFocusHeadingOnPageMount on its
+// own <h1>): its heading takes focus when a new page mounts, so screen
+// readers announce it; tabIndex={-1} keeps the heading out of the tab order.
 const PageContainer: FunctionComponent<Props> = ({
   title,
   documentTitle,
   children,
-}) => (
-  <div className="page-container">
-    <title>{documentTitle}</title>
-    <h1 tabIndex={-1} className="page-container__title">
-      {title}
-    </h1>
-    {children}
-  </div>
-);
+}) => {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  useFocusHeadingOnPageMount(headingRef);
+
+  return (
+    <div className="page-container">
+      <title>{documentTitle}</title>
+      <h1 ref={headingRef} tabIndex={-1} className="page-container__title">
+        {title}
+      </h1>
+      {children}
+    </div>
+  );
+};
 
 export default PageContainer;

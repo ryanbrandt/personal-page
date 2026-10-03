@@ -119,11 +119,6 @@ export default defineConfig(
           ],
         },
       ],
-      // Known a11y debt: clickable divs in the work cards and project modal
-      // are replaced in R5. Restore "error" once those land, and lower
-      // `--max-warnings` in package.json as each one is fixed.
-      "jsx-a11y-x/click-events-have-key-events": "warn",
-      "jsx-a11y-x/no-static-element-interactions": "warn",
     },
   },
 

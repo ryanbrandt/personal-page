@@ -69,15 +69,6 @@ export const ROUTES: ReadonlyArray<AppRoute> = [
     path: "/work",
     title: "Recent Personal Projects",
     documentTitle: toDocumentTitle("Projects"),
-    knownViolations: [
-      // The card titles fade to half opacity until hovered, on desktop.
-      {
-        rule: "color-contrast",
-        selector: ".work-page__results-display__result > label",
-        viewports: ["desktop"],
-        fixedBy: "R5",
-      },
-    ],
   },
   {
     name: "not-found",
@@ -90,8 +81,16 @@ export const ROUTES: ReadonlyArray<AppRoute> = [
 export const pageTitle = (page: Page, title: string) =>
   page.getByRole("heading", { level: 1, name: title, exact: true });
 
-export const projectDetails = (page: Page) =>
-  page.locator(".work-page__results-display__result__details-overlay");
+/** The project cards on the projects page */
+export const projectCards = (page: Page) =>
+  page.getByRole("main").getByRole("article");
+
+/** A project card's link, its title, which opens the project's dialog */
+export const projectCardLink = (page: Page, title: string) =>
+  projectCards(page).getByRole("link", { name: title, exact: true });
+
+/** The open project dialog */
+export const projectDialog = (page: Page) => page.getByRole("dialog");
 
 /** A résumé section, by its `<h2>` */
 export const resumeSection = (page: Page, name: string) =>
