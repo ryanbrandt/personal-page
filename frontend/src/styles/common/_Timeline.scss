@@ -1,0 +1,61 @@
+@use "../tools" as *;
+
+// D0's experience timeline: a rule down the left, each entry's dates above
+// its title (TimelineEntry puts them after it in the markup).
+.timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-left: 2px solid var(--rq-color-border);
+
+  &__entry {
+    @include flex--column;
+    gap: var(--rq-space-1);
+    padding: 0 0 var(--rq-space-8) var(--rq-space-6);
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+
+    @include mobile-only {
+      padding: 0 0 var(--rq-space-6) var(--rq-space-5);
+    }
+
+    @media print {
+      break-inside: avoid;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    &__dates {
+      order: -1;
+      font-size: var(--rq-font-size-xs);
+      color: var(--rq-color-muted);
+
+      @include mobile-only {
+        font-size: var(--rq-font-size-2xs);
+      }
+    }
+
+    &__title {
+      @include mobile-only {
+        font-size: var(--rq-font-size-lg);
+      }
+    }
+
+    &__organization {
+      font-size: var(--rq-font-size-md);
+      color: var(--rq-color-accent-text);
+
+      @include mobile-only {
+        font-size: var(--rq-font-size-sm);
+      }
+    }
+
+    &__details {
+      margin-top: var(--rq-space-3);
+    }
+  }
+}

@@ -1,79 +1,97 @@
 @use "../tools" as *;
 
-.resume-page {
-  &__download {
-    @include flex--align-center--justify-center;
+// Two groups side by side in the desktop column (and on paper), one on
+// narrow screens.
+$skill-group-min-width: 320px;
 
-    svg {
-      @include muted-to-accent-icon;
+.resume-page {
+  // On paper the name heads the page, in place of the "Résumé" title (and
+  // of the brand in the hidden header).
+  &__print-name {
+    display: none;
+
+    @media print {
+      display: block;
+      margin: 0 0 var(--rq-space-6);
+      text-align: center;
+      font-size: var(--rq-font-size-4xl);
+      font-weight: var(--rq-font-weight-semibold);
+      line-height: var(--rq-line-height-title);
     }
   }
 
-  &__resume-display {
-    flex: 1;
-
-    .badge {
-      font-size: 12px;
-    }
-
-    @include desktop-only {
-      @include flex--justify-space-evenly;
-    }
+  &__download {
+    @include flex--justify-center;
+    margin-bottom: var(--rq-space-16);
 
     @include mobile-only {
-      @include flex--column--align-center;
+      margin-bottom: var(--rq-space-12);
     }
 
-    &__column {
-      padding: 0px 20px;
-      flex: 1;
-
-      h2 {
-        font-weight: 300;
-        text-align: center;
-        color: var(--rq-color-accent-text);
-        border-bottom: 1px solid var(--rq-color-accent-text);
-        padding-bottom: 20px;
-      }
-
-      &__skills {
-        text-align: center;
-
-        .badge {
-          display: inline-flex;
-          margin: 5px;
-        }
-      }
-
-      &__entry {
-        &__header {
-          @include flex--align-center;
-          column-gap: 10px;
-
-          h3 {
-            column-gap: 10px;
-            font-weight: 500;
-          }
-
-          svg {
-            fill: var(--rq-color-accent-text);
-          }
-        }
-
-        label {
-          font-weight: 400;
-          font-size: 14px;
-          color: var(--rq-color-muted);
-        }
-
-        &__date {
-          font-style: italic;
-        }
-
-        p {
-          font-size: 14px;
-        }
-      }
+    @media print {
+      display: none;
     }
+  }
+
+  &__display {
+    @include flex--column;
+    gap: var(--rq-space-section);
+
+    @include mobile-only {
+      gap: var(--rq-space-section-mobile);
+    }
+  }
+
+  &__entry-summary,
+  &__entry-highlights {
+    line-height: var(--rq-line-height-body);
+  }
+
+  &__entry-highlights {
+    @include flex--column;
+    gap: var(--rq-space-2);
+    margin: var(--rq-space-3) 0 0;
+    padding-left: var(--rq-space-5);
+    // Discs, though the list sits inside the timeline's list.
+    list-style-type: disc;
+
+    li::marker {
+      color: var(--rq-color-brand);
+    }
+  }
+
+  &__skill-groups {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(100%, $skill-group-min-width), 1fr)
+    );
+    gap: var(--rq-space-8) var(--rq-space-grid-gap);
+  }
+
+  &__skill-group {
+    @media print {
+      break-inside: avoid;
+    }
+
+    &__title {
+      margin-bottom: var(--rq-space-3);
+      font-size: var(--rq-font-size-md);
+    }
+
+    &__skills {
+      @include flex;
+      flex-wrap: wrap;
+      gap: var(--rq-space-2);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+  }
+}
+
+@media print {
+  .page-container:has(> .resume-page) > .page-container__title {
+    display: none;
   }
 }

@@ -12,6 +12,13 @@
   }
 }
 
+// The mobile layout, which print (a narrow page) uses too.
+@mixin mobile-or-print {
+  @media print, only screen and (max-width: 1040px) {
+    @content;
+  }
+}
+
 // A muted icon that turns the accent colour on hover. `$property` is `fill`
 // on an SVG, or `color` on a link whose icon fills with `currentColor`.
 @mixin muted-to-accent-icon($property: fill, $size: 36px) {

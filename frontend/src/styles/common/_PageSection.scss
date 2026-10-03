@@ -1,0 +1,28 @@
+@use "../tools" as *;
+
+// D0's home page sections: the heading in the first of three columns, the
+// content across the other two.
+.page-section {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--rq-space-grid-gap);
+
+  &__content {
+    grid-column: span 2;
+  }
+
+  @include mobile-or-print {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--rq-space-5);
+
+    &__content {
+      grid-column: auto;
+    }
+  }
+
+  @media print {
+    > .heading {
+      break-after: avoid;
+    }
+  }
+}
