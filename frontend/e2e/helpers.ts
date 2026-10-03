@@ -1,7 +1,12 @@
 import path from "node:path";
 
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test as base, type Page } from "@playwright/test";
+import {
+  expect,
+  test as base,
+  type Locator,
+  type Page,
+} from "@playwright/test";
 
 import { HOME_TITLE, toDocumentTitle } from "../src/common/utils/documentTitle";
 
@@ -15,6 +20,16 @@ export const VIEWPORTS = {
 
 /** The narrowest width the page must fit without scrolling sideways (WCAG Reflow). */
 export const NARROWEST_VIEWPORT = { width: 320, height: 568 } as const;
+
+/**
+ * About a printed page's width: US Letter's 816px less the 1.25cm margins
+ * in src/styles/_print.scss.
+ */
+export const PRINT_VIEWPORT = { width: 720, height: 960 } as const;
+
+/** The number of pages in a PDF from `page.pdf()` */
+export const countPdfPages = (pdf: Buffer): number =>
+  pdf.toString("latin1").match(/\/Type\s*\/Page\b/g)?.length ?? 0;
 
 export type ViewportName = keyof typeof VIEWPORTS;
 
@@ -76,6 +91,16 @@ export const projectCardLink = (page: Page, title: string) =>
 
 /** The open project dialog */
 export const projectDialog = (page: Page) => page.getByRole("dialog");
+
+/** A résumé section, by its `<h2>` */
+export const resumeSection = (page: Page, name: string) =>
+  page.getByRole("main").locator("section", {
+    has: page.getByRole("heading", { level: 2, name, exact: true }),
+  });
+
+/** The entries of the timeline in `section` */
+export const timelineEntries = (section: Locator) =>
+  section.locator(".timeline > li");
 
 export const brandLink = (page: Page) =>
   page.getByRole("banner").getByRole("link", { name: "Ryan Brandt" });

@@ -1,3 +1,10 @@
+import { RESUME_PDF_URL } from "../src/common/constants/urls";
+import {
+  EDUCATION_ENTRIES,
+  SKILL_GROUPS,
+  WORK_ENTRIES,
+} from "../src/repositories/resume";
+
 import {
   brandLink,
   expect,
@@ -6,9 +13,11 @@ import {
   NARROWEST_VIEWPORT,
   pageTitle,
   primaryNav,
+  resumeSection,
   ROUTES,
   test,
   themeOption,
+  timelineEntries,
   VIEWPORTS,
 } from "./helpers";
 
@@ -125,6 +134,92 @@ test.describe("desktop", () => {
     await page.goto("/contact");
     await expect(page).toHaveURL("/contact");
     await expect(pageTitle(page, "Page not found")).toBeVisible();
+  });
+});
+
+test.describe("résumé", () => {
+  test.use({ viewport: VIEWPORTS.desktop });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/resume");
+  });
+
+  for (const [name, entries] of [
+    ["Experience", WORK_ENTRIES],
+    ["Education", EDUCATION_ENTRIES],
+  ] as const) {
+    test(`${name} is a timeline of entries with their highlights`, async ({
+      page,
+    }) => {
+      const items = timelineEntries(resumeSection(page, name));
+
+      await expect(items.getByRole("heading", { level: 3 })).toHaveText(
+        entries.map(({ title }) => title)
+      );
+      for (const [index, entry] of entries.entries()) {
+        const item = items.nth(index);
+        await expect(item).toContainText(entry.organization);
+        await expect(item).toContainText(entry.description);
+        await expect(item.getByRole("listitem")).toHaveText([
+          ...entry.highlights,
+        ]);
+      }
+    });
+  }
+
+  // The one check on how dates are formatted (R8 changes the stored dates).
+  test("the current role's dates end Present, above its title", async ({
+    page,
+  }) => {
+    const current = timelineEntries(resumeSection(page, "Experience")).first();
+    const dates = current.getByText(/– Present$/);
+
+    await expect(dates).toBeVisible();
+    // The dates come after the title in the markup but show above it.
+    const datesBox = (await dates.boundingBox())!;
+    const titleBox = (await current.getByRole("heading").boundingBox())!;
+    expect(datesBox.y).toBeLessThan(titleBox.y);
+  });
+
+  test("skills are grouped by category", async ({ page }) => {
+    const skills = resumeSection(page, "Skills");
+
+    await expect(skills.getByRole("heading", { level: 3 })).toHaveText(
+      SKILL_GROUPS.map(({ name }) => name)
+    );
+    for (const [index, group] of SKILL_GROUPS.entries()) {
+      await expect(
+        skills.getByRole("list").nth(index).getByRole("listitem")
+      ).toHaveText([...group.skills]);
+    }
+  });
+
+  test("links to the PDF", async ({ page }) => {
+    await expect(
+      page.getByRole("main").getByRole("link", { name: "Download PDF" })
+    ).toHaveAttribute("href", RESUME_PDF_URL);
+  });
+
+  test.describe("printed", () => {
+    // Dark, to check printing doesn't follow the theme.
+    test.use({ colorScheme: "dark" });
+
+    test("shows only the content, on white", async ({ page }) => {
+      await page.emulateMedia({ media: "print" });
+
+      await expect(page.getByRole("banner")).toBeHidden();
+      await expect(page.getByRole("contentinfo")).toBeHidden();
+      await expect(
+        page.getByRole("link", { name: "Skip to content" })
+      ).toBeHidden();
+      await expect(
+        page.getByRole("link", { name: "Download PDF" })
+      ).toBeHidden();
+      await expect(page.locator("body")).toHaveCSS(
+        "background-color",
+        "rgb(255, 255, 255)"
+      );
+    });
   });
 });
 

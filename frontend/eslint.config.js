@@ -119,10 +119,6 @@ export default defineConfig(
           ],
         },
       ],
-      // Known a11y debt: the résumé `<label>`s are replaced in R4. Restore
-      // "error" once that lands, and lower `--max-warnings` in package.json
-      // as each one is fixed.
-      "jsx-a11y-x/label-has-associated-control": "warn",
     },
   },
 

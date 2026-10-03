@@ -1,10 +1,12 @@
 import {
+  countPdfPages,
   expect,
   expectNoBlockingAxeViolations,
   expectNoHorizontalScroll,
   gotoAndSettle,
   menuButton,
   primaryNav,
+  PRINT_VIEWPORT,
   projectCardLink,
   projectDialog,
   ROUTES,
@@ -77,3 +79,18 @@ for (const colorScheme of COLOR_SCHEMES) {
     });
   });
 }
+
+// Print ignores the theme, so the dark one shows it: black on white.
+test.describe("print", () => {
+  test.use({ viewport: PRINT_VIEWPORT, colorScheme: "dark" });
+
+  test("résumé printed", async ({ page }) => {
+    await page.emulateMedia({ media: "print" });
+    await gotoAndSettle(page, "/resume");
+    await expect(page).toHaveScreenshot("resume-print.png", { fullPage: true });
+
+    // Experience fills the first page; education and skills the second.
+    const pdf = await page.pdf({ format: "Letter" });
+    expect(countPdfPages(pdf)).toBe(2);
+  });
+});
