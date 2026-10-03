@@ -59,19 +59,6 @@ for (const colorScheme of COLOR_SCHEMES) {
     });
   }
 
-  // Browser print prints black on white in either theme.
-  test.describe(`print-${colorScheme}`, () => {
-    test.use({ viewport: VIEWPORTS.desktop, colorScheme });
-
-    test("résumé printed", async ({ page }) => {
-      await page.emulateMedia({ media: "print" });
-      await gotoAndSettle(page, "/resume");
-      await expect(page).toHaveScreenshot(`resume-print-${colorScheme}.png`, {
-        fullPage: true,
-      });
-    });
-  });
-
   test.describe(`mobile-menu-${colorScheme}`, () => {
     test.use({ viewport: VIEWPORTS.mobile, colorScheme });
 
@@ -86,3 +73,14 @@ for (const colorScheme of COLOR_SCHEMES) {
     });
   });
 }
+
+// Print ignores the theme, so the dark one shows it: black on white.
+test.describe("print", () => {
+  test.use({ viewport: VIEWPORTS.desktop, colorScheme: "dark" });
+
+  test("résumé printed", async ({ page }) => {
+    await page.emulateMedia({ media: "print" });
+    await gotoAndSettle(page, "/resume");
+    await expect(page).toHaveScreenshot("resume-print.png", { fullPage: true });
+  });
+});
