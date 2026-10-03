@@ -5,7 +5,12 @@ import ProjectCard, {
   type ProjectHeadingLevel,
 } from "@app/Work/Subcomponents/ProjectCard";
 import { useClientSideLinks } from "@app/Work/hooks";
-import { OPENED_FROM_CARD_STATE, toWorkEntryPath } from "@app/Work/constants";
+import {
+  CARD_LINK_SELECTOR,
+  EAGER_IMAGE_COUNT,
+  OPENED_FROM_CARD_STATE,
+  toWorkEntryPath,
+} from "@app/Work/constants";
 
 interface Props {
   projects: ReadonlyArray<IWorkEntry>;
@@ -30,16 +35,17 @@ const ProjectGrid: FunctionComponent<Props> = ({
   linkSearch = "",
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
-  useClientSideLinks(listRef, ".card__link", OPENED_FROM_CARD_STATE);
+  useClientSideLinks(listRef, CARD_LINK_SELECTOR, OPENED_FROM_CARD_STATE);
 
   return (
     <ul ref={listRef} className="project-grid">
-      {projects.map((project) => (
-        <li key={project.slug} data-slug={project.slug}>
+      {projects.map((project, index) => (
+        <li key={project.slug}>
           <ProjectCard
             project={project}
             href={`${toWorkEntryPath(project.slug)}${linkSearch}`}
             headingLevel={headingLevel}
+            imageLoading={index < EAGER_IMAGE_COUNT ? "eager" : "lazy"}
           />
         </li>
       ))}

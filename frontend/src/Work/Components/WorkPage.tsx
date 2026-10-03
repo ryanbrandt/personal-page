@@ -1,4 +1,4 @@
-import { type FunctionComponent, useId } from "react";
+import { type FunctionComponent, useEffect, useId, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 
 import PageContainer from "@app/common/Components/PageContainer";
@@ -8,9 +8,13 @@ import { BASE_ROUTES } from "@app/routes/constants";
 import { useAppSelector } from "@app/store/hooks";
 import { selectWorkTags } from "@app/Work/memoizedSelectors";
 import { selectWorkEntries, selectWorkEntryBySlug } from "@app/Work/selectors";
-import { useFocusCardOnDeepLinkClose, useWorkFilters } from "@app/Work/hooks";
+import { useWorkFilters } from "@app/Work/hooks";
 import { filterWorkEntries } from "@app/Work/utils";
-import { isOpenedFromCard } from "@app/Work/constants";
+import {
+  CARD_LINK_SELECTOR,
+  type IWorkEntryLocationState,
+  toWorkEntryPath,
+} from "@app/Work/constants";
 import ProjectDialog from "@app/Work/Subcomponents/ProjectDialog";
 import ProjectGrid from "@app/Work/Subcomponents/ProjectGrid";
 import ProjectSearch from "@app/Work/Subcomponents/ProjectSearch";
@@ -36,16 +40,31 @@ const WorkPage: FunctionComponent = () => {
   const { query, tags, setQuery, toggleTag, clearFilters } = useWorkFilters();
   const filtered = filterWorkEntries(entries, { query, tags });
 
-  useFocusCardOnDeepLinkClose(slug);
+  // The href of the card to focus once the dialog has closed. The card
+  // can't take focus before: the open modal dialog makes the page inert,
+  // and it only closes in an effect after the navigation renders.
+  const cardToFocus = useRef<string | null>(null);
+  useEffect(() => {
+    if (slug || !cardToFocus.current) return;
+    const href = cardToFocus.current;
+    cardToFocus.current = null;
+    Array.from(document.querySelectorAll<HTMLElement>(CARD_LINK_SELECTOR))
+      .find((link) => link.getAttribute("href") === href)
+      ?.focus();
+  }, [slug]);
 
   if (slug && !selected) return <NotFoundPage />;
 
-  // Back to the card's page if a card opened it; otherwise (a link from
-  // elsewhere) replace it with the grid, keeping the filters.
   const closeDialog = () => {
-    if (isOpenedFromCard(location.state)) {
+    const { openedFromCard } = (location.state ??
+      {}) as IWorkEntryLocationState;
+    if (openedFromCard) {
+      // Back to the card's page; the Dialog refocuses the card.
       void navigate(-1);
     } else {
+      // A link from elsewhere (or a new tab): replace it with the grid,
+      // keeping the filters. No card had focus, so focus the project's.
+      cardToFocus.current = `${toWorkEntryPath(slug!)}${location.search}`;
       void navigate(
         { pathname: BASE_ROUTES.work, search: location.search },
         { replace: true }

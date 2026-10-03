@@ -45,34 +45,19 @@
   }
 
   &__chip {
+    @include control-base;
+    @include control-secondary;
     min-height: 36px;
     padding: 0 var(--rq-space-4);
-    border: 1px solid var(--rq-color-control-border);
     border-radius: var(--rq-radius-pill);
-    background-color: var(--rq-color-surface);
-    color: var(--rq-color-text);
     font: inherit;
     font-size: var(--rq-font-size-xs);
     font-weight: var(--rq-font-weight-medium);
-    cursor: pointer;
-    transition:
-      background-color var(--rq-duration-fast) var(--rq-easing-standard),
-      border-color var(--rq-duration-fast) var(--rq-easing-standard),
-      color var(--rq-duration-fast) var(--rq-easing-standard);
-
-    &:hover {
-      border-color: var(--rq-color-accent-text);
-      color: var(--rq-color-accent-text);
-    }
 
     &[aria-pressed="true"] {
       border-color: var(--rq-color-accent-fill);
       background-color: var(--rq-color-accent-fill);
       color: var(--rq-color-on-accent);
-    }
-
-    &:focus-visible {
-      @include focus-ring;
     }
   }
 }

@@ -5,7 +5,6 @@ const IMAGES_URL = "https://resume-work-images.s3.amazonaws.com";
 
 const ENTRIES: ReadonlyArray<Omit<IWorkEntry, "slug">> = [
   {
-    id: 1,
     title: "Open FEC GraphQL Server",
     start: "August 2021",
     end: null,
@@ -20,7 +19,6 @@ const ENTRIES: ReadonlyArray<Omit<IWorkEntry, "slug">> = [
     githubUrl: "https://github.com/ryanbrandt/open-fec-graphql",
   },
   {
-    id: 2,
     title: "React UseSignalR",
     start: "November 2021",
     end: null,
@@ -31,7 +29,6 @@ const ENTRIES: ReadonlyArray<Omit<IWorkEntry, "slug">> = [
     githubUrl: "https://github.com/ryanbrandt/react-use-signalr",
   },
   {
-    id: 3,
     title: "Informed Voter",
     start: "October 2019",
     end: null,
@@ -46,7 +43,6 @@ const ENTRIES: ReadonlyArray<Omit<IWorkEntry, "slug">> = [
     githubUrl: "https://github.com/ryanbrandt/informed-voter",
   },
   {
-    id: 4,
     title: "React Drag Selection",
     start: "February 2022",
     end: null,
@@ -57,7 +53,6 @@ const ENTRIES: ReadonlyArray<Omit<IWorkEntry, "slug">> = [
     githubUrl: "https://github.com/ryanbrandt/react-drag-selection",
   },
   {
-    id: 5,
     title: "React Testing Utils",
     start: "May 2022",
     end: null,

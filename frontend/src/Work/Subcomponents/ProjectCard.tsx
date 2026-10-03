@@ -12,6 +12,7 @@ interface Props {
   /** Where the card links: the project's detail view */
   href: string;
   headingLevel: ProjectHeadingLevel;
+  imageLoading: "eager" | "lazy";
 }
 
 /** A project's card: image, title, one-liner, tags and GitHub link. */
@@ -19,12 +20,13 @@ const ProjectCard: FunctionComponent<Props> = ({
   project,
   href,
   headingLevel,
+  imageLoading,
 }) => (
   <Card
     title={project.title}
     href={href}
     headingLevel={headingLevel}
-    media={<ProjectImage project={project} />}
+    media={<ProjectImage project={project} loading={imageLoading} />}
     tags={project.tags}
     footer={<ProjectGitHubLink project={project} />}
   >

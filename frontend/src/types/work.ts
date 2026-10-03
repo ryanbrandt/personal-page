@@ -1,5 +1,3 @@
-import type { IIdentityResource } from "@app/types/common";
-
 /** An image with its intrinsic size, so the page reserves its space. */
 export interface IWorkImage {
   src: string;
@@ -7,7 +5,7 @@ export interface IWorkImage {
   height: number;
 }
 
-export interface IWorkEntry extends IIdentityResource {
+export interface IWorkEntry {
   /** The URL segment of its detail view (`/work/:slug`), from the title */
   slug: string;
   title: string;

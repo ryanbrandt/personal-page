@@ -7,6 +7,12 @@ interface Props {
   project: IWorkEntry;
   /** The screenshot's alt text; empty where it only decorates */
   alt?: string;
+  /**
+   * "eager" for images likely in the first screen
+   *
+   * @default lazy
+   */
+  loading?: "eager" | "lazy";
 }
 
 /**
@@ -14,7 +20,11 @@ interface Props {
  * (decorative, hidden from screen readers). Either fills its container,
  * which sets the size.
  */
-const ProjectImage: FunctionComponent<Props> = ({ project, alt = "" }) => {
+const ProjectImage: FunctionComponent<Props> = ({
+  project,
+  alt = "",
+  loading = "lazy",
+}) => {
   const { image, title } = project;
 
   if (!image) {
@@ -35,7 +45,7 @@ const ProjectImage: FunctionComponent<Props> = ({ project, alt = "" }) => {
       width={image.width}
       height={image.height}
       alt={alt}
-      loading="lazy"
+      loading={loading}
       decoding="async"
     />
   );

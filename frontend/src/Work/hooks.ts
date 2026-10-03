@@ -1,4 +1,4 @@
-import { type RefObject, useEffect, useEffectEvent, useRef } from "react";
+import { type RefObject, useEffect, useEffectEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import type { IWorkFilters } from "@app/Work/types";
@@ -59,9 +59,11 @@ export const useWorkFilters = (): IWorkFiltersControls => {
 /**
  * Client-side navigation for the links matching `linkSelector` inside
  * `containerRef`: links rendered by components that only take an `href`
- * (e.g. the library's Card), not a router `<Link>`. Plain left clicks
- * navigate in the app with `state`; modified clicks (new tab, …) keep the
- * browser's default.
+ * (e.g. the library's Card), not a router `<Link>`. Like `<Link>`, it leaves
+ * to the browser modified clicks (new tab, …), links with a `target` other
+ * than `_self` or a `download`, and links to other origins.
+ *
+ * TODO(L2c): library Card link render prop; then use a router <Link>.
  */
 export const useClientSideLinks = (
   containerRef: RefObject<HTMLElement | null>,
@@ -74,14 +76,21 @@ export const useClientSideLinks = (
     const link = (event.target as Element).closest<HTMLAnchorElement>(
       linkSelector
     );
-    const modified =
-      event.metaKey || event.altKey || event.ctrlKey || event.shiftKey;
-    if (!link || event.defaultPrevented || event.button !== 0 || modified) {
+    if (!link || event.defaultPrevented || event.button !== 0) return;
+    if (event.metaKey || event.altKey || event.ctrlKey || event.shiftKey) {
       return;
     }
+    if (
+      (link.target && link.target !== "_self") ||
+      link.hasAttribute("download")
+    ) {
+      return;
+    }
+    const url = new URL(link.href);
+    if (url.origin !== window.location.origin) return;
 
     event.preventDefault();
-    void navigate(link.getAttribute("href")!, { state });
+    void navigate(`${url.pathname}${url.search}${url.hash}`, { state });
   });
 
   useEffect(() => {
@@ -90,28 +99,4 @@ export const useClientSideLinks = (
     container.addEventListener("click", listener);
     return () => container.removeEventListener("click", listener);
   }, [containerRef]);
-};
-
-/**
- * Closing a detail view returns focus to the card that opened it (the
- * Dialog does that). A deep link had no card to return to, so focus would
- * be lost (left on the closing dialog, or the page): this sends it to the
- * project's card instead.
- */
-export const useFocusCardOnDeepLinkClose = (slug: string | undefined): void => {
-  const previousSlug = useRef(slug);
-
-  useEffect(() => {
-    const closedSlug = previousSlug.current;
-    previousSlug.current = slug;
-    const focused = document.activeElement;
-    const focusReturned =
-      focused && focused !== document.body && !focused.closest("dialog");
-    if (!closedSlug || slug || focusReturned) return;
-
-    // ProjectGrid marks each card's list item with its slug.
-    document
-      .querySelector<HTMLElement>(`[data-slug="${closedSlug}"] .card__link`)
-      ?.focus();
-  }, [slug]);
 };

@@ -6,17 +6,25 @@ export const TAG_PARAM = "tag";
 
 export const SEARCH_DEBOUNCE_MS = 250;
 
+/** How many cards (the first row) load their images eagerly */
+export const EAGER_IMAGE_COUNT = 3;
+
 /** The path of a project's detail view */
 export const toWorkEntryPath = (slug: string): string =>
   `${BASE_ROUTES.work}/${slug}`;
 
 /**
- * The history state of a detail view opened from a project card: closing it
- * goes back to the page the card was on.
+ * The library Card's title link (its class), which ProjectGrid routes in
+ * the app.
+ * TODO(L2c): library Card link render prop, to render a router <Link>.
  */
-export const OPENED_FROM_CARD_STATE = { openedFromCard: true } as const;
+export const CARD_LINK_SELECTOR = ".card__link";
 
-/** Whether a location's `state` is OPENED_FROM_CARD_STATE (a copy of it). */
-export const isOpenedFromCard = (state: unknown): boolean =>
-  (state as Partial<typeof OPENED_FROM_CARD_STATE> | null)?.openedFromCard ===
-  true;
+/** The history state of a detail view opened from a project card */
+export interface IWorkEntryLocationState {
+  openedFromCard?: boolean;
+}
+
+export const OPENED_FROM_CARD_STATE: IWorkEntryLocationState = {
+  openedFromCard: true,
+};

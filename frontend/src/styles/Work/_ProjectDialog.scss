@@ -1,18 +1,21 @@
 @use "../tools" as *;
 
+// The library Dialog's close button (a 44px square in the top right corner).
+$dialog-close-button-size: 44px;
+
 .project-dialog {
   width: min(100% - 2 * var(--rq-space-5), 720px);
   line-height: var(--rq-line-height-body);
 
-  // The library pads the whole panel's right side for its close button (44px
-  // square); only the title shares a row with it, so the image and text can
-  // use the full width.
+  // The library pads the whole panel's right side for its close button, but
+  // only the title shares a row with it: the image and text get the full
+  // width. TODO(L2c): the library should pad only the title row.
   .dialog__panel {
     padding-right: var(--rq-space-6);
   }
 
   .dialog__title {
-    padding-right: 44px;
+    padding-right: $dialog-close-button-size;
     line-height: var(--rq-line-height-title);
   }
 

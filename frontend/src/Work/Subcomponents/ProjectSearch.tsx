@@ -1,10 +1,5 @@
-import {
-  type FunctionComponent,
-  useEffect,
-  useEffectEvent,
-  useState,
-} from "react";
-import { SearchInput, useDebounce } from "@ryanbrandt/react-quick-ui";
+import { type FunctionComponent, useEffect, useRef, useState } from "react";
+import { SearchInput } from "@ryanbrandt/react-quick-ui";
 
 import { SEARCH_DEBOUNCE_MS } from "@app/Work/constants";
 
@@ -23,20 +18,27 @@ const ProjectSearch: FunctionComponent<Props> = ({
   onQueryChange,
 }) => {
   const [text, setText] = useState(query);
-  const debouncedText = useDebounce(text, SEARCH_DEBOUNCE_MS);
+  const pendingChange = useRef<number>(undefined);
 
-  // A query changed from outside (clearing the filters, back/forward)
-  // replaces the text.
-  const [appliedQuery, setAppliedQuery] = useState(query);
-  if (query !== appliedQuery) {
-    setAppliedQuery(query);
+  // A query changed from outside (clearing the filters) replaces the text.
+  const [shownQuery, setShownQuery] = useState(query);
+  if (query !== shownQuery) {
+    setShownQuery(query);
     setText(query);
   }
 
-  const applyText = useEffectEvent((value: string) => {
-    if (value !== query) onQueryChange(value);
-  });
-  useEffect(() => applyText(debouncedText), [debouncedText]);
+  // Any new query, and unmounting, drops a pending change, so a stale one
+  // can't undo clearing the filters.
+  useEffect(() => () => window.clearTimeout(pendingChange.current), [query]);
+
+  const handleChange = (value: string) => {
+    setText(value);
+    window.clearTimeout(pendingChange.current);
+    pendingChange.current = window.setTimeout(
+      () => onQueryChange(value),
+      SEARCH_DEBOUNCE_MS
+    );
+  };
 
   return (
     <div className="project-search">
@@ -47,7 +49,7 @@ const ProjectSearch: FunctionComponent<Props> = ({
         id={id}
         placeholder="Search projects"
         value={text}
-        onChange={setText}
+        onChange={handleChange}
       />
     </div>
   );

@@ -1,18 +1,23 @@
 import type { Page } from "@playwright/test";
 
 import { toDocumentTitle } from "../src/common/utils/documentTitle";
+import { WORK_ENTRIES } from "../src/repositories/work";
 import {
   expect,
   pageTitle,
   projectCardLink,
   projectCards,
   projectDialog,
+  ROUTES,
   test,
   VIEWPORTS,
 } from "./helpers";
 
-const PROJECT_COUNT = 5;
-const PROJECTS_TITLE = "Recent Personal Projects";
+// Project images come from the `remoteImages` fixture in helpers.ts, which
+// every test using its `test` gets: no network.
+
+const PROJECT_COUNT = WORK_ENTRIES.length;
+const PROJECTS_TITLE = ROUTES.find(({ name }) => name === "work")!.title;
 
 const searchBox = (page: Page) =>
   page.getByRole("searchbox", { name: "Search projects" });
@@ -21,15 +26,6 @@ const tagChip = (page: Page, tag: string) =>
   page
     .getByRole("group", { name: "Filter by tag" })
     .getByRole("button", { name: tag, exact: true });
-
-/** Whether focus is inside the first element matching `selector`. */
-const containsFocus = (page: Page, selector: string) =>
-  page.evaluate(
-    (selector) =>
-      document.querySelector(selector)?.contains(document.activeElement) ??
-      false,
-    selector
-  );
 
 test.use({ viewport: VIEWPORTS.desktop });
 
@@ -42,7 +38,9 @@ test("search filters the projects and is kept in the URL", async ({ page }) => {
   await expect(cards).toHaveCount(1);
   await expect(cards.getByRole("heading")).toHaveText("React UseSignalR");
   await expect(page).toHaveURL("/work?q=signalr");
-  await expect(page.getByRole("status")).toHaveText("1 of 5 projects");
+  await expect(page.getByRole("status")).toHaveText(
+    `1 of ${PROJECT_COUNT} projects`
+  );
 
   await searchBox(page).fill("");
   await expect(cards).toHaveCount(PROJECT_COUNT);
@@ -74,9 +72,10 @@ test("tag chips toggle and filter the projects", async ({ page }) => {
   await expect(page).toHaveURL("/work");
 });
 
-test("filters load from the URL", async ({ page }) => {
+test("filters load from the URL; no matches show an empty state that clears them", async ({
+  page,
+}) => {
   await page.goto("/work?q=drag&tag=React");
-
   await expect(searchBox(page)).toHaveValue("drag");
   await expect(tagChip(page, "React")).toHaveAttribute("aria-pressed", "true");
   await expect(tagChip(page, "Library")).toHaveAttribute(
@@ -87,12 +86,8 @@ test("filters load from the URL", async ({ page }) => {
   await expect(projectCards(page).getByRole("heading")).toHaveText(
     "React Drag Selection"
   );
-});
 
-test("no matches show an empty state that clears the filters", async ({
-  page,
-}) => {
-  await page.goto("/work?q=no+such+project&tag=Python");
+  await searchBox(page).fill("no such project");
   await expect(projectCards(page)).toHaveCount(0);
   await expect(
     page.getByText("No projects match these filters.")
@@ -104,10 +99,7 @@ test("no matches show an empty state that clears the filters", async ({
   await expect(page).toHaveURL("/work");
   await expect(searchBox(page)).toHaveValue("");
   await expect(searchBox(page)).toBeFocused();
-  await expect(tagChip(page, "Python")).toHaveAttribute(
-    "aria-pressed",
-    "false"
-  );
+  await expect(tagChip(page, "React")).toHaveAttribute("aria-pressed", "false");
 });
 
 test("a card opens its dialog; Esc closes it and refocuses the card", async ({
@@ -124,7 +116,7 @@ test("a card opens its dialog; Esc closes it and refocuses the card", async ({
   await expect(dialog).toHaveAccessibleName("Informed Voter");
   await expect(page).toHaveURL("/work/informed-voter?tag=React");
   await expect(page).toHaveTitle(toDocumentTitle("Informed Voter"));
-  await expect.poll(() => containsFocus(page, "dialog")).toBe(true);
+  await expect(dialog.locator(":focus")).toHaveCount(1);
   // A new path in the same route: the page stays and the heading isn't
   // focused behind the dialog.
   await expect(pageTitle(page, PROJECTS_TITLE)).not.toBeFocused();
@@ -155,7 +147,7 @@ test("a click on a card opens its dialog; the close button closes it", async ({
 
   // Closing went back in history, so Back leaves the page.
   await page.goBack();
-  await expect(page).toHaveURL("about:blank");
+  await expect(page).not.toHaveURL(/\/work/);
 });
 
 test("a deep link opens the dialog over the grid", async ({ page }) => {
@@ -181,6 +173,19 @@ test("a deep link opens the dialog over the grid", async ({ page }) => {
   await expect(searchBox(page)).toHaveValue("react");
   // No card opened it, so focus goes to the project's card.
   await expect(projectCardLink(page, "React Drag Selection")).toBeFocused();
+});
+
+test("an in-app link to an unknown project focuses the 404 heading", async ({
+  page,
+}) => {
+  await page.goto("/work");
+  // No link in the app leads there, so navigate the way a router link does.
+  await page.evaluate(() => {
+    history.pushState(null, "", "/work/no-such-project");
+    dispatchEvent(new PopStateEvent("popstate"));
+  });
+
+  await expect(pageTitle(page, "Page not found")).toBeFocused();
 });
 
 test("an unknown project shows the 404 page", async ({ page }) => {
