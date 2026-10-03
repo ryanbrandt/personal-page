@@ -28,16 +28,8 @@ $social-link-size: 44px;
 
     a {
       @include flex--align-center--justify-center;
-      width: $social-link-size;
-      height: $social-link-size;
+      @include muted-to-accent-icon($property: color, $size: $social-link-size);
       border-radius: var(--rq-radius-control);
-      color: var(--rq-color-muted);
-      transition: color $hover-transition ease-out;
-
-      &:hover {
-        color: var(--rq-color-accent-text);
-        transition: color $hover-transition ease-in;
-      }
 
       &:focus-visible {
         @include focus-ring;

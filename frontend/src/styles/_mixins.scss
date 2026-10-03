@@ -1,5 +1,3 @@
-@use "variables";
-
 @mixin mobile-only {
   @media only screen and (max-width: 1040px) {
     @content;
@@ -12,42 +10,17 @@
   }
 }
 
-@mixin muted-to-accent-icon {
-  fill: var(--rq-color-muted);
+// A muted icon that turns the accent colour on hover. `$property` is `fill`
+// on an SVG, or `color` on a link whose icon fills with `currentColor`.
+@mixin muted-to-accent-icon($property: fill, $size: 36px) {
+  #{$property}: var(--rq-color-muted);
   cursor: pointer;
-  width: 36px;
-  height: 36px;
-  transition: fill variables.$hover-transition ease-out;
+  width: $size;
+  height: $size;
+  transition: $property var(--rq-duration-base) var(--rq-easing-standard);
 
   &:hover {
-    fill: var(--rq-color-accent-text);
-    transition: fill variables.$hover-transition ease-in;
-  }
-}
-
-// Faded until hovered, on desktop only (touch screens have no hover).
-@mixin hover-reveal {
-  @include desktop-only {
-    opacity: 0.5;
-    transition: opacity variables.$hover-transition ease-out;
-
-    &:hover {
-      opacity: 1;
-      transition: opacity variables.$hover-transition ease-in;
-    }
-  }
-}
-
-// Faded until hovered, on desktop only (touch screens have no hover).
-@mixin hover-reveal {
-  @include desktop-only {
-    opacity: 0.5;
-    transition: opacity variables.$hover-transition ease-out;
-
-    &:hover {
-      opacity: 1;
-      transition: opacity variables.$hover-transition ease-in;
-    }
+    #{$property}: var(--rq-color-accent-text);
   }
 }
 

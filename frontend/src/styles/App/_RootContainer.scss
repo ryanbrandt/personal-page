@@ -11,7 +11,8 @@
     position: absolute;
     top: var(--rq-space-2);
     left: var(--rq-space-2);
-    // Above the sticky header (NavBar's z-index is 10).
+    // Above the sticky header: tied to the library's NavBar z-index (10),
+    // which has no token yet.
     z-index: 11;
     padding: var(--rq-space-2) var(--rq-space-4);
     border-radius: var(--rq-radius-control);
