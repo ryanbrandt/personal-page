@@ -1,10 +1,10 @@
 import { type FunctionComponent, useRef } from "react";
 
+import { useClientSideLinks } from "@app/common/hooks";
 import type { IWorkEntry } from "@app/types/work";
 import ProjectCard, {
   type ProjectHeadingLevel,
 } from "@app/Work/Subcomponents/ProjectCard";
-import { useClientSideLinks } from "@app/Work/hooks";
 import {
   CARD_LINK_SELECTOR,
   EAGER_IMAGE_COUNT,
