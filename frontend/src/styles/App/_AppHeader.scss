@@ -1,3 +1,4 @@
+@use "sass:map";
 @use "../tools" as *;
 
 // The bar itself is the library's NavBar; this styles the brand inside it.
@@ -21,7 +22,9 @@
     height: 36px;
     border-radius: 10px;
     background-color: var(--rq-color-brand);
-    color: #ffffff;
+    // The brand colour is the same in both themes, so its ink is too: white
+    // falls short of AA on it; the light theme's text colour passes.
+    color: map.get($colors-light, text);
     font-size: var(--rq-font-size-sm);
     font-weight: var(--rq-font-weight-bold);
   }
