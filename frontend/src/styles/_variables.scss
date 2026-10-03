@@ -1,3 +1,7 @@
 $default-row-gap: 1vh;
 $default-column-gap: 1vw;
-$icon-transition: 0.25s;
+
+// The library NavBar's breakpoint ($navbar-narrow in its _NavBar.scss, which
+// its Sass API doesn't export): below this bar width it moves its links into
+// a menu and pads the bar with the mobile gutter.
+$navbar-narrow: 768px;

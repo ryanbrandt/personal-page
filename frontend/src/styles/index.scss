@@ -20,14 +20,10 @@
 
 @use "Work/WorkPage";
 
-html,
-body,
-#root {
-  margin: 0;
-  overflow-x: hidden;
-}
+@use "NotFound/NotFoundPage";
 
 body {
+  margin: 0;
   background-color: var(--rq-color-bg);
   color: var(--rq-color-text);
 }

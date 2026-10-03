@@ -1,6 +1,7 @@
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 import { THEME_STORAGE_KEY } from "../src/common/utils/theme";
+import { expect, test, themeOption } from "./helpers";
 
 type Scheme = "light" | "dark";
 
@@ -54,48 +55,52 @@ const expectScheme = async (page: Page, scheme: Scheme) => {
   await expect.poll(() => activeThemeColors(page)).toEqual([background]);
 };
 
-test("a stored preference is applied before the app loads", async ({
-  page,
-}) => {
-  await page.emulateMedia({ colorScheme: "light" });
-  await storePreference(page, "dark");
-  await blockScripts(page);
-  await page.goto("/");
+test.describe("before the app loads", () => {
+  // These tests block the app's scripts on purpose, and the browser logs each
+  // blocked load as an error.
+  test.use({ failOnConsoleProblems: false });
 
-  await expect(page.locator("#root")).toBeEmpty();
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await expectScheme(page, "dark");
+  test("a stored preference is applied before the app loads", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await storePreference(page, "dark");
+    await blockScripts(page);
+    await page.goto("/");
+
+    await expect(page.locator("#root")).toBeEmpty();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await expectScheme(page, "dark");
+  });
+
+  test('"system" (the default) follows the OS live', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
+    await blockScripts(page);
+    await page.goto("/");
+
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "system");
+    await expectScheme(page, "dark");
+
+    await page.emulateMedia({ colorScheme: "light" });
+    await expectScheme(page, "light");
+  });
+
+  test("an invalid stored value falls back to system", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
+    await storePreference(page, "Dark");
+    await blockScripts(page);
+    await page.goto("/");
+
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "system");
+    await expectScheme(page, "dark");
+  });
 });
 
-test('"system" (the default) follows the OS live', async ({ page }) => {
-  await page.emulateMedia({ colorScheme: "dark" });
-  await blockScripts(page);
-  await page.goto("/");
-
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "system");
-  await expectScheme(page, "dark");
-
-  await page.emulateMedia({ colorScheme: "light" });
-  await expectScheme(page, "light");
-});
-
-test("an invalid stored value falls back to system", async ({ page }) => {
-  await page.emulateMedia({ colorScheme: "dark" });
-  await storePreference(page, "Dark");
-  await blockScripts(page);
-  await page.goto("/");
-
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "system");
-  await expectScheme(page, "dark");
-});
-
-test("the toggle flips away from what the OS shows under system", async ({
-  page,
-}) => {
+test("choosing light overrides a dark OS", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
 
-  await page.locator(".app-header__theme-toggle").click();
+  await themeOption(page, "Light").click();
 
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await expectScheme(page, "light");

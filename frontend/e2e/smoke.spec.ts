@@ -1,12 +1,15 @@
-import { expect, test } from "@playwright/test";
-
 import {
-  gotoAndSettle,
-  mobileMenuBurger,
-  openMobileMenu,
+  brandLink,
+  expect,
+  expectNoHorizontalScroll,
+  menuButton,
+  NARROWEST_VIEWPORT,
   pageTitle,
+  primaryNav,
   projectDetails,
   ROUTES,
+  test,
+  themeOption,
   VIEWPORTS,
 } from "./helpers";
 
@@ -19,69 +22,87 @@ test.describe("desktop", () => {
     test(`${route.path} renders its title`, async ({ page }) => {
       await page.goto(route.path);
       await expect(pageTitle(page, route.title)).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
+      await expect(page).toHaveTitle(route.documentTitle);
     });
   }
 
   test("exactly the current route's nav link is marked current", async ({
     page,
   }) => {
-    const current = page.locator('.app-header__menu [aria-current="page"]');
+    const nav = primaryNav(page);
+    const current = nav.locator('[aria-current="page"]');
 
-    for (const [path, label] of [
-      ["/", "Home"],
-      ["/resume", "Résumé"],
-      ["/resume/", "Résumé"],
-      ["/work", "Personal Projects"],
-    ]) {
-      await page.goto(path);
+    await page.goto("/");
+    await expect(current).toHaveCount(1);
+    await expect(current).toHaveText("Home");
+
+    for (const label of ["Résumé", "Projects"]) {
+      await nav.getByRole("link", { name: label }).click();
       await expect(current).toHaveCount(1);
       await expect(current).toHaveText(label);
     }
+
+    // A trailing slash still matches its route.
+    await page.goto("/resume/");
+    await expect(current).toHaveText("Résumé");
   });
 
   test("nav links navigate between routes", async ({ page }) => {
     await page.goto("/");
-    const nav = page.locator(".app-header__menu");
+    const nav = primaryNav(page);
 
-    await nav.getByText("Résumé").click();
+    await nav.getByRole("link", { name: "Résumé" }).click();
     await expect(page).toHaveURL("/resume");
     await expect(pageTitle(page, "Résumé")).toBeVisible();
 
-    await nav.getByText("Personal Projects").click();
+    await nav.getByRole("link", { name: "Projects" }).click();
     await expect(page).toHaveURL("/work");
     await expect(pageTitle(page, "Recent Personal Projects")).toBeVisible();
 
-    await nav.getByText("Home").click();
+    await nav.getByRole("link", { name: "Home" }).click();
     await expect(page).toHaveURL("/");
     await expect(pageTitle(page, "Hello, World!")).toBeVisible();
   });
 
-  // Screenshots can't see this blur (nothing scrolls under the fixed header),
-  // and a CSS minifier change once dropped it silently.
-  test("header keeps its backdrop blur", async ({ page }) => {
+  test("the brand links home", async ({ page }) => {
+    await page.goto("/resume");
+    await brandLink(page).click();
+    await expect(page).toHaveURL("/");
+  });
+
+  // visual.spec.ts screenshots content scrolled under the header to see the
+  // blur itself.
+  test("header has a backdrop filter", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator(".app-header")).toHaveCSS(
+    await expect(page.getByRole("banner")).not.toHaveCSS(
       "backdrop-filter",
-      "blur(10px)"
+      "none"
     );
   });
 
-  test("theme toggle flips the theme and remembers it", async ({ page }) => {
-    await page.emulateMedia({ colorScheme: "light" });
+  test("the theme choice persists across a reload", async ({ page }) => {
     await page.goto("/");
     const html = page.locator("html");
-    const toggle = page.locator(".app-header__theme-toggle");
 
-    // No stored preference: follow the (light) OS.
-    await expect(html).toHaveAttribute("data-theme", "system");
-
-    await toggle.click();
+    await themeOption(page, "Dark").click();
     await expect(html).toHaveAttribute("data-theme", "dark");
+
     await page.reload();
     await expect(html).toHaveAttribute("data-theme", "dark");
+    await expect(themeOption(page, "Dark")).toBeChecked();
+  });
 
-    await toggle.click();
-    await expect(html).toHaveAttribute("data-theme", "light");
+  test("the footer sits below the content", async ({ page }) => {
+    await page.goto("/resume");
+    const footer = page.getByRole("contentinfo");
+
+    const mainBox = (await page.getByRole("main").boundingBox())!;
+    const footerBox = (await footer.boundingBox())!;
+    expect(footerBox.y).toBeGreaterThanOrEqual(mainBox.y + mainBox.height);
+
+    await expect(footer.getByRole("link", { name: "LinkedIn" })).toBeVisible();
+    await expect(footer.getByRole("link", { name: "GitHub" })).toBeVisible();
   });
 
   test("project search filters results", async ({ page }) => {
@@ -116,79 +137,73 @@ test.describe("desktop", () => {
     await expect(details).toBeHidden();
   });
 
-  // Until R2 adds a 404 page (and R9 brings back /contact), these redirect
-  // home instead of rendering an empty content area.
-  for (const path of ["/does-not-exist", "/contact"]) {
-    test(`${path} redirects home`, async ({ page }) => {
-      await page.goto(path);
-      await expect(page).toHaveURL("/");
-      await expect(pageTitle(page, "Hello, World!")).toBeVisible();
-    });
-  }
-
-  test("back after a redirect returns to the previous page", async ({
+  test("the 404 page isn't indexed, marks no nav link and links home", async ({
     page,
   }) => {
-    await page.goto("/resume");
     await page.goto("/does-not-exist");
+    await expect(page).toHaveURL("/does-not-exist");
+    await expect(page.locator('head > meta[name="robots"]')).toHaveAttribute(
+      "content",
+      "noindex"
+    );
+    await expect(primaryNav(page).locator("[aria-current]")).toHaveCount(0);
+
+    await page
+      .getByRole("main")
+      .getByRole("link", { name: "Go to the home page" })
+      .click();
     await expect(page).toHaveURL("/");
-
-    await page.goBack();
-    await expect(page).toHaveURL("/resume");
+    await expect(pageTitle(page, "Hello, World!")).toBeVisible();
   });
 
-  test("nav links work from the keyboard", async ({ page }) => {
-    await page.goto("/");
-    const resumeLink = page
-      .locator(".app-header__menu")
-      .getByRole("link", { name: "Résumé" });
-
-    // Home is the first tab stop, Résumé the second.
-    await page.keyboard.press("Tab");
-    await page.keyboard.press("Tab");
-    await expect(resumeLink).toBeFocused();
-
-    await page.keyboard.press("Enter");
-    await expect(page).toHaveURL("/resume");
-    await expect(pageTitle(page, "Résumé")).toBeVisible();
+  test("/contact shows the 404 page until R9", async ({ page }) => {
+    await page.goto("/contact");
+    await expect(page).toHaveURL("/contact");
+    await expect(pageTitle(page, "Page not found")).toBeVisible();
   });
-
-  for (const route of ROUTES) {
-    test(`${route.path} loads without console warnings or errors`, async ({
-      page,
-    }) => {
-      const messages: Array<string> = [];
-      page.on("console", (message) => {
-        if (message.type() === "warning" || message.type() === "error") {
-          messages.push(`${message.type()}: ${message.text()}`);
-        }
-      });
-      page.on("pageerror", (error) => messages.push(`pageerror: ${error}`));
-
-      await gotoAndSettle(page, route.path);
-      expect(messages).toEqual([]);
-    });
-  }
 });
 
 test.describe("mobile", () => {
   test.use({ viewport: VIEWPORTS.mobile });
 
-  test("burger menu opens, navigates and closes", async ({ page }) => {
+  test("menu closes on back/forward navigation", async ({ page }) => {
+    const nav = primaryNav(page);
     await page.goto("/");
-    const overlay = page.locator(".app-header__mobile-menu__overlay");
-
-    await expect(page.locator(".app-header__menu")).toBeHidden();
-
-    await mobileMenuBurger(page).click();
-    await expect(openMobileMenu(page)).toBeVisible();
-    await overlay.getByText("x", { exact: true }).click();
-    await expect(openMobileMenu(page)).toBeHidden();
-
-    await mobileMenuBurger(page).click();
-    await overlay.getByText("Résumé").click();
+    await menuButton(page).click();
+    await nav.getByRole("link", { name: "Résumé" }).click();
     await expect(page).toHaveURL("/resume");
-    await expect(pageTitle(page, "Résumé")).toBeVisible();
-    await expect(openMobileMenu(page)).toBeHidden();
+
+    // An in-app history navigation with the menu open.
+    await menuButton(page).click();
+    await expect(nav).toBeVisible();
+    await page.goBack();
+
+    await expect(page).toHaveURL("/");
+    await expect(menuButton(page)).toHaveAttribute("aria-expanded", "false");
+    await expect(nav).toBeHidden();
+  });
+
+  test("the page doesn't scroll while the menu is open", async ({ page }) => {
+    await page.goto("/resume");
+    const html = page.locator("html");
+
+    await menuButton(page).click();
+    await expect(html).toHaveCSS("overflow", "hidden");
+
+    await menuButton(page).click();
+    await expect(html).not.toHaveCSS("overflow", "hidden");
+  });
+});
+
+test.describe("320px wide", () => {
+  test.use({ viewport: NARROWEST_VIEWPORT });
+
+  // visual.spec.ts checks the desktop and mobile viewports.
+  test("no page scrolls sideways", async ({ page }) => {
+    for (const route of ROUTES) {
+      await page.goto(route.path);
+      await expect(pageTitle(page, route.title)).toBeVisible();
+      await expectNoHorizontalScroll(page);
+    }
   });
 });

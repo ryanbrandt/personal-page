@@ -1,5 +1,18 @@
 @use "../tools" as *;
 
+// Faded until hovered, on desktop. The fade takes text below AA contrast;
+// R5 replaces the cards and the modal, and this with them.
+@mixin faded-until-hover {
+  @include desktop-only {
+    opacity: 0.5;
+    transition: opacity var(--rq-duration-base) var(--rq-easing-standard);
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
 .work-page {
   @include flex--column;
   row-gap: calc($default-row-gap * 2);
@@ -29,19 +42,8 @@
 
     &__result {
       @include flex--column--align-center;
-
-      @include desktop-only {
-        opacity: 0.5;
-        transition: 0.25s ease-out;
-      }
-
-      @include desktop-only {
-        &:hover {
-          opacity: 1;
-          cursor: pointer;
-          transition: 0.25s ease-in;
-        }
-      }
+      @include faded-until-hover;
+      cursor: pointer;
 
       &__img {
         border-radius: 10px;
@@ -98,16 +100,7 @@
           font-weight: 400;
           cursor: pointer;
           color: var(--rq-color-accent-text);
-
-          @include desktop-only {
-            opacity: 0.5;
-            transition: 0.25s ease-out;
-
-            &:hover {
-              opacity: 1;
-              transition: 0.25s ease-in;
-            }
-          }
+          @include faded-until-hover;
         }
       }
     }
