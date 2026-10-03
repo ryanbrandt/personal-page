@@ -21,6 +21,16 @@ export const VIEWPORTS = {
 /** The narrowest width the page must fit without scrolling sideways (WCAG Reflow). */
 export const NARROWEST_VIEWPORT = { width: 320, height: 568 } as const;
 
+/**
+ * About a printed page's width: US Letter's 816px less the 1.25cm margins
+ * in src/styles/_print.scss.
+ */
+export const PRINT_VIEWPORT = { width: 720, height: 960 } as const;
+
+/** The number of pages in a PDF from `page.pdf()` */
+export const countPdfPages = (pdf: Buffer): number =>
+  pdf.toString("latin1").match(/\/Type\s*\/Page\b/g)?.length ?? 0;
+
 export type ViewportName = keyof typeof VIEWPORTS;
 
 /** An axe violation a later ticket fixes, skipped until then. */
