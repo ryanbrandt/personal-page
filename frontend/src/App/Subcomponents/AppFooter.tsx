@@ -1,19 +1,17 @@
 import type { FunctionComponent } from "react";
 
-import { SOCIAL_LINKS } from "@app/common/constants/socialLinks";
+import SocialLinks from "@app/common/Components/SocialLinks";
+
+// AppFooter.scss lines the icons up with the gutter from this size.
+const SOCIAL_ICON_SIZE = 20;
 
 const AppFooter: FunctionComponent = () => (
   <footer className="app-footer">
     <span>© {new Date().getFullYear()} Ryan Brandt</span>
-    <ul className="app-footer__social-links">
-      {SOCIAL_LINKS.map(({ label, url, Icon }) => (
-        <li key={label}>
-          <a href={url} aria-label={label} target="_blank" rel="noreferrer">
-            <Icon aria-hidden="true" width={20} height={20} />
-          </a>
-        </li>
-      ))}
-    </ul>
+    <SocialLinks
+      iconSize={SOCIAL_ICON_SIZE}
+      className="app-footer__social-links"
+    />
   </footer>
 );
 

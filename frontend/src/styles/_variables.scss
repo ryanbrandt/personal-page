@@ -5,3 +5,6 @@ $default-column-gap: 1vw;
 // its Sass API doesn't export): below this bar width it moves its links into
 // a menu and pads the bar with the mobile gutter.
 $navbar-narrow: 768px;
+
+// A social link's hit area (common/SocialLinks), around a smaller icon.
+$social-link-size: 44px;

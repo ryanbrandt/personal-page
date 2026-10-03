@@ -1,0 +1,24 @@
+@use "../tools" as *;
+
+// SocialLinks.tsx: a row of icon links, muted until hovered.
+.social-links {
+  @include flex--align-center;
+  gap: var(--rq-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  a {
+    @include flex--align-center--justify-center;
+    @include muted-to-accent-icon($social-link-size);
+    border-radius: var(--rq-radius-control);
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+
+  svg {
+    fill: currentColor;
+  }
+}

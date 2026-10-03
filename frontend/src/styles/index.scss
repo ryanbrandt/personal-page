@@ -6,6 +6,7 @@
 @use "common/PageContainer";
 @use "common/PageSection";
 @use "common/Timeline";
+@use "common/SocialLinks";
 
 @use "App/RootContainer";
 @use "App/AppHeader";
@@ -14,7 +15,7 @@
 
 @use "routes";
 
-@use "Home/LandingPage";
+@use "Home/HomePage";
 
 @use "Contact/ContactPage";
 

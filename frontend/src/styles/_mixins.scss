@@ -19,17 +19,17 @@
   }
 }
 
-// A muted icon that turns the accent colour on hover. `$property` is `fill`
-// on an SVG, or `color` on a link whose icon fills with `currentColor`.
-@mixin muted-to-accent-icon($property: fill, $size: 36px) {
-  #{$property}: var(--rq-color-muted);
+// A muted icon link that turns the accent colour on hover; its icon fills
+// with `currentColor`.
+@mixin muted-to-accent-icon($size) {
+  color: var(--rq-color-muted);
   cursor: pointer;
   width: $size;
   height: $size;
-  transition: $property var(--rq-duration-base) var(--rq-easing-standard);
+  transition: color var(--rq-duration-base) var(--rq-easing-standard);
 
   &:hover {
-    #{$property}: var(--rq-color-accent-text);
+    color: var(--rq-color-accent-text);
   }
 }
 
