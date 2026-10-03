@@ -2,6 +2,7 @@ import type { Page } from "@playwright/test";
 
 import { toDocumentTitle } from "../src/common/utils/documentTitle";
 import { WORK_ENTRIES } from "../src/repositories/work";
+import { SEARCH_DEBOUNCE_MS } from "../src/Work/constants";
 import {
   expect,
   pageTitle,
@@ -190,15 +191,19 @@ test("a deep link whose project the filters hide focuses the heading on close", 
   await expect(pageTitle(page, PROJECTS_TITLE)).toBeFocused();
 });
 
+// The page's timers wait for the test's clock, so the clicks always land
+// before the debounced search is applied.
 test("a chip clicked right after typing keeps both filters", async ({
   page,
 }) => {
+  await page.clock.install();
   await page.goto("/work");
 
-  // Both clicks land before the search is applied (debounced).
   await searchBox(page).fill("react");
   await tagChip(page, "Library").click();
   await tagChip(page, "Testing").click();
+  await expect(page).toHaveURL("/work?tag=Library&tag=Testing");
+  await page.clock.runFor(SEARCH_DEBOUNCE_MS);
 
   await expect(page).toHaveURL("/work?tag=Library&tag=Testing&q=react");
   await expect(tagChip(page, "Library")).toHaveAttribute(
@@ -213,36 +218,69 @@ test("a chip clicked right after typing keeps both filters", async ({
   await expect(projectCards(page)).toHaveCount(2);
 });
 
-test("a card clicked right after typing keeps its dialog open", async ({
+test("a card clicked right after typing keeps its dialog and the search", async ({
   page,
 }) => {
+  await page.clock.install();
   await page.goto("/work");
   const dialog = projectDialog(page);
 
   await searchBox(page).fill("voter");
   await projectCardLink(page, "Informed Voter").click();
   await expect(dialog).toBeVisible();
+  await expect(page).toHaveURL("/work/informed-voter");
+  await page.clock.runFor(SEARCH_DEBOUNCE_MS);
 
   // The search applies under the dialog, which stays open.
   await expect(page).toHaveURL("/work/informed-voter?q=voter");
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveAccessibleName("Informed Voter");
+
+  // Closing keeps the search the card's page didn't have yet.
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(page).toHaveURL("/work?q=voter");
+  await expect(searchBox(page)).toHaveValue("voter");
+  await expect(projectCardLink(page, "Informed Voter")).toBeFocused();
+});
+
+test("Back after a reload closes the dialog and focuses the card", async ({
+  page,
+}) => {
+  await page.goto("/work");
+  await projectCardLink(page, "Informed Voter").click();
+  await expect(projectDialog(page)).toBeVisible();
+
+  await page.reload();
+  await expect(projectDialog(page)).toBeVisible();
+  await page.goBack();
+
+  await expect(page).toHaveURL("/work");
+  await expect(projectDialog(page)).toBeHidden();
+  await expect(projectCardLink(page, "Informed Voter")).toBeFocused();
 });
 
 test("a modified click on a card leaves it to the browser", async ({
   page,
-  context,
 }) => {
   await page.goto("/work");
-  // The new tab needs nothing loaded.
-  await context.route("**/*", (route) => route.abort());
+  // Runs after the app's handler: records whether the app took the click,
+  // then stops the browser opening a new tab, which the test doesn't need.
+  await page.evaluate(() => {
+    window.addEventListener("click", (event) => {
+      document.body.dataset.appTookClick = String(event.defaultPrevented);
+      event.preventDefault();
+    });
+  });
 
-  const newTab = context.waitForEvent("page");
   await projectCardLink(page, "Informed Voter").click({
     modifiers: ["ControlOrMeta"],
   });
-  await (await newTab).close();
 
+  await expect(page.locator("body")).toHaveAttribute(
+    "data-app-took-click",
+    "false"
+  );
   await expect(page).toHaveURL("/work");
   await expect(projectDialog(page)).toBeHidden();
 });
