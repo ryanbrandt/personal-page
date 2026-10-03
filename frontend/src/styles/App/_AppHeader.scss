@@ -1,8 +1,13 @@
 @use "sass:map";
 @use "../tools" as *;
 
+// Below this bar width the brand's name doesn't fit beside the theme toggle
+// and menu button (the narrow bar needs about 357px with it), so only the
+// monogram shows; the name stays the link's accessible name.
+$brand-name-min-width: 360px;
+
 // The bar itself is the library's NavBar; this styles the brand inside it.
-// NavBar is a query container, narrow below 768px (its own breakpoint).
+// NavBar is a query container named "navbar".
 .app-header__brand {
   @include flex--align-center;
   gap: var(--rq-space-3);
@@ -29,7 +34,7 @@
     font-weight: var(--rq-font-weight-bold);
   }
 
-  @container navbar (width < 768px) {
+  @container navbar (width < #{$navbar-narrow}) {
     gap: 10px;
     font-size: var(--rq-font-size-lg);
 
@@ -38,6 +43,12 @@
       height: 32px;
       border-radius: 9px;
       font-size: var(--rq-font-size-2xs);
+    }
+  }
+
+  @container navbar (width < #{$brand-name-min-width}) {
+    &__name {
+      @include visually-hidden;
     }
   }
 }

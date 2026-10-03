@@ -39,7 +39,7 @@ const AppHeader: FunctionComponent = () => {
           <span aria-hidden="true" className="app-header__brand__monogram">
             RB
           </span>
-          Ryan Brandt
+          <span className="app-header__brand__name">Ryan Brandt</span>
         </Link>
       }
       actions={<ThemeToggle value={theme} onChange={setTheme} />}
