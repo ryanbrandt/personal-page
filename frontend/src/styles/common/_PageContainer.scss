@@ -15,7 +15,7 @@
     text-align: center;
     color: var(--rq-color-accent-text);
 
-    // Focused after a route change for screen readers; it isn't a control.
+    // Focused when a new page mounts, for screen readers; it isn't a control.
     &:focus {
       outline: none;
     }

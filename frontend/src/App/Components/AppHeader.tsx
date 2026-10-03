@@ -26,8 +26,8 @@ const AppHeader: FunctionComponent = () => {
   const [theme, setTheme] = useThemePreference();
   // NavBar closes its narrow-screen menu when a link in it is chosen, but
   // not on other navigation (e.g. back/forward). Keying it on the path
-  // resets it whenever the page changes, and only then: a remount drops
-  // focus, which the route change hook only restores for a new path.
+  // resets it whenever the path changes, and only then: a remount drops
+  // focus, which PageContainer moves to the new page's heading.
   const { pathname } = useLocation();
 
   return (
