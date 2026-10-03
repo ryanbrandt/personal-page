@@ -12,6 +12,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@axe-core/playwright@npm:4.13.0":
+  version: 4.13.0
+  resolution: "@axe-core/playwright@npm:4.13.0"
+  dependencies:
+    axe-core: "npm:~4.13.0"
+  peerDependencies:
+    playwright-core: ">= 1.0.0"
+  checksum: 10/2400e309d6f6d96b3f3f12b00a80e32cb0213726fcfc3c457b36d17f7136a3361f02a7523286024d7e8ceba9045a5f9c18edd8bc352f76b549faedce298fada2
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.29.7":
   version: 7.29.7
   resolution: "@babel/code-frame@npm:7.29.7"
@@ -1397,7 +1408,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axe-core@npm:^4.10.2":
+"axe-core@npm:^4.10.2, axe-core@npm:~4.13.0":
   version: 4.13.0
   resolution: "axe-core@npm:4.13.0"
   checksum: 10/b9319bedc705fde00e4abd981d8724202cc20102e4ae6d8edfde33cb5265e0fb8f67f32adcb4ad33fbd4a2c8d7ad7ef5af1d933d9ad859bed90e3eae0ee8c52f
@@ -3683,6 +3694,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "personal-page@workspace:."
   dependencies:
+    "@axe-core/playwright": "npm:4.13.0"
     "@eslint/js": "npm:^10.0.1"
     "@playwright/test": "npm:1.63.0"
     "@reduxjs/toolkit": "npm:^2.13.0"
