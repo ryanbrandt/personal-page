@@ -4,7 +4,7 @@ import { Dialog, Tag } from "@ryanbrandt/react-quick-ui";
 import type { IWorkEntry } from "@app/types/work";
 import ProjectGitHubLink from "@app/Work/Subcomponents/ProjectGitHubLink";
 import ProjectImage from "@app/Work/Subcomponents/ProjectImage";
-import { formatWorkDates } from "@app/Work/utils";
+import { formatDateRange } from "@app/common/utils/dates";
 
 interface Props {
   /** The project to show; the dialog is open while there is one */
@@ -30,7 +30,9 @@ const ProjectDialog: FunctionComponent<Props> = ({ project, onClose }) => {
       title={shown.title}
       aria-describedby={descriptionId}
     >
-      <p className="project-dialog__dates">{formatWorkDates(shown)}</p>
+      <p className="project-dialog__dates">
+        {formatDateRange(shown.start, shown.end)}
+      </p>
       <div className="project-dialog__media">
         <ProjectImage project={shown} alt={`Screenshot of ${shown.title}`} />
       </div>

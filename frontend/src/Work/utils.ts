@@ -28,7 +28,3 @@ export const toInitials = (title: string): string =>
     .map((word) => word.charAt(0).toUpperCase())
     .join("")
     .slice(0, 3);
-
-/** "August 2021", or "August 2021 – May 2022" once it has ended. */
-export const formatWorkDates = ({ start, end }: IWorkEntry): string =>
-  end ? `${start} – ${end}` : start;
