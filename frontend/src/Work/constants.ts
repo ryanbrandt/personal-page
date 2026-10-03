@@ -12,6 +12,9 @@ export const SEARCH_DEBOUNCE_MS = 250;
  */
 export const EAGER_IMAGE_COUNT = 2;
 
+/** How many projects the home page shows: one row of the grid */
+export const RECENT_PROJECT_COUNT = 3;
+
 /** The path of a project's detail view */
 export const toWorkEntryPath = (slug: string): string =>
   `${BASE_ROUTES.work}/${slug}`;

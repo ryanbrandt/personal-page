@@ -12,3 +12,31 @@
  */
 export const formatDateRange = (start: string, end: string | null): string =>
   `${start} – ${end ?? "Present"}`;
+
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+/**
+ * A stored date ("May 2022") as a number of months, for ordering: a later
+ * month is a larger number. Throws on a date in any other form.
+ */
+export const toMonthNumber = (date: string): number => {
+  const [month = "", year = ""] = date.split(" ");
+  const monthIndex = MONTHS.indexOf(month);
+  if (monthIndex < 0 || !/^\d{4}$/.test(year)) {
+    throw new Error(`Not a "Month YYYY" date: ${date}`);
+  }
+  return Number(year) * MONTHS.length + monthIndex;
+};
