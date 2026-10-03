@@ -51,11 +51,14 @@ interface AppRoute {
   knownViolations?: ReadonlyArray<KnownViolation>;
 }
 
+/** The home page's <h1>, the hero */
+export const HOME_HEADING = "Hello, World! My name is Ryan Brandt.";
+
 export const ROUTES: ReadonlyArray<AppRoute> = [
   {
     name: "home",
     path: "/",
-    title: "Hello, World!",
+    title: HOME_HEADING,
     documentTitle: HOME_TITLE,
   },
   {
@@ -92,8 +95,8 @@ export const projectCardLink = (page: Page, title: string) =>
 /** The open project dialog */
 export const projectDialog = (page: Page) => page.getByRole("dialog");
 
-/** A résumé section, by its `<h2>` */
-export const resumeSection = (page: Page, name: string) =>
+/** A section of the page, by its `<h2>` */
+export const pageSection = (page: Page, name: string) =>
   page.getByRole("main").locator("section", {
     has: page.getByRole("heading", { level: 2, name, exact: true }),
   });

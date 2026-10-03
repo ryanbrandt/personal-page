@@ -1,6 +1,7 @@
 import {
   brandLink,
   expect,
+  HOME_HEADING,
   menuButton,
   pageTitle,
   primaryNav,
@@ -60,13 +61,20 @@ test.describe("desktop", () => {
   test("navigating moves focus to the new page's heading", async ({ page }) => {
     await page.goto("/");
     // The first load leaves focus alone.
-    await expect(pageTitle(page, "Hello, World!")).not.toBeFocused();
+    await expect(pageTitle(page, HOME_HEADING)).not.toBeFocused();
 
     await primaryNav(page).getByRole("link", { name: "Résumé" }).focus();
     await page.keyboard.press("Enter");
 
     await expect(page).toHaveURL("/resume");
     await expect(pageTitle(page, "Résumé")).toBeFocused();
+
+    // The home page renders its own heading (the hero), not PageContainer's.
+    await primaryNav(page).getByRole("link", { name: "Home" }).focus();
+    await page.keyboard.press("Enter");
+
+    await expect(page).toHaveURL("/");
+    await expect(pageTitle(page, HOME_HEADING)).toBeFocused();
   });
 
   // Same-page navigation must not remount the header, which would drop

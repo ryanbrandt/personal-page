@@ -8,12 +8,13 @@ import {
 import {
   brandLink,
   expect,
+  HOME_HEADING,
   expectNoHorizontalScroll,
   menuButton,
   NARROWEST_VIEWPORT,
   pageTitle,
   primaryNav,
-  resumeSection,
+  pageSection,
   ROUTES,
   test,
   themeOption,
@@ -68,7 +69,7 @@ test.describe("desktop", () => {
 
     await nav.getByRole("link", { name: "Home" }).click();
     await expect(page).toHaveURL("/");
-    await expect(pageTitle(page, "Hello, World!")).toBeVisible();
+    await expect(pageTitle(page, HOME_HEADING)).toBeVisible();
   });
 
   test("the brand links home", async ({ page }) => {
@@ -127,7 +128,7 @@ test.describe("desktop", () => {
       .getByRole("link", { name: "Go to the home page" })
       .click();
     await expect(page).toHaveURL("/");
-    await expect(pageTitle(page, "Hello, World!")).toBeVisible();
+    await expect(pageTitle(page, HOME_HEADING)).toBeVisible();
   });
 
   test("/contact shows the 404 page until R9", async ({ page }) => {
@@ -151,7 +152,7 @@ test.describe("résumé", () => {
     test(`${name} is a timeline of entries with their highlights`, async ({
       page,
     }) => {
-      const items = timelineEntries(resumeSection(page, name));
+      const items = timelineEntries(pageSection(page, name));
 
       await expect(items.getByRole("heading", { level: 3 })).toHaveText(
         entries.map(({ title }) => title)
@@ -171,7 +172,7 @@ test.describe("résumé", () => {
   test("the current role's dates end Present, above its title", async ({
     page,
   }) => {
-    const current = timelineEntries(resumeSection(page, "Experience")).first();
+    const current = timelineEntries(pageSection(page, "Experience")).first();
     const dates = current.getByText(/– Present$/);
 
     await expect(dates).toBeVisible();
@@ -182,7 +183,7 @@ test.describe("résumé", () => {
   });
 
   test("skills are grouped by category", async ({ page }) => {
-    const skills = resumeSection(page, "Skills");
+    const skills = pageSection(page, "Skills");
 
     await expect(skills.getByRole("heading", { level: 3 })).toHaveText(
       SKILL_GROUPS.map(({ name }) => name)
