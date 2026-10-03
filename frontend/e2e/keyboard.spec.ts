@@ -17,6 +17,7 @@ test.describe("desktop", () => {
   test("the skip link moves focus to the main content", async ({ page }) => {
     await page.goto("/");
     const skipLink = page.getByRole("link", { name: "Skip to content" });
+    await expect(skipLink).toBeAttached();
 
     await page.keyboard.press("Tab");
     await expect(skipLink).toBeFocused();
@@ -32,6 +33,7 @@ test.describe("desktop", () => {
     await page.emulateMedia({ colorScheme: "light" });
     await page.goto("/");
     const nav = primaryNav(page);
+    await expect(nav).toBeVisible();
 
     // The skip link is the first stop.
     await page.keyboard.press("Tab");

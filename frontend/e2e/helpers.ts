@@ -13,6 +13,9 @@ export const VIEWPORTS = {
   mobile: { width: 390, height: 844 },
 } as const;
 
+/** The narrowest width the page must fit without scrolling sideways (WCAG Reflow). */
+export const NARROWEST_VIEWPORT = { width: 320, height: 568 } as const;
+
 export type ViewportName = keyof typeof VIEWPORTS;
 
 /** An axe violation a later ticket fixes, skipped until then. */
@@ -94,12 +97,15 @@ const FIXTURES_DIR = path.join(import.meta.dirname, "fixtures");
 /**
  * Playwright's `test`, plus two automatic fixtures for every test: project
  * images are served from committed copies so S3 can't flake the suite, and
- * the test fails if the page logs a warning or error, or throws.
+ * the test fails if the page logs a warning or error, or throws (unless it
+ * sets `failOnConsoleProblems: false`).
  */
 export const test = base.extend<{
+  failOnConsoleProblems: boolean;
   remoteImages: void;
   consoleProblems: void;
 }>({
+  failOnConsoleProblems: [true, { option: true }],
   remoteImages: [
     async ({ page }, use) => {
       await page.route(REMOTE_IMAGES, (route) => {
@@ -113,7 +119,7 @@ export const test = base.extend<{
     { auto: true },
   ],
   consoleProblems: [
-    async ({ page }, use) => {
+    async ({ page, failOnConsoleProblems }, use) => {
       const problems: Array<string> = [];
       page.on("console", (message) => {
         if (message.type() === "warning" || message.type() === "error") {
@@ -122,7 +128,9 @@ export const test = base.extend<{
       });
       page.on("pageerror", (error) => problems.push(`pageerror: ${error}`));
       await use();
-      expect(problems, "console warnings and errors").toEqual([]);
+      if (failOnConsoleProblems) {
+        expect(problems, "console warnings and errors").toEqual([]);
+      }
     },
     { auto: true },
   ],
@@ -134,8 +142,9 @@ const BLOCKING_IMPACTS = ["serious", "critical"];
 
 /**
  * Checks the page with axe: no serious or critical violations, apart from
- * the route's known ones for this viewport. Each known violation must still
- * fail, so this fails once its fix lands and the exclusion can go.
+ * the route's known ones for this viewport (only that rule, on only those
+ * elements). Each known violation must still be there, so this fails once
+ * its fix lands and the entry can go.
  */
 export async function expectNoBlockingAxeViolations(
   page: Page,
@@ -145,28 +154,71 @@ export async function expectNoBlockingAxeViolations(
   const known = (route.knownViolations ?? []).filter(({ viewports }) =>
     viewports.includes(viewportName)
   );
+  const expiredMessage = ({ rule, selector, fixedBy }: KnownViolation) =>
+    `${rule} on ${selector} is gone (fixed by ${fixedBy}?): remove it from knownViolations`;
 
-  const builder = new AxeBuilder({ page });
-  for (const { selector } of known) builder.exclude(selector);
-  const { violations } = await builder.analyze();
-  const blocking = violations
-    .filter(({ impact }) => BLOCKING_IMPACTS.includes(impact ?? ""))
-    .map(({ id, nodes }) => ({
-      id,
-      targets: nodes.map(({ target }) => target.join(" ")),
-    }));
-  expect(blocking).toEqual([]);
-
-  for (const { rule, selector, fixedBy } of known) {
-    const { violations: stillFailing } = await new AxeBuilder({ page })
-      .include(selector)
-      .withRules([rule])
-      .analyze();
+  for (const violation of known) {
     expect(
-      stillFailing.map(({ id }) => id),
-      `${rule} on ${selector} passes now (fixed by ${fixedBy}?): remove it from knownViolations`
-    ).toContain(rule);
+      await page.locator(violation.selector).count(),
+      expiredMessage(violation)
+    ).toBeGreaterThan(0);
   }
+
+  const { violations } = await new AxeBuilder({ page }).analyze();
+  const blocking: Array<{ id: string; target: string }> = [];
+  const seen = new Set<KnownViolation>();
+  for (const { id, impact, nodes } of violations) {
+    for (const { target } of nodes) {
+      const selector = target.join(" ");
+      const knownViolation = await findKnownViolation(
+        page,
+        known,
+        id,
+        selector
+      );
+      if (knownViolation) {
+        seen.add(knownViolation);
+      } else if (BLOCKING_IMPACTS.includes(impact ?? "")) {
+        blocking.push({ id, target: selector });
+      }
+    }
+  }
+
+  expect(blocking).toEqual([]);
+  for (const violation of known) {
+    expect(seen.has(violation), expiredMessage(violation)).toBe(true);
+  }
+}
+
+/** The known violation of `rule` that covers the element at `target`, if any. */
+async function findKnownViolation(
+  page: Page,
+  known: ReadonlyArray<KnownViolation>,
+  rule: string,
+  target: string
+): Promise<KnownViolation | undefined> {
+  for (const violation of known) {
+    if (violation.rule !== rule) continue;
+    const covered = await page
+      .locator(target)
+      .evaluate(
+        (element, selector) => element.matches(selector),
+        violation.selector
+      );
+    if (covered) return violation;
+  }
+  return undefined;
+}
+
+/** The page doesn't scroll sideways. */
+export async function expectNoHorizontalScroll(page: Page): Promise<void> {
+  const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    clientWidth: document.documentElement.clientWidth,
+  }));
+  expect(scrollWidth, "the page's scroll width").toBeLessThanOrEqual(
+    clientWidth
+  );
 }
 
 /**

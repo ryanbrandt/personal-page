@@ -1,6 +1,7 @@
 import {
   expect,
   expectNoBlockingAxeViolations,
+  expectNoHorizontalScroll,
   gotoAndSettle,
   menuButton,
   primaryNav,
@@ -14,8 +15,8 @@ import {
 
 const COLOR_SCHEMES = ["light", "dark"] as const;
 
-// Each route is screenshotted and checked with axe in one page load, in every
-// colour scheme and viewport.
+// Each route is screenshotted and checked with axe and for sideways scrolling
+// in one page load, in every colour scheme and viewport.
 for (const colorScheme of COLOR_SCHEMES) {
   for (const [viewportName, viewport] of Object.entries(VIEWPORTS) as Array<
     [ViewportName, (typeof VIEWPORTS)[ViewportName]]
@@ -32,6 +33,7 @@ for (const colorScheme of COLOR_SCHEMES) {
             fullPage: true,
           });
           await expectNoBlockingAxeViolations(page, route, viewportName);
+          await expectNoHorizontalScroll(page);
         });
       }
 

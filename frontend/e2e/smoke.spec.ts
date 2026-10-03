@@ -1,7 +1,9 @@
 import {
   brandLink,
   expect,
+  expectNoHorizontalScroll,
   menuButton,
+  NARROWEST_VIEWPORT,
   pageTitle,
   primaryNav,
   projectDetails,
@@ -135,9 +137,15 @@ test.describe("desktop", () => {
     await expect(details).toBeHidden();
   });
 
-  test("the 404 page marks no nav link and links home", async ({ page }) => {
+  test("the 404 page isn't indexed, marks no nav link and links home", async ({
+    page,
+  }) => {
     await page.goto("/does-not-exist");
     await expect(page).toHaveURL("/does-not-exist");
+    await expect(page.locator('head > meta[name="robots"]')).toHaveAttribute(
+      "content",
+      "noindex"
+    );
     await expect(primaryNav(page).locator("[aria-current]")).toHaveCount(0);
 
     await page
@@ -159,15 +167,20 @@ test.describe("mobile", () => {
   test.use({ viewport: VIEWPORTS.mobile });
 
   test("menu closes on back/forward navigation", async ({ page }) => {
+    const nav = primaryNav(page);
     await page.goto("/");
-    await page.goto("/resume");
-
     await menuButton(page).click();
-    await expect(primaryNav(page)).toBeVisible();
+    await nav.getByRole("link", { name: "Résumé" }).click();
+    await expect(page).toHaveURL("/resume");
 
+    // An in-app history navigation with the menu open.
+    await menuButton(page).click();
+    await expect(nav).toBeVisible();
     await page.goBack();
+
     await expect(page).toHaveURL("/");
-    await expect(primaryNav(page)).toBeHidden();
+    await expect(menuButton(page)).toHaveAttribute("aria-expanded", "false");
+    await expect(nav).toBeHidden();
   });
 
   test("the page doesn't scroll while the menu is open", async ({ page }) => {
@@ -179,5 +192,18 @@ test.describe("mobile", () => {
 
     await menuButton(page).click();
     await expect(html).not.toHaveCSS("overflow", "hidden");
+  });
+});
+
+test.describe("320px wide", () => {
+  test.use({ viewport: NARROWEST_VIEWPORT });
+
+  // visual.spec.ts checks the desktop and mobile viewports.
+  test("no page scrolls sideways", async ({ page }) => {
+    for (const route of ROUTES) {
+      await page.goto(route.path);
+      await expect(pageTitle(page, route.title)).toBeVisible();
+      await expectNoHorizontalScroll(page);
+    }
   });
 });
