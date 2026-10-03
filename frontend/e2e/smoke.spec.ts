@@ -1,3 +1,7 @@
+import type { Locator, Page } from "@playwright/test";
+
+import { RESUME_PDF_URL } from "../src/common/constants/urls";
+
 import {
   brandLink,
   expect,
@@ -14,6 +18,17 @@ import {
 } from "./helpers";
 
 const PROJECT_COUNT = 5;
+
+const BLACK = "rgb(0, 0, 0)";
+const WHITE = "rgb(255, 255, 255)";
+const TRANSPARENT = "rgba(0, 0, 0, 0)";
+
+const resumeSection = (page: Page, name: string) =>
+  page.getByRole("main").locator("section", {
+    has: page.getByRole("heading", { level: 2, name, exact: true }),
+  });
+
+const timelineEntries = (section: Locator) => section.locator(".timeline > li");
 
 test.describe("desktop", () => {
   test.use({ viewport: VIEWPORTS.desktop });
@@ -160,6 +175,108 @@ test.describe("desktop", () => {
     await page.goto("/contact");
     await expect(page).toHaveURL("/contact");
     await expect(pageTitle(page, "Page not found")).toBeVisible();
+  });
+});
+
+test.describe("résumé", () => {
+  test.use({ viewport: VIEWPORTS.desktop });
+
+  test("experience is a timeline with highlights", async ({ page }) => {
+    await page.goto("/resume");
+    const entries = timelineEntries(resumeSection(page, "Experience"));
+
+    await expect(entries.getByRole("heading", { level: 3 })).toHaveText([
+      "Senior Software Engineer",
+      "Software Engineer II",
+      "Software Engineer",
+    ]);
+
+    const latest = entries.first();
+    await expect(latest).toContainText("Biomeme Inc.");
+    await expect(latest).toContainText("September 2021 – Present");
+    await expect(latest.getByRole("listitem")).toHaveCount(4);
+    await expect(latest.getByRole("listitem").nth(2)).toHaveText(
+      "Piloted several core React, C# and Node.JS libraries which are used organization wide."
+    );
+    await expect(entries.nth(1).getByRole("listitem")).toHaveCount(1);
+    await expect(entries.nth(2).getByRole("listitem")).toHaveCount(3);
+
+    // The dates come after the title in the markup but show above it.
+    const dates = (await latest
+      .getByText("September 2021 – Present")
+      .boundingBox())!;
+    const title = (await latest.getByRole("heading").boundingBox())!;
+    expect(dates.y).toBeLessThan(title.y);
+  });
+
+  test("education is a timeline without highlights", async ({ page }) => {
+    await page.goto("/resume");
+    const entries = timelineEntries(resumeSection(page, "Education"));
+
+    await expect(entries.getByRole("heading", { level: 3 })).toHaveText([
+      "BS Computer Science",
+      "Certificate",
+    ]);
+    await expect(entries.first()).toContainText("Rutgers University");
+    await expect(entries.getByRole("list")).toHaveCount(0);
+  });
+
+  test("skills are grouped by category", async ({ page }) => {
+    await page.goto("/resume");
+    const skills = resumeSection(page, "Skills");
+    const groups = skills.locator(".resume-page__skill-group");
+
+    await expect(skills.getByRole("heading", { level: 3 })).toHaveText([
+      "Languages",
+      "Frameworks & libraries",
+      "Cloud & infra",
+      "Testing & tooling",
+    ]);
+    for (const [index, count] of [11, 9, 7, 7].entries()) {
+      await expect(groups.nth(index).getByRole("listitem")).toHaveCount(count);
+    }
+    await expect(skills.getByRole("listitem")).toHaveCount(34);
+    await expect(groups.first().getByRole("listitem").first()).toHaveText(
+      "TypeScript"
+    );
+  });
+
+  test("links to the PDF", async ({ page }) => {
+    await page.goto("/resume");
+    await expect(
+      page.getByRole("main").getByRole("link", { name: "Download PDF" })
+    ).toHaveAttribute("href", RESUME_PDF_URL);
+  });
+
+  test.describe("printed", () => {
+    // Dark, to check printing doesn't follow the theme.
+    test.use({ colorScheme: "dark" });
+
+    test("shows only the content, black on white", async ({ page }) => {
+      await page.emulateMedia({ media: "print" });
+      await page.goto("/resume");
+      await expect(pageTitle(page, "Résumé")).toBeVisible();
+
+      await expect(page.getByRole("banner")).toBeHidden();
+      await expect(page.getByRole("contentinfo")).toBeHidden();
+      await expect(
+        page.getByRole("link", { name: "Skip to content" })
+      ).toBeHidden();
+      await expect(
+        page.getByRole("link", { name: "Download PDF" })
+      ).toBeHidden();
+
+      await expect(page.locator("body")).toHaveCSS("background-color", WHITE);
+      await expect(pageTitle(page, "Résumé")).toHaveCSS("color", BLACK);
+      const entry = timelineEntries(resumeSection(page, "Experience")).first();
+      await expect(entry.getByRole("heading")).toHaveCSS("color", BLACK);
+      await expect(entry.getByText("Biomeme Inc.")).toHaveCSS("color", BLACK);
+      await expect(entry).toHaveCSS("break-inside", "avoid");
+      await expect(page.locator(".tag").first()).toHaveCSS(
+        "background-color",
+        TRANSPARENT
+      );
+    });
   });
 });
 
