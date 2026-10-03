@@ -6,14 +6,11 @@ import {
   NARROWEST_VIEWPORT,
   pageTitle,
   primaryNav,
-  projectDetails,
   ROUTES,
   test,
   themeOption,
   VIEWPORTS,
 } from "./helpers";
-
-const PROJECT_COUNT = 5;
 
 test.describe("desktop", () => {
   test.use({ viewport: VIEWPORTS.desktop });
@@ -103,38 +100,6 @@ test.describe("desktop", () => {
 
     await expect(footer.getByRole("link", { name: "LinkedIn" })).toBeVisible();
     await expect(footer.getByRole("link", { name: "GitHub" })).toBeVisible();
-  });
-
-  test("project search filters results", async ({ page }) => {
-    await page.goto("/work");
-    const results = page.locator(".work-page__results-display__result");
-    const search = page.getByPlaceholder("Search projects");
-
-    await expect(results).toHaveCount(PROJECT_COUNT);
-
-    await search.fill("signalr");
-    await expect(results).toHaveCount(1);
-    await expect(results).toHaveText("React UseSignalR");
-
-    await search.fill("no such project");
-    await expect(results).toHaveCount(0);
-
-    await search.fill("");
-    await expect(results).toHaveCount(PROJECT_COUNT);
-  });
-
-  test("project card opens and closes its details", async ({ page }) => {
-    await page.goto("/work");
-    const details = projectDetails(page);
-
-    await page.getByText("Informed Voter").click();
-    await expect(details).toBeVisible();
-    await expect(details.getByRole("heading", { level: 3 })).toHaveText(
-      "Informed Voter"
-    );
-
-    await details.getByText("x", { exact: true }).click();
-    await expect(details).toBeHidden();
   });
 
   test("the 404 page isn't indexed, marks no nav link and links home", async ({

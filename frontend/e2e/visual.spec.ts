@@ -5,7 +5,8 @@ import {
   gotoAndSettle,
   menuButton,
   primaryNav,
-  projectDetails,
+  projectCardLink,
+  projectDialog,
   ROUTES,
   test,
   type ViewportName,
@@ -14,6 +15,7 @@ import {
 } from "./helpers";
 
 const COLOR_SCHEMES = ["light", "dark"] as const;
+const WORK_ROUTE = ROUTES.find(({ name }) => name === "work")!;
 
 // Each route is screenshotted and checked with axe and for sideways scrolling
 // in one page load, in every colour scheme and viewport.
@@ -39,12 +41,14 @@ for (const colorScheme of COLOR_SCHEMES) {
 
       test("work modal open", async ({ page }) => {
         await gotoAndSettle(page, "/work");
-        await page.getByText("Open FEC GraphQL Server").click();
-        await expect(projectDetails(page)).toBeVisible();
+        await projectCardLink(page, "Open FEC GraphQL Server").click();
+        await expect(projectDialog(page)).toBeVisible();
         await waitForStableRender(page);
-        await expect(page).toHaveScreenshot(`work-modal-open-${variant}.png`, {
-          fullPage: true,
-        });
+        // The page can't scroll while the dialog is open, so the viewport is
+        // all there is to see (a full-page capture shows the backdrop over
+        // the first screen only).
+        await expect(page).toHaveScreenshot(`work-modal-open-${variant}.png`);
+        await expectNoBlockingAxeViolations(page, WORK_ROUTE, viewportName);
       });
 
       // Full-page captures never put content under the sticky header, so
