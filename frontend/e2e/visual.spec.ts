@@ -1,19 +1,25 @@
-import { expect, test } from "@playwright/test";
-
 import {
+  expect,
+  expectNoBlockingAxeViolations,
   gotoAndSettle,
   menuButton,
   primaryNav,
   projectDetails,
   ROUTES,
+  test,
+  type ViewportName,
   VIEWPORTS,
   waitForStableRender,
 } from "./helpers";
 
 const COLOR_SCHEMES = ["light", "dark"] as const;
 
+// Each route is screenshotted and checked with axe in one page load, in every
+// colour scheme and viewport.
 for (const colorScheme of COLOR_SCHEMES) {
-  for (const [viewportName, viewport] of Object.entries(VIEWPORTS)) {
+  for (const [viewportName, viewport] of Object.entries(VIEWPORTS) as Array<
+    [ViewportName, (typeof VIEWPORTS)[ViewportName]]
+  >) {
     const variant = `${viewportName}-${colorScheme}`;
 
     test.describe(variant, () => {
@@ -25,6 +31,7 @@ for (const colorScheme of COLOR_SCHEMES) {
           await expect(page).toHaveScreenshot(`${route.name}-${variant}.png`, {
             fullPage: true,
           });
+          await expectNoBlockingAxeViolations(page, route, viewportName);
         });
       }
 

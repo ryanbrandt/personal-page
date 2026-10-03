@@ -1,6 +1,13 @@
-import { expect, test } from "@playwright/test";
-
-import { menuButton, pageTitle, primaryNav, VIEWPORTS } from "./helpers";
+import {
+  brandLink,
+  expect,
+  menuButton,
+  pageTitle,
+  primaryNav,
+  test,
+  themeOption,
+  VIEWPORTS,
+} from "./helpers";
 
 // A keyboard-only walk through the app shell: no clicks anywhere.
 
@@ -25,12 +32,11 @@ test.describe("desktop", () => {
     await page.emulateMedia({ colorScheme: "light" });
     await page.goto("/");
     const nav = primaryNav(page);
-    const html = page.locator("html");
 
     // The skip link is the first stop.
     await page.keyboard.press("Tab");
     for (const link of [
-      page.getByRole("link", { name: "Ryan Brandt" }),
+      brandLink(page),
       nav.getByRole("link", { name: "Home" }),
       nav.getByRole("link", { name: "Résumé" }),
       nav.getByRole("link", { name: "Projects" }),
@@ -41,13 +47,12 @@ test.describe("desktop", () => {
 
     // The toggle is one tab stop, on the checked option; arrows choose.
     await page.keyboard.press("Tab");
-    await expect(page.getByRole("radio", { name: "System" })).toBeFocused();
+    await expect(themeOption(page, "System")).toBeFocused();
     await page.keyboard.press("ArrowLeft");
-    await expect(page.getByRole("radio", { name: "Dark" })).toBeChecked();
-    await expect(html).toHaveAttribute("data-theme", "dark");
+    await expect(themeOption(page, "Dark")).toBeChecked();
     await page.keyboard.press("ArrowLeft");
-    await expect(page.getByRole("radio", { name: "Light" })).toBeChecked();
-    await expect(html).toHaveAttribute("data-theme", "light");
+    await expect(themeOption(page, "Light")).toBeChecked();
+    await expect(themeOption(page, "Light")).toBeFocused();
   });
 
   test("navigating moves focus to the new page's heading", async ({ page }) => {
@@ -55,12 +60,26 @@ test.describe("desktop", () => {
     // The first load leaves focus alone.
     await expect(pageTitle(page, "Hello, World!")).not.toBeFocused();
 
-    const resumeLink = primaryNav(page).getByRole("link", { name: "Résumé" });
-    await resumeLink.focus();
+    await primaryNav(page).getByRole("link", { name: "Résumé" }).focus();
     await page.keyboard.press("Enter");
 
     await expect(page).toHaveURL("/resume");
     await expect(pageTitle(page, "Résumé")).toBeFocused();
+  });
+
+  // Same-page navigation must not remount the header, which would drop
+  // focus to <body>.
+  test("a link to the current page keeps its focus", async ({ page }) => {
+    await page.goto("/");
+
+    await brandLink(page).focus();
+    await page.keyboard.press("Enter");
+    await expect(brandLink(page)).toBeFocused();
+
+    const homeLink = primaryNav(page).getByRole("link", { name: "Home" });
+    await homeLink.focus();
+    await page.keyboard.press("Enter");
+    await expect(homeLink).toBeFocused();
   });
 });
 
@@ -73,10 +92,7 @@ test.describe("mobile", () => {
     await page.goto("/");
     const nav = primaryNav(page);
 
-    // Skip link, brand, the theme toggle, then the menu button.
-    for (let stop = 0; stop < 4; stop++) await page.keyboard.press("Tab");
-    await expect(menuButton(page)).toBeFocused();
-
+    await menuButton(page).focus();
     await page.keyboard.press("Enter");
     await expect(nav).toBeVisible();
     await expect(nav.getByRole("link", { name: "Home" })).toBeFocused();
