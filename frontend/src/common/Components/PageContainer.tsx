@@ -1,16 +1,14 @@
 import type { FunctionComponent, PropsWithChildren } from "react";
 
-const SITE_NAME = "Ryan Brandt";
-
 interface BaseProps {
   /** The page's heading, its one `<h1>` */
   title: string;
 
   /**
-   * The page's name in the browser tab, before the site name. Omit it on
-   * the home page, whose tab shows the site name and role alone.
+   * The page's browser tab title: `HOME_TITLE` or `toDocumentTitle(…)` from
+   * common/utils/documentTitle.ts
    */
-  documentTitle?: string;
+  documentTitle: string;
 }
 
 type Props = PropsWithChildren<BaseProps>;
@@ -24,11 +22,7 @@ const PageContainer: FunctionComponent<Props> = ({
   children,
 }) => (
   <div className="page-container">
-    <title>
-      {documentTitle
-        ? `${documentTitle} | ${SITE_NAME}`
-        : `${SITE_NAME} | Software Engineer`}
-    </title>
+    <title>{documentTitle}</title>
     <h1 tabIndex={-1} className="page-container__title">
       {title}
     </h1>

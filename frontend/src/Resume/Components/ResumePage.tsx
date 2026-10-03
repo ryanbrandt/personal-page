@@ -1,12 +1,13 @@
 import type { FunctionComponent } from "react";
 
 import PageContainer from "@app/common/Components/PageContainer";
+import { toDocumentTitle } from "@app/common/utils/documentTitle";
 import ResumeDisplay from "@app/Resume/Components/ResumeDisplay";
 import DownloadSvg from "@app/assets/DownloadSvg";
 import { safeOpenWindow } from "@app/common/utils/browser";
 
 const ResumePage: FunctionComponent = () => (
-  <PageContainer title="Résumé" documentTitle="Résumé">
+  <PageContainer title="Résumé" documentTitle={toDocumentTitle("Résumé")}>
     <div className="resume-page">
       <div className="resume-page__download">
         <DownloadSvg
