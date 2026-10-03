@@ -17,17 +17,29 @@ interface IWorkFiltersControls extends IWorkFilters {
  * leaves the page rather than stepping through each keystroke.
  */
 export const useWorkFilters = (): IWorkFiltersControls => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  const updateParams = (update: (params: URLSearchParams) => void) =>
-    setSearchParams(
-      (previous) => {
-        const next = new URLSearchParams(previous);
-        update(next);
-        return next;
+  // Each change starts from the URL as it is now, not as it was when this
+  // render happened: a debounced search write can land after a chip click
+  // or a card opening a project (router navigations render in transitions,
+  // so the render's own search params and path can be out of date). It
+  // keeps the current path and history state (e.g. a project dialog's
+  // OPENED_FROM_CARD_STATE).
+  const updateParams = (update: (params: URLSearchParams) => void) => {
+    const params = new URLSearchParams(window.location.search);
+    update(params);
+    const search = params.toString();
+    // The router keeps a navigation's `state` in `history.state.usr`.
+    const { usr } = (window.history.state ?? {}) as { usr?: unknown };
+    void navigate(
+      {
+        pathname: window.location.pathname,
+        search: search ? `?${search}` : "",
       },
-      { replace: true }
+      { replace: true, state: usr }
     );
+  };
 
   return {
     query: searchParams.get(QUERY_PARAM) ?? "",
@@ -40,13 +52,16 @@ export const useWorkFilters = (): IWorkFiltersControls => {
           params.delete(QUERY_PARAM);
         }
       }),
+    // Rebuilds the tag list: the two-argument has()/delete() aren't in
+    // Safari 16.
     toggleTag: (tag) =>
       updateParams((params) => {
-        if (params.has(TAG_PARAM, tag)) {
-          params.delete(TAG_PARAM, tag);
-        } else {
-          params.append(TAG_PARAM, tag);
-        }
+        const tags = params.getAll(TAG_PARAM);
+        params.delete(TAG_PARAM);
+        const next = tags.includes(tag)
+          ? tags.filter((chosen) => chosen !== tag)
+          : [...tags, tag];
+        next.forEach((chosen) => params.append(TAG_PARAM, chosen));
       }),
     clearFilters: () =>
       updateParams((params) => {

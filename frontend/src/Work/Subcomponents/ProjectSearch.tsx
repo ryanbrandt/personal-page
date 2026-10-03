@@ -20,24 +20,40 @@ const ProjectSearch: FunctionComponent<Props> = ({
   const [text, setText] = useState(query);
   const pendingChange = useRef<number>(undefined);
 
-  // A query changed from outside (clearing the filters) replaces the text.
-  const [shownQuery, setShownQuery] = useState(query);
-  if (query !== shownQuery) {
-    setShownQuery(query);
-    setText(query);
+  // When the query changes, it replaces the text only if it changed from
+  // outside (clearing the filters, back/forward): not when it's the one
+  // this box last sent arriving (in a transition, so after the send), so
+  // typing on while a send is in flight keeps every keystroke.
+  const [seenQuery, setSeenQuery] = useState(query);
+  const [sentQuery, setSentQuery] = useState(query);
+  if (query !== seenQuery) {
+    setSeenQuery(query);
+    if (query !== sentQuery) {
+      setSentQuery(query);
+      setText(query);
+    }
   }
 
-  // Any new query, and unmounting, drops a pending change, so a stale one
-  // can't undo clearing the filters.
-  useEffect(() => () => window.clearTimeout(pendingChange.current), [query]);
+  // The same check for the timer, which render can't touch: a query
+  // changed from outside drops a pending change, so a stale one can't undo
+  // clearing the filters.
+  const lastSentQuery = useRef(query);
+  useEffect(() => {
+    if (query === lastSentQuery.current) return;
+    lastSentQuery.current = query;
+    window.clearTimeout(pendingChange.current);
+  }, [query]);
+
+  useEffect(() => () => window.clearTimeout(pendingChange.current), []);
 
   const handleChange = (value: string) => {
     setText(value);
     window.clearTimeout(pendingChange.current);
-    pendingChange.current = window.setTimeout(
-      () => onQueryChange(value),
-      SEARCH_DEBOUNCE_MS
-    );
+    pendingChange.current = window.setTimeout(() => {
+      lastSentQuery.current = value;
+      setSentQuery(value);
+      onQueryChange(value);
+    }, SEARCH_DEBOUNCE_MS);
   };
 
   return (
