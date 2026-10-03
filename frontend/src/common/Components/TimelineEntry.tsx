@@ -1,7 +1,8 @@
-import type {
-  ComponentProps,
-  FunctionComponent,
-  PropsWithChildren,
+import {
+  Children,
+  type ComponentProps,
+  type FunctionComponent,
+  type PropsWithChildren,
 } from "react";
 import { Heading } from "@ryanbrandt/react-quick-ui";
 
@@ -51,7 +52,7 @@ const TimelineEntry: FunctionComponent<Props> = ({
     <p className="timeline__entry__dates">
       {formatDateRange(startDate, endDate)}
     </p>
-    {children != null && (
+    {Children.toArray(children).length > 0 && (
       <div className="timeline__entry__details">{children}</div>
     )}
   </li>

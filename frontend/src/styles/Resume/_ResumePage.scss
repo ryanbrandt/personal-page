@@ -5,16 +5,18 @@
 $skill-group-min-width: 320px;
 
 .resume-page {
-  // Print shows the name the hidden header would.
+  // On paper the name heads the page, in place of the "Résumé" title (and
+  // of the brand in the hidden header).
   &__print-name {
     display: none;
 
     @media print {
       display: block;
-      margin: 0 0 var(--rq-space-3);
+      margin: 0 0 var(--rq-space-6);
       text-align: center;
-      font-size: var(--rq-font-size-2xl);
+      font-size: var(--rq-font-size-4xl);
       font-weight: var(--rq-font-weight-semibold);
+      line-height: var(--rq-line-height-title);
     }
   }
 
@@ -85,5 +87,11 @@ $skill-group-min-width: 320px;
       padding: 0;
       list-style: none;
     }
+  }
+}
+
+@media print {
+  .page-container:has(> .resume-page) > .page-container__title {
+    display: none;
   }
 }

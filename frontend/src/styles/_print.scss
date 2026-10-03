@@ -5,9 +5,9 @@ $ink: #000000;
 $paper: #ffffff;
 
 // Browser print: the page's content only, black on white whatever the theme,
-// with no backgrounds, and a step smaller so a page holds more. Components
-// follow the tokens remapped here; pages add only layout rules (hiding,
-// page breaks) in their own partials.
+// with no backgrounds or shadows, and a step smaller so a page holds more.
+// Components follow the tokens remapped here; a page's partial adds its own
+// print rules (what to hide or show, page breaks).
 @page {
   margin: 1.25cm;
 }
@@ -25,6 +25,11 @@ $paper: #ffffff;
     --rq-color-text: #{$ink};
     --rq-color-accent-text: #{$ink};
     --rq-color-brand: #{$ink};
+    // Light borders vanish on paper; the timeline's rule should show.
+    --rq-color-border: #{map.get($colors-light, control-border)};
+    @each $name in map.keys($shadows-light) {
+      --rq-shadow-#{$name}: none;
+    }
     color-scheme: light;
 
     --rq-font-size-md: #{map.get($font-sizes, xs)};
