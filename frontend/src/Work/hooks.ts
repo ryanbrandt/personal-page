@@ -2,6 +2,7 @@ import { type RefObject, useEffect, useEffectEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import type { IWorkFilters } from "@app/Work/types";
+import { BASE_ROUTES } from "@app/routes/constants";
 import { QUERY_PARAM, TAG_PARAM } from "@app/Work/constants";
 
 interface IWorkFiltersControls extends IWorkFilters {
@@ -25,18 +26,24 @@ export const useWorkFilters = (): IWorkFiltersControls => {
   // or a card opening a project (router navigations render in transitions,
   // so the render's own search params and path can be out of date). It
   // keeps the current path and history state (e.g. a project dialog's
-  // OPENED_FROM_CARD_STATE).
+  // IWorkEntryLocationState), and writes nothing once the app has left the
+  // projects page.
   const updateParams = (update: (params: URLSearchParams) => void) => {
+    const { pathname } = window.location;
+    if (
+      pathname !== BASE_ROUTES.work &&
+      !pathname.startsWith(`${BASE_ROUTES.work}/`)
+    ) {
+      return;
+    }
+
     const params = new URLSearchParams(window.location.search);
     update(params);
     const search = params.toString();
     // The router keeps a navigation's `state` in `history.state.usr`.
     const { usr } = (window.history.state ?? {}) as { usr?: unknown };
     void navigate(
-      {
-        pathname: window.location.pathname,
-        search: search ? `?${search}` : "",
-      },
+      { pathname, search: search ? `?${search}` : "" },
       { replace: true, state: usr }
     );
   };

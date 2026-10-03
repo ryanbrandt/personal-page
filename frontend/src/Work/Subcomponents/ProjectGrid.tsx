@@ -24,7 +24,7 @@ interface Props {
   linkSearch?: string;
   /**
    * The history state the card links navigate with: the projects page
-   * passes OPENED_FROM_CARD_STATE, so closing the dialog goes back to it
+   * passes an IWorkEntryLocationState, so closing the dialog goes back to it
    */
   linkState?: unknown;
 }

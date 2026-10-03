@@ -1,5 +1,6 @@
-import { type FunctionComponent, useEffect, useId, useRef } from "react";
+import { type FunctionComponent, useEffect, useId } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
+import { usePrevious } from "@ryanbrandt/react-quick-ui";
 
 import { CONTENT_ID } from "@app/App/constants";
 import PageContainer from "@app/common/Components/PageContainer";
@@ -14,7 +15,7 @@ import { filterWorkEntries } from "@app/Work/utils";
 import {
   CARD_LINK_SELECTOR,
   type IWorkEntryLocationState,
-  OPENED_FROM_CARD_STATE,
+  toWorkEntryPath,
 } from "@app/Work/constants";
 import ProjectDialog from "@app/Work/Subcomponents/ProjectDialog";
 import ProjectGrid from "@app/Work/Subcomponents/ProjectGrid";
@@ -41,41 +42,41 @@ const WorkPage: FunctionComponent = () => {
   const { query, tags, setQuery, toggleTag, clearFilters } = useWorkFilters();
   const filtered = filterWorkEntries(entries, { query, tags });
 
-  // Where focus goes once the dialog has closed: it can't move before
-  // then, as the open modal dialog makes the page inert, and the dialog
-  // only closes in an effect after the navigation renders. When a card
-  // opened the dialog and is still there, the Dialog has already returned
-  // focus to it. Otherwise (a deep link, a reload) focus would be lost:
-  // focus the project's card, or, if the filters hide it, the page heading.
-  const closedProjectPath = useRef<string | null>(null);
+  // Where focus goes once the dialog has closed (by its own controls or by
+  // Back): it can't move before then, as the open modal dialog makes the
+  // page inert, and the dialog only closes in an effect after the
+  // navigation renders. When a card opened the dialog and is still there,
+  // the Dialog has already returned focus to it. Otherwise (a deep link, a
+  // reload) focus would be lost: focus the project's card, or, if the
+  // filters hide it, the page heading.
+  const previousSlug = usePrevious(slug);
   useEffect(() => {
-    const path = closedProjectPath.current;
-    if (slug || !path) return;
-    closedProjectPath.current = null;
+    if (slug || !previousSlug) return;
 
     const focused = document.activeElement;
     const focusReturned =
       focused && focused !== document.body && !focused.closest("dialog");
     if (focusReturned) return;
 
+    const path = toWorkEntryPath(previousSlug);
     const card = Array.from(
       document.querySelectorAll<HTMLAnchorElement>(CARD_LINK_SELECTOR)
     ).find((link) => new URL(link.href).pathname === path);
     (card ?? document.querySelector<HTMLElement>(`#${CONTENT_ID} h1`))?.focus();
-  }, [slug]);
+  }, [slug, previousSlug]);
 
   if (slug && !selected) return <NotFoundPage />;
 
   const closeDialog = () => {
-    closedProjectPath.current = location.pathname;
-    const { openedFromCard } = (location.state ??
+    const { openedFromCard, search } = (location.state ??
       {}) as IWorkEntryLocationState;
-    if (openedFromCard) {
+    if (openedFromCard && search === location.search) {
       // Back to the page the card was on.
       void navigate(-1);
     } else {
-      // A link from elsewhere (or a new tab): replace it with the grid,
-      // keeping the filters.
+      // A link from elsewhere (or a new tab), or the filters changed since
+      // the card opened it (a search applied under the dialog): go to the
+      // grid with the current filters instead.
       void navigate(
         { pathname: BASE_ROUTES.work, search: location.search },
         { replace: true }
@@ -107,7 +108,12 @@ const WorkPage: FunctionComponent = () => {
           <ProjectGrid
             projects={filtered}
             linkSearch={location.search}
-            linkState={OPENED_FROM_CARD_STATE}
+            linkState={
+              {
+                openedFromCard: true,
+                search: location.search,
+              } satisfies IWorkEntryLocationState
+            }
           />
         ) : (
           <WorkPageEmptyState onClearFilters={clearFiltersAndFocusSearch} />
