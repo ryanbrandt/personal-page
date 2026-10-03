@@ -2,30 +2,57 @@ import path from "node:path";
 
 import type { Page } from "@playwright/test";
 
+// `title` is the page's <h1>, `documentTitle` its browser tab title.
 export const ROUTES = [
-  { name: "home", path: "/", title: "Hello, World!" },
-  { name: "resume", path: "/resume", title: "Résumé" },
-  { name: "work", path: "/work", title: "Recent Personal Projects" },
+  {
+    name: "home",
+    path: "/",
+    title: "Hello, World!",
+    documentTitle: "Ryan Brandt | Software Engineer",
+  },
+  {
+    name: "resume",
+    path: "/resume",
+    title: "Résumé",
+    documentTitle: "Résumé | Ryan Brandt",
+  },
+  {
+    name: "work",
+    path: "/work",
+    title: "Recent Personal Projects",
+    documentTitle: "Projects | Ryan Brandt",
+  },
+  {
+    name: "not-found",
+    path: "/does-not-exist",
+    title: "Page not found",
+    documentTitle: "Page not found | Ryan Brandt",
+  },
 ] as const;
 
 // The app switches to its mobile layout at widths <= 1040px (`mobile-only` in
-// src/styles/_mixins.scss).
+// src/styles/_mixins.scss), and the header moves its links into a menu below
+// 768px (the library's NavBar).
 export const VIEWPORTS = {
   desktop: { width: 1440, height: 900 },
   mobile: { width: 390, height: 844 },
 } as const;
 
 export const pageTitle = (page: Page, title: string) =>
-  page.getByRole("heading", { level: 2, name: title, exact: true });
+  page.getByRole("heading", { level: 1, name: title, exact: true });
 
 export const projectDetails = (page: Page) =>
   page.locator(".work-page__results-display__result__details-overlay");
 
-export const mobileMenuBurger = (page: Page) =>
-  page.locator(".app-header__mobile-menu > svg");
+export const primaryNav = (page: Page) =>
+  page.getByRole("navigation", { name: "Primary" });
 
-export const openMobileMenu = (page: Page) =>
-  page.locator(".app-header__mobile-menu__overlay--open");
+/** The header's menu button, shown while the header is narrow. */
+export const menuButton = (page: Page) =>
+  page.getByRole("button", { name: "Menu" });
+
+export const themeOption = (page: Page, name: "Light" | "Dark" | "System") =>
+  page.getByRole("radiogroup", { name: "Theme" }).getByRole("radio", { name });
 
 const REMOTE_IMAGES = "https://resume-work-images.s3.amazonaws.com/**";
 const FIXTURES_DIR = path.join(import.meta.dirname, "fixtures");

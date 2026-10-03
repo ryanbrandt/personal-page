@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
 import { THEME_STORAGE_KEY } from "../src/common/utils/theme";
+import { themeOption } from "./helpers";
 
 type Scheme = "light" | "dark";
 
@@ -89,13 +90,11 @@ test("an invalid stored value falls back to system", async ({ page }) => {
   await expectScheme(page, "dark");
 });
 
-test("the toggle flips away from what the OS shows under system", async ({
-  page,
-}) => {
+test("choosing light overrides a dark OS", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
 
-  await page.locator(".app-header__theme-toggle").click();
+  await themeOption(page, "Light").click();
 
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await expectScheme(page, "light");

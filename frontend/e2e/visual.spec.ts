@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 import {
   gotoAndSettle,
-  mobileMenuBurger,
-  openMobileMenu,
+  menuButton,
+  primaryNav,
   projectDetails,
   ROUTES,
   VIEWPORTS,
@@ -37,6 +37,16 @@ for (const colorScheme of COLOR_SCHEMES) {
           fullPage: true,
         });
       });
+
+      // Full-page captures never put content under the sticky header, so
+      // they can't see its translucent, blurred background (a CSS minifier
+      // change once dropped the blur silently).
+      test("content scrolled under the header", async ({ page }) => {
+        await gotoAndSettle(page, "/resume");
+        await page.evaluate(() => window.scrollTo(0, 440));
+        await waitForStableRender(page);
+        await expect(page).toHaveScreenshot(`scrolled-resume-${variant}.png`);
+      });
     });
   }
 
@@ -45,8 +55,8 @@ for (const colorScheme of COLOR_SCHEMES) {
 
     test("mobile menu open", async ({ page }) => {
       await gotoAndSettle(page, "/");
-      await mobileMenuBurger(page).click();
-      await expect(openMobileMenu(page)).toBeVisible();
+      await menuButton(page).click();
+      await expect(primaryNav(page)).toBeVisible();
       await expect(page).toHaveScreenshot(
         `mobile-menu-open-mobile-${colorScheme}.png`,
         { fullPage: true }
