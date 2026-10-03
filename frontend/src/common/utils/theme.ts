@@ -53,10 +53,8 @@ export function applyTheme(
 export const applyThemePreference = (preference: ThemePreference): void =>
   applyTheme(THEME_STORAGE_KEY, preference);
 
-/** Whether the page currently shows the dark theme. */
-export const isDarkThemeShown = (): boolean => {
+/** The preference the page currently shows: its `data-theme` on `<html>`. */
+export const getThemePreference = (): ThemePreference => {
   const { theme } = document.documentElement.dataset;
-  return theme === "system"
-    ? window.matchMedia("(prefers-color-scheme: dark)").matches
-    : theme === "dark";
+  return theme === "light" || theme === "dark" ? theme : "system";
 };

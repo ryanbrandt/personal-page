@@ -5,7 +5,7 @@ import WorkPageSearchFilters from "@app/Work/Components/WorkPageSearchFilters";
 import WorkPageResultsDisplay from "@app/Work/Components/WorkPageResultsDisplay";
 
 const WorkPage: FunctionComponent = () => (
-  <PageContainer title="Recent Personal Projects">
+  <PageContainer title="Recent Personal Projects" documentTitle="Projects">
     <div className="work-page">
       <WorkPageSearchFilters />
       <WorkPageResultsDisplay />

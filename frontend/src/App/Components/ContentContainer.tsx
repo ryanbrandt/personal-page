@@ -1,11 +1,13 @@
 import type { FunctionComponent } from "react";
 
+import { CONTENT_ID } from "@app/App/constants";
 import ApplicationRoutes from "@app/routes";
 
+// tabIndex={-1}: the skip link can focus it, but Tab doesn't stop on it.
 const ContentContainer: FunctionComponent = () => (
-  <div className="content-container">
+  <main id={CONTENT_ID} tabIndex={-1} className="content-container">
     <ApplicationRoutes />
-  </div>
+  </main>
 );
 
 export default ContentContainer;

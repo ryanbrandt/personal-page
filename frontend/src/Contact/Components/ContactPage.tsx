@@ -5,7 +5,7 @@ import PageContainer from "@app/common/Components/PageContainer";
 import SocialLinks from "@app/Contact/Subcomponents/SocialLinks";
 
 const ContactPage: FunctionComponent = () => (
-  <PageContainer title="Get in Touch">
+  <PageContainer title="Get in Touch" documentTitle="Contact">
     <div className="contact-page">
       <ContactForm />
       <SocialLinks />

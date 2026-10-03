@@ -1,11 +1,51 @@
 @use "../tools" as *;
 
+// AppFooter.tsx draws the icons at this size.
+$social-icon-size: 20px;
+$social-link-size: 44px;
+
 .app-footer {
-  position: absolute;
-  text-align: center;
-  bottom: 10px;
-  width: 100%;
-  font-size: 10px;
-  font-weight: 400;
+  @include flex--align-center--justify-space-between;
+  @include page-gutter;
+  gap: var(--rq-space-4);
+  padding-block: var(--rq-space-6);
+  border-top: 1px solid var(--rq-color-border);
+  font-size: var(--rq-font-size-xs);
   color: var(--rq-color-muted);
+
+  @include mobile-only {
+    padding-block: var(--rq-space-4);
+    font-size: var(--rq-font-size-2xs);
+  }
+
+  &__social-links {
+    @include flex--align-center;
+    gap: var(--rq-space-1);
+    // The icons, not their 44px hit areas, line up with the gutter.
+    margin: 0 calc(($social-icon-size - $social-link-size) / 2) 0 0;
+    padding: 0;
+    list-style: none;
+
+    a {
+      @include flex--align-center--justify-center;
+      width: $social-link-size;
+      height: $social-link-size;
+      border-radius: var(--rq-radius-control);
+      color: var(--rq-color-muted);
+      transition: color $hover-transition ease-out;
+
+      &:hover {
+        color: var(--rq-color-accent-text);
+        transition: color $hover-transition ease-in;
+      }
+
+      &:focus-visible {
+        @include focus-ring;
+      }
+    }
+
+    svg {
+      fill: currentColor;
+    }
+  }
 }

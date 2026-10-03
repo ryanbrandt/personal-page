@@ -6,7 +6,7 @@ import DownloadSvg from "@app/assets/DownloadSvg";
 import { safeOpenWindow } from "@app/common/utils/browser";
 
 const ResumePage: FunctionComponent = () => (
-  <PageContainer title="Résumé">
+  <PageContainer title="Résumé" documentTitle="Résumé">
     <div className="resume-page">
       <div className="resume-page__download">
         <DownloadSvg

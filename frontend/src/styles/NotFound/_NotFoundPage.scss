@@ -1,0 +1,20 @@
+@use "../tools" as *;
+
+.not-found-page {
+  @include flex--column--align-center;
+  font-size: var(--rq-font-size-xl);
+  text-align: center;
+
+  p {
+    margin-top: 0;
+  }
+
+  a {
+    color: var(--rq-color-accent-text);
+    font-weight: var(--rq-font-weight-medium);
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+}
