@@ -32,7 +32,11 @@ const ProjectDialog: FunctionComponent<Props> = ({ project, onClose }) => {
     >
       <p className="project-dialog__dates">{formatWorkDates(shown)}</p>
       <div className="project-dialog__media">
-        <ProjectImage project={shown} alt={`Screenshot of ${shown.title}`} />
+        <ProjectImage
+          project={shown}
+          alt={`Screenshot of ${shown.title}`}
+          loading="eager"
+        />
       </div>
       <p id={descriptionId}>{shown.description}</p>
       <ul className="project-dialog__tags">

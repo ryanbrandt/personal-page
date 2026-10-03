@@ -132,6 +132,7 @@ test("a card opens its dialog; Esc closes it and refocuses the card", async ({
 test("a click on a card opens its dialog; the close button closes it", async ({
   page,
 }) => {
+  await page.goto("/");
   await page.goto("/work");
   const card = projectCardLink(page, "React UseSignalR");
   const dialog = projectDialog(page);
@@ -147,7 +148,7 @@ test("a click on a card opens its dialog; the close button closes it", async ({
 
   // Closing went back in history, so Back leaves the page.
   await page.goBack();
-  await expect(page).not.toHaveURL(/\/work/);
+  await expect(page).toHaveURL("/");
 });
 
 test("a deep link opens the dialog over the grid", async ({ page }) => {
@@ -173,6 +174,83 @@ test("a deep link opens the dialog over the grid", async ({ page }) => {
   await expect(searchBox(page)).toHaveValue("react");
   // No card opened it, so focus goes to the project's card.
   await expect(projectCardLink(page, "React Drag Selection")).toBeFocused();
+});
+
+test("a deep link whose project the filters hide focuses the heading on close", async ({
+  page,
+}) => {
+  await page.goto("/work/open-fec-graphql-server?tag=React");
+  const dialog = projectDialog(page);
+  await expect(dialog).toBeVisible();
+
+  await page.keyboard.press("Escape");
+
+  await expect(dialog).toBeHidden();
+  await expect(page).toHaveURL("/work?tag=React");
+  await expect(pageTitle(page, PROJECTS_TITLE)).toBeFocused();
+});
+
+test("a chip clicked right after typing keeps both filters", async ({
+  page,
+}) => {
+  await page.goto("/work");
+
+  // Both clicks land before the search is applied (debounced).
+  await searchBox(page).fill("react");
+  await tagChip(page, "Library").click();
+  await tagChip(page, "Testing").click();
+
+  await expect(page).toHaveURL("/work?tag=Library&tag=Testing&q=react");
+  await expect(tagChip(page, "Library")).toHaveAttribute(
+    "aria-pressed",
+    "true"
+  );
+  await expect(tagChip(page, "Testing")).toHaveAttribute(
+    "aria-pressed",
+    "true"
+  );
+  await expect(searchBox(page)).toHaveValue("react");
+  await expect(projectCards(page)).toHaveCount(2);
+});
+
+test("a card clicked right after typing keeps its dialog open", async ({
+  page,
+}) => {
+  await page.goto("/work");
+  const dialog = projectDialog(page);
+
+  await searchBox(page).fill("voter");
+  await projectCardLink(page, "Informed Voter").click();
+  await expect(dialog).toBeVisible();
+
+  // The search applies under the dialog, which stays open.
+  await expect(page).toHaveURL("/work/informed-voter?q=voter");
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toHaveAccessibleName("Informed Voter");
+});
+
+test("a modified click on a card leaves it to the browser", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/work");
+  // The new tab needs nothing loaded.
+  await context.route("**/*", (route) => route.abort());
+
+  const newTab = context.waitForEvent("page");
+  await projectCardLink(page, "Informed Voter").click({
+    modifiers: ["ControlOrMeta"],
+  });
+  await (await newTab).close();
+
+  await expect(page).toHaveURL("/work");
+  await expect(projectDialog(page)).toBeHidden();
+});
+
+test("project slugs are unique and not empty", () => {
+  const slugs = WORK_ENTRIES.map(({ slug }) => slug);
+  expect(slugs.every((slug) => slug.length > 0)).toBe(true);
+  expect(new Set(slugs).size).toBe(slugs.length);
 });
 
 test("an in-app link to an unknown project focuses the 404 heading", async ({

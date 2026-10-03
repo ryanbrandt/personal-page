@@ -6,8 +6,11 @@ export const TAG_PARAM = "tag";
 
 export const SEARCH_DEBOUNCE_MS = 250;
 
-/** How many cards (the first row) load their images eagerly */
-export const EAGER_IMAGE_COUNT = 3;
+/**
+ * How many cards load their images eagerly: the first two, which are in
+ * the first screen at any width; the rest load lazily
+ */
+export const EAGER_IMAGE_COUNT = 2;
 
 /** The path of a project's detail view */
 export const toWorkEntryPath = (slug: string): string =>
