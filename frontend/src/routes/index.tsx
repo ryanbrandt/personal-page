@@ -15,7 +15,8 @@ const COMPONENT_ROUTES: Array<IComponentRoute> = [
     component: <LandingPage />,
   },
   {
-    route: BASE_ROUTES.work,
+    // One route, so opening a project's detail view keeps the grid mounted.
+    route: `${BASE_ROUTES.work}/:slug?`,
     component: <WorkPage />,
   },
   {
@@ -26,8 +27,10 @@ const COMPONENT_ROUTES: Array<IComponentRoute> = [
   // { route: BASE_ROUTES.contact, component: <ContactPage /> },
 ];
 
+const ROUTE_PATTERNS = COMPONENT_ROUTES.map(({ route }) => route);
+
 const ApplicationRoutes: FunctionComponent = () => {
-  useResetScrollAndFocusOnRouteChange();
+  useResetScrollAndFocusOnRouteChange(ROUTE_PATTERNS);
 
   return (
     <Routes>
