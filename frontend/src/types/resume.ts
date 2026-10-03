@@ -20,8 +20,6 @@ export interface IResumeEntry
   type: ResumeEntryType;
 }
 
-export interface IResumeSkill extends IIdentityResource, INamedResource {}
-
 export interface IResumeSkillGroup extends INamedResource {
-  skills: ReadonlyArray<IResumeSkill>;
+  skills: ReadonlyArray<string>;
 }

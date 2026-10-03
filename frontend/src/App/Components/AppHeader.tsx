@@ -4,6 +4,7 @@ import { NavBar, ThemeToggle } from "@ryanbrandt/react-quick-ui";
 
 import type { IAppHeaderMenuLink } from "@app/App/types";
 import { useThemePreference } from "@app/App/hooks";
+import { OWNER_NAME } from "@app/common/constants/site";
 import { BASE_ROUTES } from "@app/routes/constants";
 
 // TODO(R9): add Contact (BASE_ROUTES.contact) once /contact has a page.
@@ -39,7 +40,7 @@ const AppHeader: FunctionComponent = () => {
           <span aria-hidden="true" className="app-header__brand__monogram">
             RB
           </span>
-          <span className="app-header__brand__name">Ryan Brandt</span>
+          <span className="app-header__brand__name">{OWNER_NAME}</span>
         </Link>
       }
       actions={<ThemeToggle value={theme} onChange={setTheme} />}

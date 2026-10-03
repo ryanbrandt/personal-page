@@ -85,157 +85,47 @@ export const SKILL_GROUPS: ReadonlyArray<IResumeSkillGroup> = [
   {
     name: "Languages",
     skills: [
-      {
-        id: 1,
-        name: "TypeScript",
-      },
-      {
-        id: 2,
-        name: "JavaScript",
-      },
-      {
-        id: 3,
-        name: "C#",
-      },
-      {
-        id: 4,
-        name: "Python",
-      },
-      {
-        id: 5,
-        name: "Java",
-      },
-      {
-        id: 6,
-        name: "SQL",
-      },
-      {
-        id: 7,
-        name: "NoSQL",
-      },
-      {
-        id: 8,
-        name: "C",
-      },
-      {
-        id: 9,
-        name: "HTML",
-      },
-      {
-        id: 10,
-        name: "CSS",
-      },
-      {
-        id: 11,
-        name: "SCSS",
-      },
+      "TypeScript",
+      "JavaScript",
+      "C#",
+      "Python",
+      "Java",
+      "SQL",
+      "NoSQL",
+      "C",
+      "HTML",
+      "CSS",
+      "SCSS",
     ],
   },
   {
     name: "Frameworks & libraries",
     skills: [
-      {
-        id: 12,
-        name: "React",
-      },
-      {
-        id: 13,
-        name: "React Native",
-      },
-      {
-        id: 14,
-        name: "Serverless",
-      },
-      {
-        id: 15,
-        name: "Express",
-      },
-      {
-        id: 16,
-        name: "ASP.NET",
-      },
-      {
-        id: 17,
-        name: "Flask",
-      },
-      {
-        id: 18,
-        name: "GraphQL",
-      },
-      {
-        id: 33,
-        name: "Blazor",
-      },
-      {
-        id: 34,
-        name: "Maui",
-      },
+      "React",
+      "React Native",
+      "Serverless",
+      "Express",
+      "ASP.NET",
+      "Flask",
+      "GraphQL",
+      "Blazor",
+      "Maui",
     ],
   },
   {
     name: "Cloud & infra",
     skills: [
-      {
-        id: 26,
-        name: "AWS",
-      },
-      {
-        id: 27,
-        name: "GCP",
-      },
-      {
-        id: 28,
-        name: "Docker",
-      },
-      {
-        id: 29,
-        name: "CircleCI",
-      },
-      {
-        id: 30,
-        name: "AWS CDK",
-      },
-      {
-        id: 31,
-        name: "CloudFormation",
-      },
-      {
-        id: 32,
-        name: "Terraform",
-      },
+      "AWS",
+      "GCP",
+      "Docker",
+      "CircleCI",
+      "AWS CDK",
+      "CloudFormation",
+      "Terraform",
     ],
   },
   {
     name: "Testing & tooling",
-    skills: [
-      {
-        id: 19,
-        name: "Vite",
-      },
-      {
-        id: 20,
-        name: "Webpack",
-      },
-      {
-        id: 21,
-        name: "Jest",
-      },
-      {
-        id: 22,
-        name: "Cypress",
-      },
-      {
-        id: 23,
-        name: "XUnit",
-      },
-      {
-        id: 24,
-        name: "PyTest",
-      },
-      {
-        id: 25,
-        name: "Git",
-      },
-    ],
+    skills: ["Vite", "Webpack", "Jest", "Cypress", "XUnit", "PyTest", "Git"],
   },
 ];

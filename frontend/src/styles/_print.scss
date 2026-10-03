@@ -1,9 +1,15 @@
+@use "sass:map";
 @use "tools" as *;
 
+$ink: #000000;
+$paper: #ffffff;
+
 // Browser print: the page's content only, black on white whatever the theme,
-// with no backgrounds. Pages add their own print rules in their partials.
+// with no backgrounds, and a step smaller so a page holds more. Components
+// follow the tokens remapped here; pages add only layout rules (hiding,
+// page breaks) in their own partials.
 @page {
-  margin: 1.5cm;
+  margin: 1.25cm;
 }
 
 @media print {
@@ -13,12 +19,29 @@
     @each $name, $value in $colors-light {
       --rq-color-#{$name}: #{$value};
     }
-    --rq-color-bg: #{$print-paper};
-    --rq-color-surface: #{$print-paper};
+    --rq-color-bg: #{$paper};
+    --rq-color-surface: #{$paper};
     --rq-color-tint: transparent;
-    --rq-color-text: #{$print-ink};
-    --rq-color-accent-text: #{$print-ink};
+    --rq-color-text: #{$ink};
+    --rq-color-accent-text: #{$ink};
+    --rq-color-brand: #{$ink};
     color-scheme: light;
+
+    --rq-font-size-md: #{map.get($font-sizes, xs)};
+    --rq-font-size-2xl: #{map.get($font-sizes, md)};
+    --rq-font-size-section: #{map.get($font-sizes, 2xl)};
+    --rq-line-height-body: #{map.get($line-heights, snug)};
+    --rq-space-2: #{map.get($space, 1)};
+    --rq-space-3: #{map.get($space, 2)};
+    --rq-space-5: #{map.get($space, 3)};
+    --rq-space-8: #{map.get($space, 4)};
+    --rq-space-section: #{map.get($space, 6)};
+  }
+
+  // Page text follows the (smaller) body size; on screen it stays the
+  // browser's default.
+  body {
+    font-size: var(--rq-font-size-md);
   }
 
   .root-container__skip-link,
@@ -32,7 +55,12 @@
   }
 
   .page-container__title {
-    margin-bottom: var(--rq-space-4);
+    margin-bottom: var(--rq-space-2);
     font-size: var(--rq-font-size-4xl);
+  }
+
+  // With no tint behind them, tags need an outline to read as tags.
+  .tag {
+    border-color: var(--rq-color-control-border);
   }
 }

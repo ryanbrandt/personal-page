@@ -1,14 +1,28 @@
-import type { FunctionComponent, PropsWithChildren } from "react";
+import type {
+  ComponentProps,
+  FunctionComponent,
+  PropsWithChildren,
+} from "react";
+import { Heading } from "@ryanbrandt/react-quick-ui";
+
+import { formatDateRange } from "@app/common/utils/dates";
+
+type HeadingLevel = NonNullable<ComponentProps<typeof Heading>["as"]>;
 
 interface BaseProps {
-  /** The role, degree or other title: the entry's `<h3>` */
+  /** The role, degree or other title: the entry's heading */
   title: string;
 
-  /** Where: the company, school or other organization */
-  organization: string;
+  /** The title's heading element, to fit the page's outline */
+  headingLevel?: HeadingLevel;
 
-  /** When, already formatted, e.g. "April 2021 – September 2021" */
-  dates: string;
+  /** Where: the company, school or other organization */
+  organization?: string;
+
+  startDate: string;
+
+  /** null while it's ongoing ("Present") */
+  endDate: string | null;
 }
 
 /** `children`, if any, are the entry's details, shown below its heading. */
@@ -18,15 +32,28 @@ type Props = PropsWithChildren<BaseProps>;
 // the heading starts the entry for screen readers and heading navigation.
 const TimelineEntry: FunctionComponent<Props> = ({
   title,
+  headingLevel = "h3",
   organization,
-  dates,
+  startDate,
+  endDate,
   children,
 }) => (
   <li className="timeline__entry">
-    <h3 className="timeline__entry__title">{title}</h3>
-    <p className="timeline__entry__organization">{organization}</p>
-    <p className="timeline__entry__dates">{dates}</p>
-    {children && <div className="timeline__entry__details">{children}</div>}
+    <Heading
+      variant="title"
+      as={headingLevel}
+      text={title}
+      className="timeline__entry__title"
+    />
+    {organization && (
+      <p className="timeline__entry__organization">{organization}</p>
+    )}
+    <p className="timeline__entry__dates">
+      {formatDateRange(startDate, endDate)}
+    </p>
+    {children != null && (
+      <div className="timeline__entry__details">{children}</div>
+    )}
   </li>
 );
 

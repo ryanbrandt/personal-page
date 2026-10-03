@@ -1,5 +1,5 @@
 import type { FunctionComponent } from "react";
-import { Tag } from "@ryanbrandt/react-quick-ui";
+import { Heading, Tag } from "@ryanbrandt/react-quick-ui";
 
 import type { IResumeSkillGroup } from "@app/types/resume";
 
@@ -11,11 +11,16 @@ const ResumeSkillGroup: FunctionComponent<Props> = ({
   group: { name, skills },
 }) => (
   <div className="resume-page__skill-group">
-    <h3 className="resume-page__skill-group__title">{name}</h3>
+    <Heading
+      variant="title"
+      as="h3"
+      text={name}
+      className="resume-page__skill-group__title"
+    />
     <ul className="resume-page__skill-group__skills">
       {skills.map((skill) => (
-        <li key={skill.id}>
-          <Tag text={skill.name} />
+        <li key={skill}>
+          <Tag text={skill} />
         </li>
       ))}
     </ul>
