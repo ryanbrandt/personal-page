@@ -10,6 +10,8 @@ const NotFoundPage: FunctionComponent = () => (
     title="Page not found"
     documentTitle={toDocumentTitle("Page not found")}
   >
+    {/* React hoists this into <head>. */}
+    <meta name="robots" content="noindex" />
     <div className="not-found-page">
       <p>Sorry, there's nothing at this address.</p>
       <Link to={BASE_ROUTES.home}>Go to the home page</Link>

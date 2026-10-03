@@ -11,8 +11,6 @@
   &__title {
     font-size: 42px;
     font-weight: 400;
-    // The library styles every h1 with a tight line height; keep the body's.
-    line-height: var(--rq-line-height-body);
     margin-bottom: 50px;
     text-align: center;
     color: var(--rq-color-accent-text);
