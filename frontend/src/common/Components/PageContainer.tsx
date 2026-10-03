@@ -1,9 +1,6 @@
-import {
-  type FunctionComponent,
-  type PropsWithChildren,
-  useEffect,
-  useRef,
-} from "react";
+import { type FunctionComponent, type PropsWithChildren, useRef } from "react";
+
+import { useFocusHeadingOnPageMount } from "@app/common/hooks";
 
 interface BaseProps {
   /** The page's heading, its one `<h1>` */
@@ -18,15 +15,9 @@ interface BaseProps {
 
 type Props = PropsWithChildren<BaseProps>;
 
-// The heading of the page the app loaded with. That page keeps the
-// browser's own scroll and focus; StrictMode's replayed effect sees the
-// same element, so it can't count as a second page.
-let firstHeading: HTMLHeadingElement | undefined;
-
-// A page that mounts after the first scrolls to the top and focuses its
-// heading, so screen readers announce it; tabIndex={-1} keeps the heading
-// out of the tab order. A new path that keeps the page mounted (e.g. a
-// project's dialog at /work/:slug) leaves both alone.
+// Every routed page renders this (or uses useFocusHeadingOnPageMount on its
+// own <h1>): its heading takes focus when a new page mounts, so screen
+// readers announce it; tabIndex={-1} keeps the heading out of the tab order.
 const PageContainer: FunctionComponent<Props> = ({
   title,
   documentTitle,
@@ -34,14 +25,7 @@ const PageContainer: FunctionComponent<Props> = ({
 }) => {
   const headingRef = useRef<HTMLHeadingElement>(null);
 
-  useEffect(() => {
-    const heading = headingRef.current!;
-    firstHeading ??= heading;
-    if (heading === firstHeading) return;
-
-    window.scrollTo(0, 0);
-    heading.focus({ preventScroll: true });
-  }, []);
+  useFocusHeadingOnPageMount(headingRef);
 
   return (
     <div className="page-container">

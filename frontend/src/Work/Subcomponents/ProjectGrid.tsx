@@ -8,7 +8,6 @@ import { useClientSideLinks } from "@app/Work/hooks";
 import {
   CARD_LINK_SELECTOR,
   EAGER_IMAGE_COUNT,
-  OPENED_FROM_CARD_STATE,
   toWorkEntryPath,
 } from "@app/Work/constants";
 
@@ -23,6 +22,11 @@ interface Props {
   headingLevel?: ProjectHeadingLevel;
   /** A query string (e.g. the page's filters) the card links carry along */
   linkSearch?: string;
+  /**
+   * The history state the card links navigate with: the projects page
+   * passes OPENED_FROM_CARD_STATE, so closing the dialog goes back to it
+   */
+  linkState?: unknown;
 }
 
 /**
@@ -33,9 +37,10 @@ const ProjectGrid: FunctionComponent<Props> = ({
   projects,
   headingLevel = "h2",
   linkSearch = "",
+  linkState,
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
-  useClientSideLinks(listRef, CARD_LINK_SELECTOR, OPENED_FROM_CARD_STATE);
+  useClientSideLinks(listRef, CARD_LINK_SELECTOR, linkState);
 
   return (
     <ul ref={listRef} className="project-grid">
