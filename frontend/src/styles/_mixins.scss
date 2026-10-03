@@ -38,6 +38,19 @@
   }
 }
 
+// Faded until hovered, on desktop only (touch screens have no hover).
+@mixin hover-reveal {
+  @include desktop-only {
+    opacity: 0.5;
+    transition: opacity variables.$hover-transition ease-out;
+
+    &:hover {
+      opacity: 1;
+      transition: opacity variables.$hover-transition ease-in;
+    }
+  }
+}
+
 // The page's side gutter: the spec's 120px at 1440px wide, shrinking with the
 // viewport to 20px. Matches the header's (NavBar's) gutter, so page content
 // lines up with it.

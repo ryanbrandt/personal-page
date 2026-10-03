@@ -29,19 +29,8 @@
 
     &__result {
       @include flex--column--align-center;
-
-      @include desktop-only {
-        opacity: 0.5;
-        transition: 0.25s ease-out;
-      }
-
-      @include desktop-only {
-        &:hover {
-          opacity: 1;
-          cursor: pointer;
-          transition: 0.25s ease-in;
-        }
-      }
+      @include hover-reveal;
+      cursor: pointer;
 
       &__img {
         border-radius: 10px;
@@ -98,16 +87,7 @@
           font-weight: 400;
           cursor: pointer;
           color: var(--rq-color-accent-text);
-
-          @include desktop-only {
-            opacity: 0.5;
-            transition: 0.25s ease-out;
-
-            &:hover {
-              opacity: 1;
-              transition: 0.25s ease-in;
-            }
-          }
+          @include hover-reveal;
         }
       }
     }
