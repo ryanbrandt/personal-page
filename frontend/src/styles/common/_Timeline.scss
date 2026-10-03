@@ -60,3 +60,24 @@
     }
   }
 }
+
+@media print {
+  .timeline__entry {
+    gap: 0;
+    padding-bottom: var(--rq-space-4);
+    break-inside: avoid;
+
+    &__title {
+      font-size: var(--rq-font-size-md);
+    }
+
+    &__organization,
+    &__dates {
+      font-size: var(--rq-font-size-xs);
+    }
+
+    &__details {
+      margin-top: var(--rq-space-2);
+    }
+  }
+}

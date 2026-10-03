@@ -1,0 +1,38 @@
+@use "tools" as *;
+
+// Browser print: the page's content only, black on white whatever the theme,
+// with no backgrounds. Pages add their own print rules in their partials.
+@page {
+  margin: 1.5cm;
+}
+
+@media print {
+  // `:root[data-theme]` outranks the library's `[data-theme=…]` theme rules.
+  :root,
+  :root[data-theme] {
+    @each $name, $value in $colors-light {
+      --rq-color-#{$name}: #{$value};
+    }
+    --rq-color-bg: #{$print-paper};
+    --rq-color-surface: #{$print-paper};
+    --rq-color-tint: transparent;
+    --rq-color-text: #{$print-ink};
+    --rq-color-accent-text: #{$print-ink};
+    color-scheme: light;
+  }
+
+  .root-container__skip-link,
+  .app-header,
+  .app-footer {
+    display: none;
+  }
+
+  .content-container {
+    padding: 0;
+  }
+
+  .page-container__title {
+    margin-bottom: var(--rq-space-4);
+    font-size: var(--rq-font-size-4xl);
+  }
+}

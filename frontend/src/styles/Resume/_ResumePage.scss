@@ -88,3 +88,68 @@ $skill-group-min-width: 320px;
     }
   }
 }
+
+// Close to a one-pager: compact, the sections stacked, nothing split across
+// pages that needn't be.
+@media print {
+  .resume-page {
+    font-size: var(--rq-font-size-xs);
+
+    &__download {
+      display: none;
+    }
+
+    &__display {
+      gap: var(--rq-space-6);
+    }
+
+    &__section {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--rq-space-3);
+
+      &__content {
+        grid-column: auto;
+      }
+
+      .heading {
+        break-after: avoid;
+        font-size: var(--rq-font-size-2xl);
+      }
+    }
+
+    &__entry-summary,
+    &__entry-highlights {
+      font-size: var(--rq-font-size-xs);
+      line-height: var(--rq-line-height-snug);
+    }
+
+    &__entry-highlights {
+      gap: var(--rq-space-1);
+      margin-top: var(--rq-space-2);
+
+      li::marker {
+        color: inherit;
+      }
+    }
+
+    &__skill-groups {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--rq-space-4);
+    }
+
+    &__skill-group {
+      break-inside: avoid;
+
+      &__title {
+        margin-bottom: var(--rq-space-2);
+        font-size: var(--rq-font-size-xs);
+      }
+    }
+
+    .tag {
+      padding: 0 var(--rq-space-2);
+      border-color: var(--rq-color-border);
+      color: var(--rq-color-text);
+    }
+  }
+}
