@@ -57,6 +57,42 @@ interface LayoutShift extends PerformanceEntry {
 const navLink = (page: Page, name: string) =>
   primaryNav(page).getByRole("link", { name, exact: true });
 
+/**
+ * The layout shift, every entry summed (even right after a click, which CLS
+ * would forgive), while changing pages: through the nav links, then back
+ * and forward, ending on the home page.
+ */
+async function layoutShiftChangingPages(page: Page): Promise<number> {
+  await page.goto("/");
+  await waitForStableRender(page);
+  // From here: the first load's shift (the web font swapping in) isn't
+  // a page change's.
+  await page.evaluate(() => {
+    const shifts = window as unknown as { layoutShift: number };
+    shifts.layoutShift = 0;
+    new PerformanceObserver((list) => {
+      for (const entry of list.getEntries() as Array<LayoutShift>) {
+        shifts.layoutShift += entry.value;
+      }
+    }).observe({ type: "layout-shift" });
+  });
+
+  for (const name of ["Résumé", "Projects", "Contact", "Home"]) {
+    await navLink(page, name).click();
+    await waitForStableRender(page);
+  }
+  // Back to Contact and Projects, then forward to Contact and Home.
+  for (const step of ["back", "back", "forward", "forward"] as const) {
+    await (step === "back" ? page.goBack() : page.goForward());
+    await waitForStableRender(page);
+  }
+  await expect(page).toHaveURL("/");
+
+  return page.evaluate(
+    () => (window as unknown as { layoutShift: number }).layoutShift
+  );
+}
+
 test.use({ viewport: VIEWPORTS.desktop });
 
 test.describe("with motion", () => {
@@ -91,48 +127,69 @@ test.describe("with motion", () => {
     expect(await viewTransitions(page)).toBe(2);
   });
 
-  test("the hero's title shows at once, as it's the largest paint", async ({
+  test("the hero's lines rise in; its title, the largest paint, shows at once", async ({
     page,
   }) => {
     await page.goto("/");
-    const title = pageTitle(page, HOME_HEADING);
+    const hero = page.locator(".home-hero");
 
-    expect(await title.evaluate((h1) => h1.getAnimations().length)).toBe(0);
+    expect(
+      await hero.evaluate((section) =>
+        Array.from(section.children, (child) => ({
+          title: child.matches("h1"),
+          animation: getComputedStyle(child).animationName,
+        }))
+      )
+    ).toEqual([
+      { title: true, animation: "none" },
+      ...Array(4).fill({ title: false, animation: "home-hero-rise" }),
+    ]);
+    // And nothing is left running or applied once it ends.
     await waitForStableRender(page);
     expect(await animations(page)).toEqual([]);
   });
 
-  test("changing pages doesn't shift the layout", async ({ page }) => {
+  test("history steps faster than a cross-fade end on the last one", async ({
+    page,
+  }) => {
     await page.goto("/");
+    await navLink(page, "Projects").click();
+    await projectCardLink(page, PROJECT.title).click();
+    await expect(projectDialog(page)).toBeVisible();
+    await page.goBack();
+    await page.goBack();
+    await expect(page).toHaveURL("/");
     await waitForStableRender(page);
-    // Page changes only: the first load's shift (the web font swapping in)
-    // isn't motion's.
+
+    // Forward to the projects (a cross-fade) and, before its update, on to
+    // the project's dialog (the same page, so no cross-fade).
     await page.evaluate(() => {
-      const shifts = window as unknown as { layoutShift: number };
-      shifts.layoutShift = 0;
-      new PerformanceObserver((list) => {
-        for (const entry of list.getEntries() as Array<LayoutShift>) {
-          // As the CLS metric counts them: not right after a click.
-          if (!entry.hadRecentInput) shifts.layoutShift += entry.value;
-        }
-      }).observe({ type: "layout-shift" });
+      history.forward();
+      history.forward();
     });
 
-    for (const name of ["Résumé", "Projects", "Contact", "Home"]) {
-      await navLink(page, name).click();
-      await waitForStableRender(page);
-    }
-    // Back and forward, which aren't input, so every shift would count.
-    for (const step of [-1, -1, 1] as const) {
-      await (step < 0 ? page.goBack() : page.goForward());
-      await waitForStableRender(page);
-    }
+    await expect(page).toHaveURL(`/work/${PROJECT.slug}`);
+    await waitForStableRender(page);
+    await expect(projectDialog(page)).toBeVisible();
+  });
 
-    expect(
-      await page.evaluate(
-        () => (window as unknown as { layoutShift: number }).layoutShift
-      )
-    ).toBe(0);
+  test("Back from a project's dialog keeps the page's scroll", async ({
+    page,
+  }) => {
+    await page.goto("/work");
+    const card = projectCardLink(page, PROJECT.title);
+    await card.scrollIntoViewIfNeeded();
+    await page.evaluate(() => window.scrollBy(0, 200));
+    const scrollY = await page.evaluate(() => window.scrollY);
+    expect(scrollY).toBeGreaterThan(0);
+
+    await card.click();
+    await expect(projectDialog(page)).toBeVisible();
+    await page.goBack();
+
+    await expect(page).toHaveURL("/work");
+    await expect(projectDialog(page)).toBeHidden();
+    expect(await page.evaluate(() => window.scrollY)).toBe(scrollY);
   });
 });
 
@@ -173,4 +230,18 @@ test.describe("under reduced motion", () => {
 
     expect(await viewTransitions(page)).toBe(0);
   });
+});
+
+// Short pages (e.g. Contact) show the footer, which a long page puts below
+// the fold; a page change moves it, with or without motion. Motion must
+// add nothing to that.
+test("motion shifts the layout no more than changing pages does", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const withoutMotion = await layoutShiftChangingPages(page);
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  const withMotion = await layoutShiftChangingPages(page);
+
+  expect(withMotion).toBe(withoutMotion);
 });
