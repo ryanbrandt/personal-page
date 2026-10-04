@@ -1,3 +1,4 @@
+@use "@ryanbrandt/react-quick-ui/stylesheets/sass" as rq;
 @use "variables";
 
 @mixin mobile-only {
@@ -19,17 +20,19 @@
   }
 }
 
-// A muted icon link that turns the accent colour on hover; its icon fills
-// with `currentColor`.
-@mixin muted-to-accent-icon($size) {
-  color: var(--rq-color-muted);
-  cursor: pointer;
-  width: $size;
-  height: $size;
-  transition: color var(--rq-duration-base) var(--rq-easing-standard);
+// A text link in the accent colour, underlined on hover (e.g. "View on
+// GitHub →").
+@mixin accent-text-link {
+  color: var(--rq-color-accent-text);
+  font-weight: var(--rq-font-weight-medium);
+  text-decoration: none;
 
   &:hover {
-    color: var(--rq-color-accent-text);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    @include rq.focus-ring;
   }
 }
 

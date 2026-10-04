@@ -57,15 +57,5 @@ $single-column-max: 640px;
 }
 
 .project-github-link {
-  color: var(--rq-color-accent-text);
-  font-weight: var(--rq-font-weight-medium);
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &:focus-visible {
-    @include focus-ring;
-  }
+  @include accent-text-link;
 }

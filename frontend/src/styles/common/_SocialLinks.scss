@@ -1,7 +1,10 @@
 @use "../tools" as *;
 
-// SocialLinks.tsx: a row of icon links, muted until hovered.
+// SocialLinks.tsx: a row of icon links, muted until hovered. A container
+// can resize the icons with --social-icon-size.
 .social-links {
+  --social-icon-size: 24px;
+
   @include flex--align-center;
   gap: var(--rq-space-1);
   margin: 0;
@@ -10,8 +13,15 @@
 
   a {
     @include flex--align-center--justify-center;
-    @include muted-to-accent-icon($social-link-size);
+    width: $social-link-size;
+    height: $social-link-size;
     border-radius: var(--rq-radius-control);
+    color: var(--rq-color-muted);
+    transition: color var(--rq-duration-base) var(--rq-easing-standard);
+
+    &:hover {
+      color: var(--rq-color-accent-text);
+    }
 
     &:focus-visible {
       @include focus-ring;
@@ -19,6 +29,8 @@
   }
 
   svg {
+    width: var(--social-icon-size);
+    height: var(--social-icon-size);
     fill: currentColor;
   }
 }

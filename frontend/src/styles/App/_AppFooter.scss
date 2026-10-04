@@ -1,8 +1,5 @@
 @use "../tools" as *;
 
-// AppFooter.tsx draws the icons at this size.
-$social-icon-size: 20px;
-
 .app-footer {
   @include flex--align-center--justify-space-between;
   @include page-gutter;
@@ -17,8 +14,10 @@ $social-icon-size: 20px;
     font-size: var(--rq-font-size-2xs);
   }
 
-  // The icons, not their hit areas, line up with the gutter.
   &__social-links {
-    margin-right: calc(($social-icon-size - $social-link-size) / 2);
+    --social-icon-size: 20px;
+
+    // The icons, not their hit areas, line up with the gutter.
+    margin-right: calc((var(--social-icon-size) - #{$social-link-size}) / 2);
   }
 }

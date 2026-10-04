@@ -2,8 +2,6 @@
 
 // D0's measure for the hero's bio.
 $bio-max-width: 640px;
-// HomeHero.tsx draws the social icons at this size.
-$social-icon-size: 24px;
 
 .home-page {
   @include flex--column;
@@ -94,10 +92,10 @@ $social-icon-size: 24px;
     }
   }
 
-  // The icons, not their hit areas, line up with the text's start.
   &__social {
+    // The icons, not their hit areas, line up with the text's start.
     @include mobile-only {
-      margin-left: calc(($social-icon-size - $social-link-size) / 2);
+      margin-left: calc((var(--social-icon-size) - #{$social-link-size}) / 2);
     }
   }
 }
@@ -138,16 +136,6 @@ $social-icon-size: 24px;
 }
 
 .more-link {
-  color: var(--rq-color-accent-text);
+  @include accent-text-link;
   font-size: var(--rq-font-size-md);
-  font-weight: var(--rq-font-weight-medium);
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &:focus-visible {
-    @include focus-ring;
-  }
 }

@@ -13,16 +13,16 @@ import { BASE_ROUTES } from "@app/routes/constants";
 /** The job without an end date, if there is one. */
 const CURRENT_JOB = WORK_ENTRIES.find(({ endDate }) => endDate === null);
 
-// HomePage.scss lines the icons up with the text from this size.
-const SOCIAL_ICON_SIZE = 24;
-
 /**
  * The page's `<h1>` (the name), the current job as an eyebrow, a short bio,
  * calls to action and the social links.
  *
  * The `<h1>` is the page's heading, so it takes focus when the page mounts
  * after another (see useFocusHeadingOnPageMount). It's a plain `<h1>`, as
- * the library's Heading takes neither a ref nor a tabIndex (TODO(L2c)).
+ * the library's Heading takes neither a ref nor a tabIndex.
+ * TODO(L2c): once Heading takes a `ref` and passes on the rest of its props,
+ * use `<Heading variant="hero">` and delete this `<h1>` and the copied
+ * `.home-hero__title` styles.
  * The eyebrow is shown above it but comes after it in the markup, so the
  * heading starts the page for screen readers and heading navigation.
  */
@@ -69,7 +69,7 @@ const HomeHero: FunctionComponent = () => {
           text="Personal projects"
         />
       </div>
-      <SocialLinks iconSize={SOCIAL_ICON_SIZE} className="home-hero__social" />
+      <SocialLinks className="home-hero__social" />
     </section>
   );
 };
