@@ -23,10 +23,16 @@ interface Props {
   /** A query string (e.g. the page's filters) the card links carry along */
   linkSearch?: string;
   /**
-   * The history state the card links navigate with: the projects page
-   * passes an IWorkEntryLocationState, so closing the dialog goes back to it
+   * The history state the card links navigate with: an
+   * IWorkEntryLocationState, so closing the dialog goes back to the page
    */
   linkState?: unknown;
+  /**
+   * How many cards load their images eagerly; 0 for a grid below the fold
+   *
+   * @default EAGER_IMAGE_COUNT
+   */
+  eagerImageCount?: number;
 }
 
 /**
@@ -38,6 +44,7 @@ const ProjectGrid: FunctionComponent<Props> = ({
   headingLevel = "h2",
   linkSearch = "",
   linkState,
+  eagerImageCount = EAGER_IMAGE_COUNT,
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
   useClientSideLinks(listRef, CARD_LINK_SELECTOR, linkState);
@@ -50,7 +57,7 @@ const ProjectGrid: FunctionComponent<Props> = ({
             project={project}
             href={`${toWorkEntryPath(project.slug)}${linkSearch}`}
             headingLevel={headingLevel}
-            imageLoading={index < EAGER_IMAGE_COUNT ? "eager" : "lazy"}
+            imageLoading={index < eagerImageCount ? "eager" : "lazy"}
           />
         </li>
       ))}

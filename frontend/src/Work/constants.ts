@@ -27,11 +27,12 @@ export const toWorkEntryPath = (slug: string): string =>
 export const CARD_LINK_SELECTOR = ".card__link";
 
 /**
- * The history state of a detail view opened from a project card on the
- * projects page, with the page's query string at the time: closing goes
- * back to that page while the query is unchanged.
+ * The history state of a detail view opened from a page's project card:
+ * with `returnOnClose`, closing goes back to that page (history back) while
+ * the query string is still `search` (the projects page's filters when the
+ * card opened it; empty from elsewhere).
  */
 export interface IWorkEntryLocationState {
-  openedFromCard?: boolean;
+  returnOnClose?: boolean;
   search?: string;
 }

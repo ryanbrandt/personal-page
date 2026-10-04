@@ -68,10 +68,10 @@ const WorkPage: FunctionComponent = () => {
   if (slug && !selected) return <NotFoundPage />;
 
   const closeDialog = () => {
-    const { openedFromCard, search } = (location.state ??
+    const { returnOnClose, search } = (location.state ??
       {}) as IWorkEntryLocationState;
-    if (openedFromCard && search === location.search) {
-      // Back to the page the card was on.
+    if (returnOnClose && search === location.search) {
+      // Back to the page the card was on (this one, or e.g. the home page).
       void navigate(-1);
     } else {
       // A link from elsewhere (or a new tab), or the filters changed since
@@ -110,7 +110,7 @@ const WorkPage: FunctionComponent = () => {
             linkSearch={location.search}
             linkState={
               {
-                openedFromCard: true,
+                returnOnClose: true,
                 search: location.search,
               } satisfies IWorkEntryLocationState
             }
