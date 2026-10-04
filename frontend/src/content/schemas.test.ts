@@ -20,6 +20,17 @@ describe("contentSchema", () => {
     ]);
   });
 
+  it("rejects a repeated résumé entry (start and title)", () => {
+    const [job] = CONTENT.experience;
+    const { error } = contentSchema.safeParse({
+      ...CONTENT,
+      experience: [job, { ...job, organization: "Elsewhere" }],
+    });
+    expect(error?.issues.map(({ message }) => message)).toEqual([
+      "Entries must differ in start or title",
+    ]);
+  });
+
   it("rejects résumé entries that aren't newest first", () => {
     const { error } = contentSchema.safeParse({
       ...CONTENT,

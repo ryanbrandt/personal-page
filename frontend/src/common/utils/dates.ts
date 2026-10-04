@@ -9,9 +9,15 @@ const MONTH_FORMAT = new Intl.DateTimeFormat("en-US", {
   timeZone: "UTC",
 });
 
-/** An ISO month ("2021-09") for display: "September 2021". */
-export const formatMonth = (isoMonth: IsoMonth): string =>
-  MONTH_FORMAT.format(new Date(isoMonth));
+/**
+ * An ISO month ("2021-09") for display: "September 2021". A month that
+ * doesn't parse (which the content check should have stopped) shows as it
+ * is rather than throwing during render.
+ */
+export const formatMonth = (isoMonth: IsoMonth): string => {
+  const date = new Date(isoMonth);
+  return Number.isNaN(date.getTime()) ? isoMonth : MONTH_FORMAT.format(date);
+};
 
 /**
  * ISO months as a range for display, e.g. "April 2021 – September 2021",

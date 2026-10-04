@@ -9,6 +9,10 @@ describe("formatMonth", () => {
     expect(formatMonth("2022-01")).toBe("January 2022");
   });
 
+  it("shows a month that doesn't parse as it is", () => {
+    expect(formatMonth("2021-13")).toBe("2021-13");
+  });
+
   // The tests run in a US time zone (vite.config.ts), where the month
   // starts after midnight UTC.
   it("shows the same month in a time zone behind UTC", () => {

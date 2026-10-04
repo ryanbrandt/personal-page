@@ -41,6 +41,10 @@ const documentTitle = (): Plugin => ({
 // server) starts, so bad data fails the build (and so the deploy) instead
 // of breaking the page. The checks run here, not in the app, to keep zod
 // out of its bundle.
+// The data files are config dependencies, so editing one restarts the dev
+// server, and invalid content stops it until it's fixed. The app modules
+// this file imports are loaded without the `@app` alias: keep them free of
+// runtime `@app` imports (type-only imports are fine).
 // TODO(images): make and measure the project images' variants here (see
 // content/schemas.ts).
 const contentCheck = (): Plugin => ({

@@ -25,6 +25,9 @@ const periodShape = {
 
 const textSchema = z.string().min(1);
 
+const isUnique = <T>(entries: ReadonlyArray<T>, toKey: (entry: T) => string) =>
+  new Set(entries.map(toKey)).size === entries.length;
+
 const textListSchema = z.array(textSchema).readonly();
 
 /** A job, degree or certificate on the résumé. */
@@ -42,10 +45,17 @@ const resumeEntrySchema = z.object({
 // Ongoing entries first, then by end month, latest first.
 const toEndKey = ({ end }: { end: IsoMonth | null }) => end ?? "9999-12";
 
-/** Résumé entries, newest (latest end) first, as they're shown. */
+/**
+ * Résumé entries, newest (latest end) first, as they're shown, each with a
+ * unique start and title (its React key: toEntryKey in content/index.ts).
+ */
 const resumeEntriesSchema = z
   .array(resumeEntrySchema)
   .readonly()
+  .refine(
+    (entries) => isUnique(entries, ({ start, title }) => `${start} ${title}`),
+    "Entries must differ in start or title"
+  )
   .refine(
     (entries) =>
       entries.every(
@@ -101,8 +111,7 @@ const workEntriesSchema = z
   .array(workEntrySchema)
   .readonly()
   .refine(
-    (entries) =>
-      new Set(entries.map(({ slug }) => slug)).size === entries.length,
+    (entries) => isUnique(entries, ({ slug }) => slug),
     "Project slugs must be unique"
   );
 
