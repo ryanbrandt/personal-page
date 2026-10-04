@@ -16,6 +16,10 @@ import {
   waitForStableRender,
 } from "./helpers";
 
+// Screenshots show where motion ends, not a frame of it: under reduced
+// motion, pages and dialogs change at once and the hero doesn't rise in.
+test.use({ reducedMotion: "reduce" });
+
 const COLOR_SCHEMES = ["light", "dark"] as const;
 const WORK_ROUTE = ROUTES.find(({ name }) => name === "work")!;
 
