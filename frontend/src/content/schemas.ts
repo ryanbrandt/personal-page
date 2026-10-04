@@ -1,45 +1,50 @@
-import { z } from "zod";
+import { z } from "zod/mini";
 
 /**
  * The content's shape, checked when it loads: the contract a content API
- * would serve (see ContentSource).
+ * would serve (see ContentSource). Zod Mini: the same schemas as Zod, a
+ * quarter of its bundle size.
  */
 
 /** A month as ISO "YYYY-MM", e.g. "2021-09"; formatted for display. */
 const isoMonthSchema = z
   .string()
-  .regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Expected an ISO month ("YYYY-MM")');
+  .check(
+    z.regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Expected an ISO month ("YYYY-MM")')
+  );
 
-const textListSchema = z.array(z.string().min(1)).readonly();
+const nonEmptyTextSchema = z.string().check(z.minLength(1));
+
+const textListSchema = z.readonly(z.array(nonEmptyTextSchema));
 
 export const profileSchema = z.object({
-  name: z.string().min(1),
+  name: nonEmptyTextSchema,
   /** One or two sentences under the home page's heading */
-  bio: z.string().min(1),
+  bio: nonEmptyTextSchema,
 });
 
 /** A job, degree or certificate on the résumé. */
 export const resumeEntrySchema = z.object({
   /** The role, degree or certificate */
-  title: z.string().min(1),
+  title: nonEmptyTextSchema,
   /** The company or school */
-  organization: z.string().min(1),
-  description: z.string().min(1),
+  organization: nonEmptyTextSchema,
+  description: nonEmptyTextSchema,
   /** Shown as a bulleted list; empty for none */
   highlights: textListSchema,
   start: isoMonthSchema,
   /** null while it's ongoing */
-  end: isoMonthSchema.nullable(),
+  end: z.nullable(isoMonthSchema),
 });
 
-export const resumeEntriesSchema = z.array(resumeEntrySchema).readonly();
+export const resumeEntriesSchema = z.readonly(z.array(resumeEntrySchema));
 
 export const skillGroupSchema = z.object({
-  name: z.string().min(1),
+  name: nonEmptyTextSchema,
   skills: textListSchema,
 });
 
-export const skillGroupsSchema = z.array(skillGroupSchema).readonly();
+export const skillGroupsSchema = z.readonly(z.array(skillGroupSchema));
 
 /**
  * An image with its intrinsic size, so the page reserves its space.
@@ -50,8 +55,8 @@ export const skillGroupsSchema = z.array(skillGroupSchema).readonly();
  */
 export const workImageSchema = z.object({
   src: z.url(),
-  width: z.int().positive(),
-  height: z.int().positive(),
+  width: z.int().check(z.positive()),
+  height: z.int().check(z.positive()),
 });
 
 /**
@@ -61,30 +66,33 @@ export const workImageSchema = z.object({
  */
 const slugSchema = z
   .string()
-  .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Expected a slug like project-name");
+  .check(
+    z.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Expected a slug like project-name")
+  );
 
 export const workEntrySchema = z.object({
   slug: slugSchema,
-  title: z.string().min(1),
+  title: nonEmptyTextSchema,
   /** A one-sentence summary */
-  description: z.string().min(1),
+  description: nonEmptyTextSchema,
   tags: textListSchema,
   /** A screenshot, or null for the designed fallback */
-  image: workImageSchema.nullable(),
+  image: z.nullable(workImageSchema),
   start: isoMonthSchema,
   /** null while it's ongoing */
-  end: isoMonthSchema.nullable(),
+  end: z.nullable(isoMonthSchema),
   githubUrl: z.url(),
 });
 
 /** The projects, whose slugs are unique (each is a URL). */
 export const workEntriesSchema = z
-  .array(workEntrySchema)
-  .readonly()
-  .refine(
-    (entries) =>
-      new Set(entries.map(({ slug }) => slug)).size === entries.length,
-    "Project slugs must be unique"
+  .readonly(z.array(workEntrySchema))
+  .check(
+    z.refine(
+      (entries) =>
+        new Set(entries.map(({ slug }) => slug)).size === entries.length,
+      "Project slugs must be unique"
+    )
   );
 
 export type IProfile = z.infer<typeof profileSchema>;
