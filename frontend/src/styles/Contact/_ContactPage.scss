@@ -1,61 +1,68 @@
 @use "../tools" as *;
 
-$contact-page-default-row-col-gap: 50px;
-
 .contact-page {
-  @include desktop-only {
+  @include flex--column;
+  row-gap: var(--rq-space-6);
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+// Native controls in the library's input styles (see ContactFormField); its
+// input-base mixin brings the `--error` modifier.
+.contact-form {
+  @include flex--column;
+  row-gap: var(--rq-space-6);
+
+  &__field {
+    @include input-container;
+  }
+
+  &__label {
+    @include input-label;
+  }
+
+  &__control {
+    @include input-base(var(--rq-space-3));
+    width: 100%;
+    font-family: inherit;
+    line-height: var(--rq-line-height-body);
+    resize: vertical;
+  }
+
+  &__error {
+    @include input-error;
+    margin: 0;
+  }
+
+  &__actions {
     @include flex--justify-center;
-    column-gap: $contact-page-default-row-col-gap;
   }
 
-  @include mobile-only {
+  &__sent,
+  &__failed {
     @include flex--column--align-center;
-    row-gap: $contact-page-default-row-col-gap;
-  }
+    row-gap: var(--rq-space-4);
+    margin: 0;
+    padding: var(--rq-space-4) var(--rq-space-5);
+    border-radius: var(--rq-radius-control);
+    text-align: center;
 
-  &__form {
-    @include flex--column;
-    width: fit-content;
-    row-gap: calc($contact-page-default-row-col-gap / 2);
-
-    &__submit-btn {
-      align-self: center;
+    &:focus-visible {
+      @include focus-ring;
     }
   }
 
-  &__social-links {
-    @include flex--column--justify-center;
-    row-gap: $contact-page-default-row-col-gap;
-    padding: 50px;
-    border-radius: 10px;
-    // Darkens from accent-fill, so on-accent text keeps AA contrast (4.5:1)
-    // across the whole gradient in both themes.
-    background: var(--rq-color-accent-fill);
-    background: linear-gradient(
-      135deg,
-      var(--rq-color-accent-fill),
-      color-mix(in srgb, var(--rq-color-accent-fill) 70%, black)
-    );
+  &__sent {
+    background-color: var(--rq-color-success-tint);
+    color: var(--rq-color-success-text);
+  }
 
-    h2 {
-      color: var(--rq-color-on-accent);
-      font-weight: 400;
-      align-self: center;
-    }
+  &__failed {
+    background-color: var(--rq-color-danger-tint);
+    color: var(--rq-color-danger-text);
 
-    &__link {
-      @include flex--align-center;
-      column-gap: 10px;
-      text-decoration: none;
-      color: var(--rq-color-on-accent);
-
-      &:hover {
-        text-decoration: underline;
-      }
-
-      svg {
-        fill: var(--rq-color-on-accent);
-      }
+    p {
+      margin: 0;
     }
   }
 }
