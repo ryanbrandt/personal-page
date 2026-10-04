@@ -13,7 +13,8 @@ import {
 // A keyboard-only walk through the app shell: no clicks anywhere.
 
 test.describe("desktop", () => {
-  test.use({ viewport: VIEWPORTS.desktop });
+  // A light OS: the theme toggle's checked option is Light until chosen.
+  test.use({ viewport: VIEWPORTS.desktop, colorScheme: "light" });
 
   test("the skip link moves focus to the main content", async ({ page }) => {
     await page.goto("/");
@@ -48,10 +49,11 @@ test.describe("desktop", () => {
       await expect(link).toBeFocused();
     }
 
-    // The toggle is one tab stop, on the checked option; arrows choose.
+    // The toggle is one tab stop, on the checked option (the light OS's
+    // theme until the user chooses); arrows choose.
     await page.keyboard.press("Tab");
-    await expect(themeOption(page, "System")).toBeFocused();
-    await page.keyboard.press("ArrowLeft");
+    await expect(themeOption(page, "Light")).toBeFocused();
+    await page.keyboard.press("ArrowRight");
     await expect(themeOption(page, "Dark")).toBeChecked();
     await page.keyboard.press("ArrowLeft");
     await expect(themeOption(page, "Light")).toBeChecked();

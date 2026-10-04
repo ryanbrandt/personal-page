@@ -16,6 +16,8 @@ const ResumePage: FunctionComponent = () => (
       <div className="resume-page__download">
         <Button
           href={RESUME_PDF_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           size="xlg"
           width="auto"
           text="Download PDF"
