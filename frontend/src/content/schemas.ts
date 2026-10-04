@@ -41,7 +41,13 @@ export const skillGroupSchema = z.object({
 
 export const skillGroupsSchema = z.array(skillGroupSchema).readonly();
 
-/** An image with its intrinsic size, so the page reserves its space. */
+/**
+ * An image with its intrinsic size, so the page reserves its space.
+ * TODO(images): processed variants: resized WebP/AVIF in a `srcset` (a
+ * `<picture>` in ProjectImage), their sizes measured at build time, served
+ * from cacheable URLs with a long Cache-Control. Today's S3 PNGs are full
+ * size, with no Cache-Control.
+ */
 export const workImageSchema = z.object({
   src: z.url(),
   width: z.int().positive(),

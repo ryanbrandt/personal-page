@@ -7,11 +7,13 @@ import ResumeEntry from "@app/Resume/Subcomponents/ResumeEntry";
 import ResumeSkillGroup from "@app/Resume/Subcomponents/ResumeSkillGroup";
 
 const ResumeDisplay: FunctionComponent = () => {
-  const timelineSections = [
-    { title: "Experience", entries: useExperience() },
-    { title: "Education", entries: useEducation() },
-  ];
+  const experience = useExperience();
+  const education = useEducation();
   const skillGroups = useSkills();
+  const timelineSections = [
+    { title: "Experience", entries: experience },
+    { title: "Education", entries: education },
+  ];
 
   return (
     <div className="resume-page__display">
