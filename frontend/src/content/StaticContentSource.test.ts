@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import education from "@app/content/data/education.json";
-import experience from "@app/content/data/experience.json";
-import profile from "@app/content/data/profile.json";
-import projects from "@app/content/data/projects.json";
-import skills from "@app/content/data/skills.json";
+import education from "@app/content/data/education.json" with { type: "json" };
+import experience from "@app/content/data/experience.json" with { type: "json" };
+import profile from "@app/content/data/profile.json" with { type: "json" };
+import projects from "@app/content/data/projects.json" with { type: "json" };
+import skills from "@app/content/data/skills.json" with { type: "json" };
 import {
   createStaticContentSource,
   type IStaticContent,
