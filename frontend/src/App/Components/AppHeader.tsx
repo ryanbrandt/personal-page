@@ -6,6 +6,7 @@ import type { IAppHeaderMenuLink } from "@app/App/types";
 import { type ShownTheme, useShownTheme } from "@app/App/hooks";
 import { OWNER_NAME } from "@app/common/constants/site";
 import { BASE_ROUTES } from "@app/routes/constants";
+import { pageOf } from "@app/routes/utils";
 
 // No "system" option (Ryan's call): with nothing chosen, the page follows
 // the OS, and the toggle shows the theme it resolves to. Choosing the other
@@ -35,11 +36,11 @@ const MENU_LINKS: Array<IAppHeaderMenuLink> = [
 const AppHeader: FunctionComponent = () => {
   const [theme, setTheme] = useShownTheme();
   // NavBar closes its narrow-screen menu when a link in it is chosen, but
-  // not on other navigation (e.g. back/forward). Keying it on the path's
-  // first segment (the page) resets it whenever the page changes, and only
-  // then: a remount drops focus, which the new page's heading takes (see
+  // not on other navigation (e.g. back/forward). Keying it on the page
+  // resets it whenever the page changes, and only then: a remount drops
+  // focus, which the new page's heading takes (see
   // useFocusHeadingOnPageMount), while /work to /work/:slug keeps it.
-  const page = useLocation().pathname.split("/")[1];
+  const page = pageOf(useLocation().pathname);
 
   return (
     <NavBar

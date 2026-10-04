@@ -12,12 +12,30 @@ $bio-max-width: 640px;
   }
 }
 
+// The hero's lines below the title rise into place as the page appears.
+// Only opacity and transform, so nothing shifts, and no fill, so nothing is
+// left applied once it ends.
+@keyframes home-hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rq-space-2));
+  }
+}
+
 // D0's hero: centred on wide screens; on narrow ones, aligned to the start
 // with the calls to action stacked.
 .home-hero {
   @include flex--column--align-center;
   gap: var(--rq-space-6);
   text-align: center;
+
+  // Not the title: it's the largest paint, so it shows at once.
+  > :not(.home-hero__title) {
+    @media screen and (prefers-reduced-motion: no-preference) {
+      animation: home-hero-rise var(--rq-duration-base)
+        var(--rq-easing-emphasized);
+    }
+  }
 
   @include mobile-only {
     align-items: flex-start;
