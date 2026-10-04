@@ -1,8 +1,11 @@
 import type { FunctionComponent } from "react";
 
+import SocialLinks from "@app/common/Components/SocialLinks";
+
 const AppFooter: FunctionComponent = () => (
   <footer className="app-footer">
-    © {new Date().getFullYear()} Ryan Brandt. All rights reserved.
+    <span>© {new Date().getFullYear()} Ryan Brandt</span>
+    <SocialLinks className="app-footer__social-links" />
   </footer>
 );
 

@@ -13,65 +13,53 @@
   }
 }
 
-// Not the lib's `%flex…` placeholders: `@extend` can't reach into `@media` (mobile-only/desktop-only).
-@mixin flex {
-  display: flex;
+// The mobile layout, which print (a narrow page) uses too.
+@mixin mobile-or-print {
+  @media print, only screen and (max-width: 1040px) {
+    @content;
+  }
 }
 
-@mixin flex--col {
-  @include flex;
-  flex-direction: column;
-}
-
-@mixin flex--align-center {
-  @include flex;
-  align-items: center;
-}
-
-@mixin flex--align-center--justify-center {
-  @include flex--align-center;
-  justify-content: center;
-}
-
-@mixin flex--align-center--justify-space-between {
-  @include flex--align-center;
-  justify-content: space-between;
-}
-
-@mixin flex--justify-center {
-  @include flex;
-  justify-content: center;
-}
-
-@mixin flex--justify-space-evenly {
-  @include flex;
-  justify-content: space-evenly;
-}
-
-@mixin flex--col--align-center {
-  @include flex--col;
-  align-items: center;
-}
-
-@mixin flex--col--align-center--justify-center {
-  @include flex--col--align-center;
-  justify-content: center;
-}
-
-@mixin flex--col--justify-center {
-  @include flex--col;
-  justify-content: center;
-}
-
-@mixin gray-to-primary-blue-icon {
-  fill: rq.$dark-gray;
-  cursor: pointer;
-  width: 36px;
-  height: 36px;
-  transition: fill variables.$icon-transition ease-out;
+// A text link in the accent colour, underlined on hover (e.g. "View on
+// GitHub →").
+@mixin accent-text-link {
+  color: var(--rq-color-accent-text);
+  font-weight: var(--rq-font-weight-medium);
+  text-decoration: none;
 
   &:hover {
-    fill: rq.$primary-blue;
-    transition: fill variables.$icon-transition ease-in;
+    text-decoration: underline;
   }
+
+  &:focus-visible {
+    @include rq.focus-ring;
+  }
+}
+
+// The page's side gutter, lined up with the header's (NavBar's): the
+// spec's 120px at 1440px wide, shrinking with the viewport, and the mobile
+// gutter (20px) while the header is narrow, as NavBar's brand side is.
+@mixin page-gutter {
+  padding-inline: clamp(
+    var(--rq-space-gutter-mobile),
+    8.333vw,
+    var(--rq-space-gutter)
+  );
+
+  @media (width < #{variables.$navbar-narrow}) {
+    padding-inline: var(--rq-space-gutter-mobile);
+  }
+}
+
+// Hidden on screen, still read by screen readers.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }

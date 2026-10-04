@@ -1,45 +1,41 @@
 import type { FunctionComponent } from "react";
-import { Badge } from "@ryanbrandt/react-quick-ui";
 
-import ResumeWorkEntry from "@app/Resume/Subcomponents/ResumeEntry";
-import ResumeColumn from "@app/Resume/Subcomponents/ResumeColumn";
-import SuitcaseSvg from "@app/assets/svg/SuitcaseSvg";
-import GraduationCapSvg from "@app/assets/svg/GraduationCapSvg";
-import {
-  WORK_ENTRIES,
-  EDUCATION_ENTRIES,
-  SKILL_ENTRIES,
-} from "@app/repositories/resume";
+import PageSection from "@app/common/Components/PageSection";
+import Timeline from "@app/common/Components/Timeline";
+import { toEntryKey } from "@app/content";
+import { useEducation, useExperience, useSkills } from "@app/content/hooks";
+import ResumeEntry from "@app/Resume/Subcomponents/ResumeEntry";
+import ResumeSkillGroup from "@app/Resume/Subcomponents/ResumeSkillGroup";
 
-const ResumeDisplay: FunctionComponent = () => (
-  <div className="resume-page__resume-display">
-    <ResumeColumn title="Experience">
-      {WORK_ENTRIES.map((entry) => (
-        <ResumeWorkEntry icon={<SuitcaseSvg />} key={entry.id} entry={entry} />
+const ResumeDisplay: FunctionComponent = () => {
+  const experience = useExperience();
+  const education = useEducation();
+  const skillGroups = useSkills();
+  const timelineSections = [
+    { title: "Experience", entries: experience },
+    { title: "Education", entries: education },
+  ];
+
+  return (
+    <div className="resume-page__display">
+      {timelineSections.map(({ title, entries }) => (
+        <PageSection key={title} title={title}>
+          <Timeline>
+            {entries.map((entry) => (
+              <ResumeEntry key={toEntryKey(entry)} entry={entry} />
+            ))}
+          </Timeline>
+        </PageSection>
       ))}
-    </ResumeColumn>
-    <ResumeColumn title="Education">
-      {EDUCATION_ENTRIES.map((entry) => (
-        <ResumeWorkEntry
-          icon={<GraduationCapSvg />}
-          key={entry.id}
-          entry={entry}
-        />
-      ))}
-    </ResumeColumn>
-    <ResumeColumn title="Skills">
-      <div className="resume-page__resume-display__column__skills">
-        {SKILL_ENTRIES.map(({ name, id }) => (
-          <Badge
-            key={`${name}-${id}`}
-            size="fit-content"
-            variant="primary"
-            text={name}
-          />
-        ))}
-      </div>
-    </ResumeColumn>
-  </div>
-);
+      <PageSection title="Skills">
+        <div className="resume-page__skill-groups">
+          {skillGroups.map((group) => (
+            <ResumeSkillGroup key={group.name} group={group} />
+          ))}
+        </div>
+      </PageSection>
+    </div>
+  );
+};
 
 export default ResumeDisplay;

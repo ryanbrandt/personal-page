@@ -1,42 +1,42 @@
 import type { FunctionComponent } from "react";
-import { Navigate, Route, Routes } from "react-router";
+import { Route, Routes } from "react-router";
 
 import { BASE_ROUTES } from "@app/routes/constants";
 import type { IComponentRoute } from "@app/routes/types";
-import { useScrollToTopOnRouteChange } from "@app/routes/hooks";
+import HomePage from "@app/Home/Components/HomePage";
 import ResumePage from "@app/Resume/Components/ResumePage";
-import LandingPage from "@app/Home/Components/LandingPage";
 import WorkPage from "@app/Work/Components/WorkPage";
+import ContactPage from "@app/Contact/Components/ContactPage";
+import NotFoundPage from "@app/NotFound/Components/NotFoundPage";
 
 const COMPONENT_ROUTES: Array<IComponentRoute> = [
   {
     route: BASE_ROUTES.home,
-    component: <LandingPage />,
+    component: <HomePage />,
   },
   {
-    route: BASE_ROUTES.work,
+    // One route, so opening a project's detail view keeps the grid mounted.
+    route: `${BASE_ROUTES.work}/:slug?`,
     component: <WorkPage />,
   },
   {
     route: BASE_ROUTES.resumé,
     component: <ResumePage />,
   },
-  // Contact page is disabled until R9 (Netlify Forms):
-  // { route: BASE_ROUTES.contact, component: <ContactPage /> },
+  {
+    route: BASE_ROUTES.contact,
+    component: <ContactPage />,
+  },
 ];
 
-const ApplicationRoutes: FunctionComponent = () => {
-  useScrollToTopOnRouteChange();
-
-  return (
-    <Routes>
-      {COMPONENT_ROUTES.map(({ route, component }) => (
-        <Route key={route} path={route} element={component} />
-      ))}
-      {/* Unknown paths (and /contact until R9) go home until R2 adds a 404 page. */}
-      <Route path="*" element={<Navigate to={BASE_ROUTES.home} replace />} />
-    </Routes>
-  );
-};
+const ApplicationRoutes: FunctionComponent = () => (
+  <Routes>
+    {COMPONENT_ROUTES.map(({ route, component }) => (
+      <Route key={route} path={route} element={component} />
+    ))}
+    {/* Unknown paths */}
+    <Route path="*" element={<NotFoundPage />} />
+  </Routes>
+);
 
 export default ApplicationRoutes;

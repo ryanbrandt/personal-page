@@ -1,54 +1,75 @@
 @use "../tools" as *;
 
-$contact-page-default-row-col-gap: 50px;
-
 .contact-page {
-  @include desktop-only {
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+// Native controls in the library's input styles (see ContactFormField); its
+// input-base mixin brings the `--error` modifier.
+.contact-form {
+  @include flex--column;
+  row-gap: var(--rq-space-6);
+
+  &__field {
+    @include input-container;
+  }
+
+  &__label {
+    @include input-label;
+  }
+
+  &__control {
+    @include input-base(var(--rq-space-3));
+    width: 100%;
+    font-family: inherit;
+    line-height: var(--rq-line-height-body);
+    resize: vertical;
+  }
+
+  &__error {
+    @include input-error;
+    margin: 0;
+  }
+
+  &__actions {
     @include flex--justify-center;
-    column-gap: $contact-page-default-row-col-gap;
   }
 
-  @include mobile-only {
-    @include flex--col--align-center;
-    row-gap: $contact-page-default-row-col-gap;
+  &__sent,
+  &__failed {
+    @include flex--column--align-center;
+    row-gap: var(--rq-space-4);
+    margin: 0;
+    padding: var(--rq-space-4) var(--rq-space-5);
+    border-radius: var(--rq-radius-control);
+    text-align: center;
   }
 
-  &__form {
-    @include flex--col;
-    width: fit-content;
-    row-gap: calc($contact-page-default-row-col-gap / 2);
+  // Always rendered (a live region), taking space only with an outcome. It
+  // takes focus when one arrives (see ContactForm); like a page's heading,
+  // it isn't a control.
+  &__outcome {
+    &:not(:empty) {
+      margin-top: var(--rq-space-6);
+    }
 
-    &__submit-btn {
-      align-self: center;
+    &:focus {
+      outline: none;
     }
   }
 
-  &__social-links {
-    @include flex--col--justify-center;
-    row-gap: $contact-page-default-row-col-gap;
-    padding: 50px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, $primary-blue, rgb($primary-blue, 0.3));
+  &__sent {
+    background-color: var(--rq-color-success-tint);
+    color: var(--rq-color-success-text);
+  }
 
-    h2 {
-      color: $white;
-      font-weight: 400;
-      align-self: center;
-    }
+  &__failed {
+    background-color: var(--rq-color-danger-tint);
+    color: var(--rq-color-danger-text);
 
-    &__link {
-      @include flex--align-center;
-      column-gap: 10px;
-      text-decoration: none;
-      color: $white;
-
-      &:hover {
-        text-decoration: underline;
-      }
-
-      svg {
-        fill: $white;
-      }
+    p {
+      margin: 0;
     }
   }
 }

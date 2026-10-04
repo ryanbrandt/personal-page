@@ -1,147 +1,60 @@
+@use "sass:map";
 @use "../tools" as *;
 
-$link-hover-transition-time: 0.25s;
-$mobile-menu-height-transition-time: 0.2s;
-$link-padding: 10px;
+// Below this bar width the brand's name doesn't fit beside the theme toggle
+// and menu button (the narrow bar needs about 357px with it), so only the
+// monogram shows; the name stays the link's accessible name.
+$brand-name-min-width: 360px;
 
-// Nav links are real `<a href>`s; keep them looking like the old href-less
-// anchors (no browser link colour or underline).
-@mixin link-reset {
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-}
-
-@mixin link-active {
-  a {
-    @include user-control-disabled;
-  }
-}
-
-.app-header {
+// The bar itself is the library's NavBar; this styles the brand inside it.
+// NavBar is a query container named "navbar".
+.app-header__brand {
   @include flex--align-center;
-  width: 100%;
-  position: fixed;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  gap: var(--rq-space-3);
+  border-radius: var(--rq-radius-control);
+  color: var(--rq-color-text);
+  font-size: var(--rq-font-size-xl);
+  font-weight: var(--rq-font-weight-semibold);
+  text-decoration: none;
 
-  @include themed {
-    background-color: theme-get(primary-color);
+  &:focus-visible {
+    @include focus-ring;
   }
 
-  &__theme-toggle {
-    cursor: pointer;
-    padding: 0px 20px;
-
-    svg {
-      @include themed {
-        fill: theme-get(toggle-color);
-
-        @include desktop-only {
-          opacity: 0.5;
-          transition: opacity 0.25s ease-out;
-
-          &:hover {
-            opacity: 1;
-            transition: opacity 0.25s ease-in;
-          }
-        }
-      }
-    }
-  }
-
-  &__menu {
+  &__monogram {
     @include flex--align-center--justify-center;
-    height: 100%;
-    width: 100%;
-    column-gap: 30px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background-color: var(--rq-color-brand);
+    // The brand colour is the same in both themes, so its ink is too: white
+    // falls short of AA on it; the light theme's text colour passes.
+    color: map.get($colors-light, text);
+    font-size: var(--rq-font-size-sm);
+    font-weight: var(--rq-font-weight-bold);
+  }
 
-    &__link {
-      @include flex--align-center;
-      font-size: 18px;
-      font-weight: 400;
-      height: 100%;
-      padding: 0px $link-padding;
-      @include link-reset;
+  @container navbar (width < #{$navbar-narrow}) {
+    gap: 10px;
+    font-size: var(--rq-font-size-lg);
 
-      a {
-        transition: color $link-hover-transition-time ease-out;
-
-        &:hover {
-          color: $primary-blue;
-          transition: color $link-hover-transition-time ease-in;
-        }
-      }
-
-      &--active {
-        border-bottom: 2px solid $primary-blue;
-        @include link-active;
-      }
+    &__monogram {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      font-size: var(--rq-font-size-2xs);
     }
   }
 
-  &__mobile-menu {
-    width: 100%;
-
-    svg {
-      padding: 0px 20px;
-      fill: $primary-blue;
-    }
-
-    &__overlay {
-      top: 0;
-      width: 100%;
-      position: fixed;
-      color: $primary-blue;
-      overscroll-behavior: contain;
-
-      &--closed {
-        height: 0%;
-        opacity: 0;
-        visibility: collapse;
-        transition: all $mobile-menu-height-transition-time ease-out;
-      }
-
-      &--open {
-        height: 100vh;
-        opacity: 1;
-        visibility: visible;
-        transition: all $mobile-menu-height-transition-time ease-in;
-
-        @include themed {
-          background-color: theme-get(overlay-color);
-        }
-      }
-
-      &__close-btn {
-        padding: 20px;
-        font-size: 32px;
-        font-weight: 400;
-      }
-
-      &__link-container {
-        @include flex--col--align-center;
-        height: 100%;
-        row-gap: 10%;
-        padding: 50px;
-
-        &__link {
-          padding: $link-padding;
-          font-size: 24px;
-          font-weight: 600;
-          @include link-reset;
-
-          @include themed {
-            color: theme-get(secondary-color);
-          }
-
-          &--active {
-            border-bottom: 2px solid rgb($primary-blue, 0.2);
-            @include link-active;
-          }
-        }
-      }
+  @container navbar (width < #{$brand-name-min-width}) {
+    &__name {
+      @include visually-hidden;
     }
   }
+}
+
+// The page behind the open menu doesn't scroll. The menu only opens while
+// the bar is narrow.
+:root:has(.app-header .navbar__nav--open) {
+  overflow: hidden;
 }

@@ -21,6 +21,58 @@ const reactVersion = createRequire(import.meta.url)(
   "react/package.json"
 ).version;
 
+// Use the typed Redux hooks.
+const REDUX_HOOKS_IMPORT = {
+  name: "react-redux",
+  importNames: ["useDispatch", "useSelector"],
+  message: "Use useAppDispatch/useAppSelector from @app/store/hooks.",
+};
+
+// Import through the `@app/*` alias instead of relative paths.
+const RELATIVE_IMPORTS = {
+  regex: "^\\.{1,2}/",
+  message: "Use the @app/* alias instead of a relative import.",
+};
+
+// zod runs at build time (content/schemas.ts, from vite.config.ts) and in
+// tests; keep it out of the app's bundle. Its types are fine.
+const ZOD_IMPORT = {
+  name: "zod",
+  allowTypeImports: true,
+  message: "zod is for the build-time content check (content/schemas.ts).",
+};
+
+// Only src/content reads the data files, the schemas and CONTENT: the app
+// reads content through its hooks.
+const CONTENT_MESSAGE =
+  "Read content with the hooks in @app/content/hooks (types: @app/content/types).";
+const CONTENT_FILE_IMPORTS = {
+  regex: "^@app/content/(data|schemas)(\\.ts)?(/|$)",
+  message: CONTENT_MESSAGE,
+};
+const CONTENT_DATA_IMPORTS = [
+  "@app/content",
+  "@app/content/index",
+  "@app/content/index.ts",
+].map((name) => ({ name, importNames: ["CONTENT"], message: CONTENT_MESSAGE }));
+
+/**
+ * The import rules, plus `paths` and `patterns`. typescript-eslint's version
+ * of the rule, which can allow type-only imports.
+ * @param {{ paths?: object[], patterns?: object[] }} [options]
+ * @returns {import("eslint").Linter.RulesRecord}
+ */
+const restrictImports = ({ paths = [], patterns = [] } = {}) => ({
+  "no-restricted-imports": "off",
+  "@typescript-eslint/no-restricted-imports": [
+    "error",
+    {
+      paths: [REDUX_HOOKS_IMPORT, ...paths],
+      patterns: [RELATIVE_IMPORTS, ...patterns],
+    },
+  ],
+});
+
 export default defineConfig(
   globalIgnores(["dist/", "playwright-report/", "test-results/", ".yarn/"]),
 
@@ -98,35 +150,19 @@ export default defineConfig(
       // Types replace prop-types.
       "react/prop-types": "off",
       "react/no-unescaped-entities": "off",
-      // Import through the `@app/*` alias instead of relative paths, and use
-      // the typed Redux hooks.
-      "no-restricted-imports": [
-        "error",
-        {
-          paths: [
-            {
-              name: "react-redux",
-              importNames: ["useDispatch", "useSelector"],
-              message:
-                "Use useAppDispatch/useAppSelector from @app/store/hooks.",
-            },
-          ],
-          patterns: [
-            {
-              regex: "^\\.{1,2}/",
-              message: "Use the @app/* alias instead of a relative import.",
-            },
-          ],
-        },
-      ],
-      // Known a11y debt: clickable divs in the app shell (theme toggle,
-      // mobile menu close button) are replaced in R2, the work cards in R5,
-      // and the résumé `<label>`s in R4. Restore "error" once those land, and
-      // lower `--max-warnings` in package.json as each one is fixed.
-      "jsx-a11y-x/click-events-have-key-events": "warn",
-      "jsx-a11y-x/no-static-element-interactions": "warn",
-      "jsx-a11y-x/label-has-associated-control": "warn",
+      ...restrictImports({
+        paths: [ZOD_IMPORT, ...CONTENT_DATA_IMPORTS],
+        patterns: [CONTENT_FILE_IMPORTS],
+      }),
     },
+  },
+  {
+    files: ["src/content/**"],
+    rules: restrictImports({ paths: [ZOD_IMPORT] }),
+  },
+  {
+    files: ["src/content/schemas.ts", "src/**/*.test.ts"],
+    rules: restrictImports(),
   },
 
   // Turns off rules that conflict with Prettier; keep it after the rule sets.

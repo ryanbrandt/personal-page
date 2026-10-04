@@ -1,11 +1,25 @@
 @use "../tools" as *;
 
 .app-footer {
-  position: absolute;
-  text-align: center;
-  bottom: 10px;
-  width: 100%;
-  font-size: 10px;
-  font-weight: 400;
-  color: $dark-gray;
+  @include flex--align-center--justify-space-between;
+  @include page-gutter;
+  gap: var(--rq-space-4);
+  padding-block: var(--rq-space-6);
+  border-top: 1px solid var(--rq-color-border);
+  font-size: var(--rq-font-size-xs);
+  color: var(--rq-color-muted);
+
+  @include mobile-only {
+    padding-block: var(--rq-space-4);
+    font-size: var(--rq-font-size-2xs);
+  }
+
+  &__social-links {
+    --social-icon-size: 20px;
+
+    // The icons, not their hit areas, line up with the gutter.
+    margin-right: calc(
+      (var(--social-icon-size, #{$social-icon-size}) - #{$social-link-size}) / 2
+    );
+  }
 }

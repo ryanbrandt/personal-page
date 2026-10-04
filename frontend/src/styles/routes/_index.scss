@@ -1,22 +1,9 @@
-$slide-transition-time: 400ms;
-
-.slide-enter {
-  transform: translateY(20%);
-  transition: all $slide-transition-time ease-in-out;
-  opacity: 0;
-}
-
-.slide-enter.slide-enter-active {
-  transform: translateX(0%);
-  opacity: 1;
-  transition: all $slide-transition-time ease-in-out;
-}
-
-.slide-exit {
-  transform: translateX(0%);
-  opacity: 0;
-}
-
-.slide-exit.slide-exit-active {
-  transform: translateY(-20%);
+// The cross-fade between pages (see PageTransitionRouter.tsx): the browser's
+// default View Transition of the whole page, shortened to the library's
+// fast duration. The router skips it under reduced motion.
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--rq-duration-fast);
+  animation-timing-function: var(--rq-easing-standard);
 }

@@ -13,9 +13,11 @@
     font-weight: 400;
     margin-bottom: 50px;
     text-align: center;
+    color: var(--rq-color-accent-text);
 
-    @include themed {
-      color: theme-get(secondary-color);
+    // Focused when a new page mounts, for screen readers; it isn't a control.
+    &:focus {
+      outline: none;
     }
   }
 }

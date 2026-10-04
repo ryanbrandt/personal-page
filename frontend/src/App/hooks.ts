@@ -1,57 +1,44 @@
-import { useEffect, useState } from "react";
-import { useWindowSize } from "@ryanbrandt/react-quick-ui";
+import { useState, useSyncExternalStore } from "react";
+import type { ThemePreference } from "@ryanbrandt/react-quick-ui";
 
-import { Theme } from "@app/common/constants/themes";
-import { selectManualAppThemePreference } from "@app/App/selectors";
-import { useAppSelector } from "@app/store/hooks";
+import {
+  applyThemePreference,
+  getThemePreference,
+} from "@app/common/utils/theme";
 
-export const MOBILE_WIDTH_UPPER_BOUND = 1024;
+/** A theme the page can show: "system" resolved to the OS's scheme. */
+export type ShownTheme = Exclude<ThemePreference, "system">;
 
-export const useIsMobile = (): boolean => {
-  const { innerWidth } = useWindowSize();
+const DARK_SCHEME_QUERY = "(prefers-color-scheme: dark)";
 
-  if (innerWidth > MOBILE_WIDTH_UPPER_BOUND) {
-    return false;
-  }
-
-  return true;
+const subscribeToOsScheme = (onChange: () => void) => {
+  const query = window.matchMedia(DARK_SCHEME_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
 };
 
-export const useAppTheme = (): Theme => {
-  const manualThemePreference = useAppSelector(selectManualAppThemePreference);
-  const [theme, setTheme] = useState(Theme.LIGHT);
+const osPrefersDark = () => window.matchMedia(DARK_SCHEME_QUERY).matches;
 
-  useEffect(() => {
-    const darkModePreferenceRequest = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    );
+/**
+ * The theme the page shows and a setter that applies and stores a choice.
+ * Until the user chooses, the page follows the OS ("system"), and the shown
+ * theme follows OS changes live. `data-theme` on `<html>` is the source of
+ * truth (index.html sets it before React mounts); this state only mirrors
+ * it for rendering.
+ */
+export const useShownTheme = (): [
+  ShownTheme,
+  (theme: ThemePreference) => void,
+] => {
+  const [preference, setPreference] = useState(getThemePreference);
+  const prefersDark = useSyncExternalStore(subscribeToOsScheme, osPrefersDark);
 
-    // R1 replaces this with a persisted, no-flash theme; until then keep the
-    // current behaviour, which the visual baseline depends on.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setTheme(darkModePreferenceRequest.matches ? Theme.DARK : Theme.LIGHT);
+  const choose = (theme: ThemePreference) => {
+    applyThemePreference(theme);
+    setPreference(theme);
+  };
 
-    const darkModePreferenceChangeListener = (e: MediaQueryListEvent) => {
-      setTheme(e.matches ? Theme.DARK : Theme.LIGHT);
-    };
-    darkModePreferenceRequest.addEventListener(
-      "change",
-      darkModePreferenceChangeListener
-    );
-
-    return () =>
-      darkModePreferenceRequest.removeEventListener(
-        "change",
-        darkModePreferenceChangeListener
-      );
-  }, []);
-
-  useEffect(() => {
-    if (manualThemePreference) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- see above
-      setTheme(manualThemePreference);
-    }
-  }, [manualThemePreference]);
-
-  return theme;
+  const shown =
+    preference === "system" ? (prefersDark ? "dark" : "light") : preference;
+  return [shown, choose];
 };
