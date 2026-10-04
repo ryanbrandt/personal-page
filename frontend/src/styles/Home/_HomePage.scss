@@ -31,7 +31,7 @@ $bio-max-width: 640px;
 
   // Not the title: it's the largest paint, so it shows at once.
   > :not(.home-hero__title) {
-    @media (prefers-reduced-motion: no-preference) {
+    @media screen and (prefers-reduced-motion: no-preference) {
       animation: home-hero-rise var(--rq-duration-base)
         var(--rq-easing-emphasized);
     }

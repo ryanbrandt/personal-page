@@ -289,8 +289,7 @@ export async function waitForStableRender(page: Page): Promise<void> {
   );
   await page.evaluate(async () => {
     // Infinite animations (e.g. a loading spinner) never finish, so only wait
-    // on ones that end. Re-check a few times: finishing one can start another
-    // (react-transition-group swaps -enter for -enter-active).
+    // on ones that end. Re-check a few times: finishing one can start another.
     const runningFinite = () =>
       document
         .getAnimations()
