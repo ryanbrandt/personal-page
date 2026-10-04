@@ -1,7 +1,7 @@
 import type { FunctionComponent } from "react";
 import { Heading, Tag } from "@ryanbrandt/react-quick-ui";
 
-import type { IResumeSkillGroup } from "@app/types/resume";
+import type { IResumeSkillGroup } from "@app/content/schemas";
 
 interface Props {
   group: IResumeSkillGroup;

@@ -1,4 +1,5 @@
-import type { IWorkEntry } from "@app/types/work";
+import { formatDateRange, formatMonth } from "@app/common/utils/dates";
+import type { IWorkEntry } from "@app/content/schemas";
 import type { IWorkFilters } from "@app/Work/types";
 
 /**
@@ -29,6 +30,9 @@ export const toInitials = (title: string): string =>
     .join("")
     .slice(0, 3);
 
-/** "August 2021", or "August 2021 – May 2022" once it has ended. */
+/**
+ * "August 2021", or "August 2021 – May 2022" once it has ended: a side
+ * project doesn't read "– Present".
+ */
 export const formatWorkDates = ({ start, end }: IWorkEntry): string =>
-  end ? `${start} – ${end}` : start;
+  end ? formatDateRange(start, end) : formatMonth(start);

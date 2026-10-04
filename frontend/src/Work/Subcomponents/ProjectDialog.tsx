@@ -1,7 +1,7 @@
 import { type FunctionComponent, useId, useState } from "react";
 import { Dialog, Tag } from "@ryanbrandt/react-quick-ui";
 
-import type { IWorkEntry } from "@app/types/work";
+import type { IWorkEntry } from "@app/content/schemas";
 import ProjectGitHubLink from "@app/Work/Subcomponents/ProjectGitHubLink";
 import ProjectImage from "@app/Work/Subcomponents/ProjectImage";
 import { formatWorkDates } from "@app/Work/utils";

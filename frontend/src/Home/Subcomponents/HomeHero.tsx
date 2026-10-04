@@ -7,11 +7,8 @@ import {
   useClientSideLinks,
   useFocusHeadingOnPageMount,
 } from "@app/common/hooks";
-import { WORK_ENTRIES } from "@app/repositories/resume";
+import { useExperience, useProfile } from "@app/content/hooks";
 import { BASE_ROUTES } from "@app/routes/constants";
-
-/** The job without an end date, if there is one. */
-const CURRENT_JOB = WORK_ENTRIES.find(({ endDate }) => endDate === null);
 
 /**
  * The page's `<h1>` (the name), the current job as an eyebrow, a short bio,
@@ -27,6 +24,9 @@ const CURRENT_JOB = WORK_ENTRIES.find(({ endDate }) => endDate === null);
  * heading starts the page for screen readers and heading navigation.
  */
 const HomeHero: FunctionComponent = () => {
+  const { bio } = useProfile();
+  // The job without an end date, if there is one.
+  const currentJob = useExperience().find(({ end }) => end === null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
 
@@ -42,18 +42,16 @@ const HomeHero: FunctionComponent = () => {
           My name is <strong>{OWNER_NAME}</strong>.
         </span>
       </h1>
-      {CURRENT_JOB && (
+      {currentJob && (
         <p className="home-hero__eyebrow">
           <Tag
             size="lg"
             className="home-hero__eyebrow__tag"
-            text={`${CURRENT_JOB.title} at ${CURRENT_JOB.organization}`}
+            text={`${currentJob.title} at ${currentJob.organization}`}
           />
         </p>
       )}
-      <p className="home-hero__bio">
-        I'm a Software Engineer based out of Philadelphia.
-      </p>
+      <p className="home-hero__bio">{bio}</p>
       <div ref={actionsRef} className="home-hero__actions">
         <Button
           href={BASE_ROUTES.resumé}

@@ -1,20 +1,20 @@
 import type { FunctionComponent } from "react";
 
 import TimelineEntry from "@app/common/Components/TimelineEntry";
-import type { IResumeEntry } from "@app/types/resume";
+import type { IResumeEntry } from "@app/content/schemas";
 
 interface Props {
   entry: IResumeEntry;
 }
 
 const ResumeEntry: FunctionComponent<Props> = ({
-  entry: { title, organization, startDate, endDate, description, highlights },
+  entry: { title, organization, start, end, description, highlights },
 }) => (
   <TimelineEntry
     title={title}
     organization={organization}
-    startDate={startDate}
-    endDate={endDate}
+    start={start}
+    end={end}
   >
     <p className="resume-page__entry-summary">{description}</p>
     {highlights.length > 0 && (

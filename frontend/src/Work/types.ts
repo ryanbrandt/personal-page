@@ -1,4 +1,4 @@
-import type { IWorkEntry } from "@app/types/work";
+import type { IWorkEntry } from "@app/content/schemas";
 
 export interface IWorkSlice {
   entries: ReadonlyArray<IWorkEntry>;

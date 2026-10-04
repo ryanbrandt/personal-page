@@ -1,9 +1,5 @@
 import { RESUME_PDF_URL } from "../src/common/constants/urls";
-import {
-  EDUCATION_ENTRIES,
-  SKILL_GROUPS,
-  WORK_ENTRIES,
-} from "../src/repositories/resume";
+import { contentSource } from "../src/content/source";
 
 import {
   brandLink,
@@ -146,8 +142,8 @@ test.describe("résumé", () => {
   });
 
   for (const [name, entries] of [
-    ["Experience", WORK_ENTRIES],
-    ["Education", EDUCATION_ENTRIES],
+    ["Experience", contentSource.getExperience()],
+    ["Education", contentSource.getEducation()],
   ] as const) {
     test(`${name} is a timeline of entries with their highlights`, async ({
       page,
@@ -168,12 +164,14 @@ test.describe("résumé", () => {
     });
   }
 
-  // The one check on how dates are formatted (R8 changes the stored dates).
+  // The one check on how dates are formatted (the data stores ISO months).
   test("the current role's dates end Present, above its title", async ({
     page,
   }) => {
     const current = timelineEntries(pageSection(page, "Experience")).first();
-    const dates = current.getByText(/– Present$/);
+    const dates = current.getByText("September 2021 – Present", {
+      exact: true,
+    });
 
     await expect(dates).toBeVisible();
     // The dates come after the title in the markup but show above it.
@@ -184,11 +182,12 @@ test.describe("résumé", () => {
 
   test("skills are grouped by category", async ({ page }) => {
     const skills = pageSection(page, "Skills");
+    const groups = contentSource.getSkills();
 
     await expect(skills.getByRole("heading", { level: 3 })).toHaveText(
-      SKILL_GROUPS.map(({ name }) => name)
+      groups.map(({ name }) => name)
     );
-    for (const [index, group] of SKILL_GROUPS.entries()) {
+    for (const [index, group] of groups.entries()) {
       await expect(
         skills.getByRole("list").nth(index).getByRole("listitem")
       ).toHaveText([...group.skills]);

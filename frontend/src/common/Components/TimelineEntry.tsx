@@ -20,10 +20,11 @@ interface BaseProps {
   /** Where: the company, school or other organization */
   organization?: string;
 
-  startDate: string;
+  /** An ISO month ("2021-09") */
+  start: string;
 
-  /** null while it's ongoing ("Present") */
-  endDate: string | null;
+  /** An ISO month, or null while it's ongoing ("Present") */
+  end: string | null;
 }
 
 /** `children`, if any, are the entry's details, shown below its heading. */
@@ -35,8 +36,8 @@ const TimelineEntry: FunctionComponent<Props> = ({
   title,
   headingLevel = "h3",
   organization,
-  startDate,
-  endDate,
+  start,
+  end,
   children,
 }) => (
   <li className="timeline__entry">
@@ -49,9 +50,7 @@ const TimelineEntry: FunctionComponent<Props> = ({
     {organization && (
       <p className="timeline__entry__organization">{organization}</p>
     )}
-    <p className="timeline__entry__dates">
-      {formatDateRange(startDate, endDate)}
-    </p>
+    <p className="timeline__entry__dates">{formatDateRange(start, end)}</p>
     {Children.toArray(children).length > 0 && (
       <div className="timeline__entry__details">{children}</div>
     )}

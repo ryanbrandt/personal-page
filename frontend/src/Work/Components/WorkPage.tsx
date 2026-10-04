@@ -9,11 +9,12 @@ import {
   takeReturnTarget,
 } from "@app/common/returnFocus";
 import { toDocumentTitle } from "@app/common/utils/documentTitle";
+import { useProjects } from "@app/content/hooks";
 import NotFoundPage from "@app/NotFound/Components/NotFoundPage";
 import { BASE_ROUTES } from "@app/routes/constants";
 import { useAppSelector } from "@app/store/hooks";
 import { selectWorkTags } from "@app/Work/memoizedSelectors";
-import { selectWorkEntries, selectWorkEntryBySlug } from "@app/Work/selectors";
+import { selectWorkEntryBySlug } from "@app/Work/selectors";
 import { useWorkFilters } from "@app/Work/hooks";
 import { filterWorkEntries } from "@app/Work/utils";
 import {
@@ -37,7 +38,7 @@ const WorkPage: FunctionComponent = () => {
   const navigate = useNavigate();
   const searchId = useId();
 
-  const entries = useAppSelector(selectWorkEntries);
+  const entries = useProjects();
   const allTags = useAppSelector(selectWorkTags);
   const selected = useAppSelector((state) =>
     slug ? selectWorkEntryBySlug(state, slug) : undefined
