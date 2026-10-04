@@ -3,6 +3,7 @@ import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { deprecations } from "sass";
 
+import { HOME_TITLE } from "./src/common/constants/site";
 import { applyTheme, THEME_STORAGE_KEY } from "./src/common/utils/theme";
 
 // Runs applyTheme from a script in index.html's <head>, ahead of the app's
@@ -20,9 +21,19 @@ const themeScript = (): Plugin => {
   };
 };
 
+// The page's title until the app loads (and for clients that don't run it),
+// so the site's name is written in one place.
+const documentTitle = (): Plugin => ({
+  name: "document-title",
+  transformIndexHtml: {
+    order: "pre",
+    handler: () => [{ tag: "title", children: HOME_TITLE, injectTo: "head" }],
+  },
+});
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [themeScript(), react()],
+  plugins: [documentTitle(), themeScript(), react()],
   server: {
     open: true,
   },

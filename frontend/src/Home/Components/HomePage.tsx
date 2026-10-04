@@ -1,6 +1,6 @@
 import type { FunctionComponent } from "react";
 
-import { HOME_TITLE } from "@app/common/utils/documentTitle";
+import { HOME_TITLE } from "@app/common/constants/site";
 import HomeExperience from "@app/Home/Subcomponents/HomeExperience";
 import HomeHero from "@app/Home/Subcomponents/HomeHero";
 import RecentProjects from "@app/Home/Subcomponents/RecentProjects";
