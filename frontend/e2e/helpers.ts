@@ -74,6 +74,12 @@ export const ROUTES: ReadonlyArray<AppRoute> = [
     documentTitle: toDocumentTitle("Projects"),
   },
   {
+    name: "contact",
+    path: "/contact",
+    title: "Get in Touch",
+    documentTitle: toDocumentTitle("Contact"),
+  },
+  {
     name: "not-found",
     path: "/does-not-exist",
     title: "Page not found",

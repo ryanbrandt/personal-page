@@ -44,7 +44,7 @@ test.describe("desktop", () => {
     await expect(current).toHaveCount(1);
     await expect(current).toHaveText("Home");
 
-    for (const label of ["Résumé", "Projects"]) {
+    for (const label of ["Résumé", "Projects", "Contact"]) {
       await nav.getByRole("link", { name: label }).click();
       await expect(current).toHaveCount(1);
       await expect(current).toHaveText(label);
@@ -66,6 +66,10 @@ test.describe("desktop", () => {
     await nav.getByRole("link", { name: "Projects" }).click();
     await expect(page).toHaveURL("/work");
     await expect(pageTitle(page, "Recent Personal Projects")).toBeVisible();
+
+    await nav.getByRole("link", { name: "Contact" }).click();
+    await expect(page).toHaveURL("/contact");
+    await expect(pageTitle(page, "Get in Touch")).toBeVisible();
 
     await nav.getByRole("link", { name: "Home" }).click();
     await expect(page).toHaveURL("/");
@@ -129,12 +133,6 @@ test.describe("desktop", () => {
       .click();
     await expect(page).toHaveURL("/");
     await expect(pageTitle(page, HOME_HEADING)).toBeVisible();
-  });
-
-  test("/contact shows the 404 page until R9", async ({ page }) => {
-    await page.goto("/contact");
-    await expect(page).toHaveURL("/contact");
-    await expect(pageTitle(page, "Page not found")).toBeVisible();
   });
 });
 
