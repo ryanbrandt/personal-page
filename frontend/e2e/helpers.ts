@@ -275,11 +275,14 @@ export async function gotoAndSettle(page: Page, path: string): Promise<void> {
 }
 
 /**
- * Waits until nothing on the page is still changing: web fonts are loaded,
- * images have decoded, CSS animations (e.g. the project modal's fade/scale)
- * have finished, and the browser has painted the final frame.
+ * Waits until nothing on the page is still changing: a page change's
+ * cross-fade has ended, web fonts are loaded, images have decoded, CSS
+ * animations (e.g. the project modal's fade/scale) have finished, and the
+ * browser has painted the final frame.
  */
 export async function waitForStableRender(page: Page): Promise<void> {
+  // First, as the new page renders only once the old one is captured.
+  await page.evaluate(() => document.activeViewTransition?.finished);
   await page.evaluate(() => document.fonts.ready);
   await page.waitForFunction(() =>
     Array.from(document.images).every((img) => img.complete)
