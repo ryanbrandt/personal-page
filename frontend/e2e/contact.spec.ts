@@ -7,7 +7,17 @@ import {
   HONEYPOT_FIELD,
 } from "../src/Contact/constants";
 
-import { expect, pageTitle, primaryNav, test, VIEWPORTS } from "./helpers";
+import {
+  expect,
+  expectNoBlockingAxeViolations,
+  pageTitle,
+  primaryNav,
+  ROUTES,
+  test,
+  VIEWPORTS,
+} from "./helpers";
+
+const CONTACT_ROUTE = ROUTES.find(({ name }) => name === "contact")!;
 
 const nameField = (page: Page) => page.getByLabel("Name", { exact: true });
 const emailField = (page: Page) => page.getByLabel("Email", { exact: true });
@@ -84,6 +94,7 @@ test("an empty form shows each field's error and focuses the first", async ({
     await expect(field).toHaveAttribute("aria-invalid", "true");
     await expect(field).toHaveAccessibleDescription(error);
   }
+  await expectNoBlockingAxeViolations(page, CONTACT_ROUTE, "desktop");
 });
 
 test("an invalid email is focused, and its error clears once fixed", async ({
@@ -159,6 +170,7 @@ test.describe("when sending fails", () => {
     await expect(alert).toBeFocused();
     await expect(sentMessage(page)).toHaveText("");
     await expect(nameField(page)).toHaveValue(VALID_ENTRY.name);
+    await expectNoBlockingAxeViolations(page, CONTACT_ROUTE, "desktop");
 
     await alert.getByRole("button", { name: "Try again" }).click();
 
