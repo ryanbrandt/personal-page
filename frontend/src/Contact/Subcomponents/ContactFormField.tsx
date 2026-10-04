@@ -16,14 +16,16 @@ interface Props {
   multiline?: boolean;
   type?: HTMLInputTypeAttribute;
   autoComplete?: string;
+  /** Shows the value but blocks edits (e.g. while the form is sending) */
+  readOnly?: boolean;
 }
 
 // The library's TextInput and TextArea can't take a `name`, `type`,
-// `autoComplete` or ARIA attributes yet, so this renders native controls in
-// the library's input styles (its Sass input mixins).
+// `autoComplete`, `required` or ARIA attributes yet, so this renders native
+// controls in the library's input styles (its Sass input mixins).
 // TODO(L2c): replace with the library's TextInput and TextArea once they
-// pass `name`, `type`, `autoComplete` and ARIA attributes through and link
-// their `error` to the control.
+// pass `name`, `type`, `autoComplete`, `required` and ARIA attributes
+// through and link their `error` to the control.
 const ContactFormField: FunctionComponent<Props> = ({
   name,
   label,
@@ -32,6 +34,7 @@ const ContactFormField: FunctionComponent<Props> = ({
   multiline = false,
   type = "text",
   autoComplete,
+  readOnly = false,
 }) => {
   const id = useId();
   const errorId = `${id}-error`;
@@ -40,6 +43,7 @@ const ContactFormField: FunctionComponent<Props> = ({
     name,
     placeholder,
     required: true,
+    readOnly,
     "aria-invalid": error ? true : undefined,
     "aria-describedby": error ? errorId : undefined,
     className: error

@@ -132,16 +132,17 @@ const FIXTURES_DIR = path.join(import.meta.dirname, "fixtures");
  * images are served from committed copies so S3 can't flake the suite, and
  * the test fails if the page logs a warning or error, or throws (unless it
  * sets `failOnConsoleProblems: false`, or the problem, as "type: text",
- * matches one of its `allowedConsoleProblems`).
+ * matches its `allowedConsoleProblems` pattern).
  */
 export const test = base.extend<{
   failOnConsoleProblems: boolean;
-  allowedConsoleProblems: ReadonlyArray<RegExp>;
+  /** One pattern: `test.use` would read an array as [value, options]. */
+  allowedConsoleProblems: RegExp | undefined;
   remoteImages: void;
   consoleProblems: void;
 }>({
   failOnConsoleProblems: [true, { option: true }],
-  allowedConsoleProblems: [[], { option: true }],
+  allowedConsoleProblems: [undefined, { option: true }],
   remoteImages: [
     async ({ page }, use) => {
       await page.route(REMOTE_IMAGES, (route) => {
@@ -166,10 +167,7 @@ export const test = base.extend<{
       await use();
       if (failOnConsoleProblems) {
         expect(
-          problems.filter(
-            (problem) =>
-              !allowedConsoleProblems.some((allowed) => allowed.test(problem))
-          ),
+          problems.filter((problem) => !allowedConsoleProblems?.test(problem)),
           "console warnings and errors"
         ).toEqual([]);
       }

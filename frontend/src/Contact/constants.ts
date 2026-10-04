@@ -1,6 +1,9 @@
 // The contact form in Netlify Forms. Netlify finds forms in the deployed
 // HTML, not in the app's JavaScript, so the build writes a static copy of
 // the form from these constants (netlifyForms in vite.config.ts).
+//
+// Imported by vite.config.ts and e2e: keep it dependency-free, no `@app`
+// aliases.
 
 /** The contact form's name in Netlify Forms */
 export const CONTACT_FORM_NAME = "contact";

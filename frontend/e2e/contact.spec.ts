@@ -29,6 +29,8 @@ const failedMessage = (page: Page) =>
   page.getByText("Sorry, your message couldn’t be sent. Please try again.");
 const tryAgainButton = (page: Page) =>
   page.getByRole("button", { name: "Try again" });
+/** The live region announcing whether the form was sent */
+const outcome = (page: Page) => page.getByRole("status");
 
 const VALID_ENTRY = {
   name: "Ada Lovelace",
@@ -42,29 +44,49 @@ async function fillForm(page: Page, entry = VALID_ENTRY): Promise<void> {
   await messageField(page).fill(entry.message);
 }
 
+interface Submission {
+  method: string;
+  contentType: string | null;
+  body: URLSearchParams;
+}
+
 /**
- * Answers the form's POSTs to Netlify Forms with `handle`, and returns the
- * bodies posted.
+ * Answers the requests to Netlify Forms with `handle`, and returns what
+ * was sent: check it with expectFormPosts.
  */
 async function interceptSubmissions(
   page: Page,
   handle: (route: Route) => Promise<void>
-): Promise<Array<URLSearchParams>> {
-  const bodies: Array<URLSearchParams> = [];
+): Promise<Array<Submission>> {
+  const submissions: Array<Submission> = [];
   await page.route(
     (url) => url.pathname === CONTACT_FORM_PATH,
     async (route) => {
       const request = route.request();
-      expect(request.method()).toBe("POST");
-      expect(await request.headerValue("content-type")).toBe(
-        "application/x-www-form-urlencoded"
-      );
-      bodies.push(new URLSearchParams(request.postData() ?? ""));
+      submissions.push({
+        method: request.method(),
+        contentType: await request.headerValue("content-type"),
+        body: new URLSearchParams(request.postData() ?? ""),
+      });
       await handle(route);
     }
   );
-  return bodies;
+  return submissions;
 }
+
+/** There were `count` submissions, each a urlencoded POST */
+function expectFormPosts(
+  submissions: ReadonlyArray<Submission>,
+  count: number
+): void {
+  expect(submissions).toHaveLength(count);
+  for (const { method, contentType } of submissions) {
+    expect(method).toBe("POST");
+    expect(contentType).toBe("application/x-www-form-urlencoded");
+  }
+}
+
+const respondOk = (route: Route) => route.fulfill({ status: 200 });
 
 test.use({ viewport: VIEWPORTS.desktop });
 
@@ -113,66 +135,113 @@ test.describe("the contact form", () => {
   }) => {
     let respond!: () => void;
     const responded = new Promise<void>((resolve) => (respond = resolve));
-    const bodies = await interceptSubmissions(page, async (route) => {
+    const submissions = await interceptSubmissions(page, async (route) => {
       await responded;
-      await route.fulfill({ status: 200 });
+      await respondOk(route);
     });
 
     await fillForm(page);
     await submitButton(page).click();
 
-    // Sending: the button is disabled and says so, and Enter in a field
+    // Sending: the button is disabled and says so, the fields can't be
+    // edited (the reset would lose the edit), and Enter in a field
     // (implicit submission) can't send the form again.
     const sending = page.getByRole("button", { name: "Sending…" });
     await expect(sending).toBeDisabled();
+    for (const field of [nameField, emailField, messageField]) {
+      await expect(field(page)).not.toBeEditable();
+    }
     await nameField(page).press("Enter");
     respond();
 
-    await expect(sentMessage(page)).toBeFocused();
+    await expect(outcome(page)).toBeFocused();
+    await expect(outcome(page)).toHaveText(
+      "Thanks for getting in touch! Your message was sent."
+    );
     await expect(submitButton(page)).toBeEnabled();
     for (const field of [nameField, emailField, messageField]) {
+      await expect(field(page)).toBeEditable();
       await expect(field(page)).toHaveValue("");
     }
 
-    expect(bodies).toHaveLength(1);
-    expect(Object.fromEntries(bodies[0])).toEqual({
+    expectFormPosts(submissions, 1);
+    expect(Object.fromEntries(submissions[0].body)).toEqual({
       [FORM_NAME_FIELD]: CONTACT_FORM_NAME,
       [HONEYPOT_FIELD]: "",
       ...VALID_ENTRY,
     });
   });
 
+  test("an edit, or a submit with errors, clears the outcome", async ({
+    page,
+  }) => {
+    await interceptSubmissions(page, respondOk);
+
+    await fillForm(page);
+    await submitButton(page).click();
+    await expect(outcome(page)).toBeFocused();
+    await expect(sentMessage(page)).toBeVisible();
+    // The sent form is empty.
+    await submitButton(page).click();
+    await expect(nameField(page)).toBeFocused();
+    await expect(outcome(page)).toBeEmpty();
+
+    await fillForm(page);
+    await submitButton(page).click();
+    await expect(outcome(page)).toBeFocused();
+    await expect(sentMessage(page)).toBeVisible();
+    await nameField(page).pressSequentially("A");
+    await expect(outcome(page)).toBeEmpty();
+  });
+
   test.describe("when sending fails", () => {
     // The browser logs the failed request as a console error.
     test.use({
-      allowedConsoleProblems: [
-        /^error: Failed to load resource: the server responded with a status of 500\b/,
-      ],
+      allowedConsoleProblems:
+        /^error: Failed to load resource: (the server responded with a status of 500\b|net::ERR_FAILED$)/,
     });
 
-    test("alerts, keeps the entry, and Try again resends it", async ({
+    test("says so, keeps the entry, and Try again resends it", async ({
       page,
     }) => {
       const statuses = [500, 200];
-      const bodies = await interceptSubmissions(page, (route) =>
+      const submissions = await interceptSubmissions(page, (route) =>
         route.fulfill({ status: statuses.shift() })
       );
 
       await fillForm(page);
       await submitButton(page).click();
 
-      await expect(failedMessage(page)).toBeFocused();
+      await expect(outcome(page)).toBeFocused();
+      await expect(failedMessage(page)).toBeVisible();
       await expect(sentMessage(page)).toBeHidden();
       await expect(nameField(page)).toHaveValue(VALID_ENTRY.name);
       await expectNoBlockingAxeViolations(page, CONTACT_ROUTE, "desktop");
 
-      await tryAgainButton(page).click();
+      // Try again is the next tab stop after the focused outcome.
+      await page.keyboard.press("Tab");
+      await expect(tryAgainButton(page)).toBeFocused();
+      await page.keyboard.press("Enter");
 
-      await expect(sentMessage(page)).toBeFocused();
+      await expect(sentMessage(page)).toBeVisible();
+      await expect(outcome(page)).toBeFocused();
       await expect(failedMessage(page)).toBeHidden();
       await expect(tryAgainButton(page)).toBeHidden();
-      expect(bodies).toHaveLength(2);
-      expect(bodies[1].toString()).toBe(bodies[0].toString());
+      expectFormPosts(submissions, 2);
+      expect(submissions[1].body.toString()).toBe(
+        submissions[0].body.toString()
+      );
+    });
+
+    test("says so when the network fails", async ({ page }) => {
+      await interceptSubmissions(page, (route) => route.abort());
+
+      await fillForm(page);
+      await submitButton(page).click();
+
+      await expect(outcome(page)).toBeFocused();
+      await expect(failedMessage(page)).toBeVisible();
+      await expect(nameField(page)).toHaveValue(VALID_ENTRY.name);
     });
   });
 

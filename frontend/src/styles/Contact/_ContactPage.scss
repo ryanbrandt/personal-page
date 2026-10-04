@@ -1,8 +1,6 @@
 @use "../tools" as *;
 
 .contact-page {
-  @include flex--column;
-  row-gap: var(--rq-space-6);
   max-width: 640px;
   margin-inline: auto;
 }
@@ -48,10 +46,14 @@
     text-align: center;
   }
 
-  // The outcome's message takes focus when it appears, for screen readers
-  // (see ContactForm); like a page's heading, it isn't a control.
-  &__sent,
-  &__failed p {
+  // Always rendered (a live region), taking space only with an outcome. It
+  // takes focus when one arrives (see ContactForm); like a page's heading,
+  // it isn't a control.
+  &__outcome {
+    &:not(:empty) {
+      margin-top: var(--rq-space-6);
+    }
+
     &:focus {
       outline: none;
     }
