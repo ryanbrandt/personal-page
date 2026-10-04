@@ -12,14 +12,8 @@ const HomeExperience: FunctionComponent = () => (
   <PageSection title="Experience">
     <div className="home-experience">
       <Timeline>
-        {WORK_ENTRIES.map(({ id, title, organization, startDate, endDate }) => (
-          <TimelineEntry
-            key={id}
-            title={title}
-            organization={organization}
-            startDate={startDate}
-            endDate={endDate}
-          />
+        {WORK_ENTRIES.map((job) => (
+          <TimelineEntry key={job.id} {...job} />
         ))}
       </Timeline>
       <MoreLink to={BASE_ROUTES.resumé} text="Full résumé" />

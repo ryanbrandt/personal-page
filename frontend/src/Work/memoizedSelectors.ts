@@ -11,11 +11,15 @@ export const selectWorkTags = createSelector([selectWorkEntries], (entries) =>
   )
 );
 
-/** The projects started most recently, newest first. */
+/**
+ * The projects started most recently, newest first.
+ * TODO(R8): with ISO dates, compare with `localeCompare` (or store the data
+ * newest first) and drop toMonthNumber.
+ */
 export const selectRecentWorkEntries = createSelector(
   [selectWorkEntries],
   (entries) =>
-    [...entries]
-      .sort((a, b) => toMonthNumber(b.start) - toMonthNumber(a.start))
+    entries
+      .toSorted((a, b) => toMonthNumber(b.start) - toMonthNumber(a.start))
       .slice(0, RECENT_PROJECT_COUNT)
 );

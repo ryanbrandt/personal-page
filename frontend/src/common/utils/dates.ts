@@ -31,6 +31,8 @@ const MONTHS = [
 /**
  * A stored date ("May 2022") as a number of months, for ordering: a later
  * month is a larger number. Throws on a date in any other form.
+ *
+ * TODO(R8): ISO dates sort as strings (`localeCompare`); delete this then.
  */
 export const toMonthNumber = (date: string): number => {
   const [month = "", year = ""] = date.split(" ");
