@@ -120,3 +120,23 @@ test("the toggle offers light and dark, showing the OS's theme until chosen", as
   await page.emulateMedia({ colorScheme: "light" });
   await expect(themeOption(page, "Light")).toBeChecked();
 });
+
+test("a chosen theme stays when the OS changes", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/");
+
+  await themeOption(page, "Light").click();
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.emulateMedia({ colorScheme: "dark" });
+
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(themeOption(page, "Light")).toBeChecked();
+});
+
+test("a stored theme is checked once the app loads", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await storePreference(page, "dark");
+  await page.goto("/");
+
+  await expect(themeOption(page, "Dark")).toBeChecked();
+});

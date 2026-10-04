@@ -7,8 +7,10 @@ import { type ShownTheme, useShownTheme } from "@app/App/hooks";
 import { OWNER_NAME } from "@app/common/constants/site";
 import { BASE_ROUTES } from "@app/routes/constants";
 
-// No "system" option: with nothing chosen, the page follows the OS, and the
-// toggle shows the theme it resolves to.
+// No "system" option (Ryan's call): with nothing chosen, the page follows
+// the OS, and the toggle shows the theme it resolves to. Choosing the other
+// theme stores it; following the OS again then means clearing the stored
+// choice, which the UI doesn't offer.
 const THEME_OPTIONS: ReadonlyArray<ShownTheme> = ["light", "dark"];
 
 // TODO(R9): add Contact (BASE_ROUTES.contact) once /contact has a page.

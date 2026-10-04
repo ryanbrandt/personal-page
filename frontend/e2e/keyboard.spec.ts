@@ -12,7 +12,8 @@ import {
 // A keyboard-only walk through the app shell: no clicks anywhere.
 
 test.describe("desktop", () => {
-  test.use({ viewport: VIEWPORTS.desktop });
+  // A light OS: the theme toggle's checked option is Light until chosen.
+  test.use({ viewport: VIEWPORTS.desktop, colorScheme: "light" });
 
   test("the skip link moves focus to the main content", async ({ page }) => {
     await page.goto("/");
