@@ -11,6 +11,9 @@ export default defineConfig({
   expect: { toHaveScreenshot: { threshold: 0 } },
   use: {
     baseURL: BASE_URL,
+    // Behind UTC, where formatting an ISO month in local time would show the
+    // previous month (see src/common/utils/dates.ts).
+    timezoneId: "America/Los_Angeles",
     trace: "retain-on-failure",
   },
   // Snapshot names include the project name, so keep it "chromium".

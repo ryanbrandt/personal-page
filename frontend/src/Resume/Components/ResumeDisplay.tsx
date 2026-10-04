@@ -2,38 +2,40 @@ import type { FunctionComponent } from "react";
 
 import PageSection from "@app/common/Components/PageSection";
 import Timeline from "@app/common/Components/Timeline";
+import { toEntryKey } from "@app/content";
+import { useEducation, useExperience, useSkills } from "@app/content/hooks";
 import ResumeEntry from "@app/Resume/Subcomponents/ResumeEntry";
 import ResumeSkillGroup from "@app/Resume/Subcomponents/ResumeSkillGroup";
-import {
-  WORK_ENTRIES,
-  EDUCATION_ENTRIES,
-  SKILL_GROUPS,
-} from "@app/repositories/resume";
 
-const TIMELINE_SECTIONS = [
-  { title: "Experience", entries: WORK_ENTRIES },
-  { title: "Education", entries: EDUCATION_ENTRIES },
-] as const;
+const ResumeDisplay: FunctionComponent = () => {
+  const experience = useExperience();
+  const education = useEducation();
+  const skillGroups = useSkills();
+  const timelineSections = [
+    { title: "Experience", entries: experience },
+    { title: "Education", entries: education },
+  ];
 
-const ResumeDisplay: FunctionComponent = () => (
-  <div className="resume-page__display">
-    {TIMELINE_SECTIONS.map(({ title, entries }) => (
-      <PageSection key={title} title={title}>
-        <Timeline>
-          {entries.map((entry) => (
-            <ResumeEntry key={entry.id} entry={entry} />
+  return (
+    <div className="resume-page__display">
+      {timelineSections.map(({ title, entries }) => (
+        <PageSection key={title} title={title}>
+          <Timeline>
+            {entries.map((entry) => (
+              <ResumeEntry key={toEntryKey(entry)} entry={entry} />
+            ))}
+          </Timeline>
+        </PageSection>
+      ))}
+      <PageSection title="Skills">
+        <div className="resume-page__skill-groups">
+          {skillGroups.map((group) => (
+            <ResumeSkillGroup key={group.name} group={group} />
           ))}
-        </Timeline>
+        </div>
       </PageSection>
-    ))}
-    <PageSection title="Skills">
-      <div className="resume-page__skill-groups">
-        {SKILL_GROUPS.map((group) => (
-          <ResumeSkillGroup key={group.name} group={group} />
-        ))}
-      </div>
-    </PageSection>
-  </div>
-);
+    </div>
+  );
+};
 
 export default ResumeDisplay;

@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-restricted-imports -- the typed hooks wrap these
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports -- the typed hooks wrap these
 import { useDispatch, useSelector } from "react-redux";
 
 import type { AppDispatch, RootState } from "@app/store";

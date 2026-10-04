@@ -1,6 +1,5 @@
 import { GITHUB_URL, LINKEDIN_URL } from "../src/common/constants/urls";
-import { WORK_ENTRIES as JOBS } from "../src/repositories/resume";
-import { WORK_ENTRIES as PROJECTS } from "../src/repositories/work";
+import { CONTENT } from "../src/content";
 
 import {
   expect,
@@ -15,12 +14,14 @@ import {
   VIEWPORTS,
 } from "./helpers";
 
+const JOBS = CONTENT.experience;
+
 // The projects started most recently, newest first (by Date.parse, not the
-// app's own parser, so a bug there shows).
-const RECENT_PROJECTS = PROJECTS.toSorted(
-  (a, b) => Date.parse(`1 ${b.start}`) - Date.parse(`1 ${a.start}`)
-).slice(0, 3);
-const CURRENT_JOB = JOBS.find(({ endDate }) => endDate === null)!;
+// app's own string comparison, so a bug there shows).
+const RECENT_PROJECTS = CONTENT.projects
+  .toSorted((a, b) => Date.parse(b.start) - Date.parse(a.start))
+  .slice(0, 3);
+const CURRENT_JOB = JOBS.find(({ end }) => end === null)!;
 
 // Layout: the hero's eyebrow at both widths.
 for (const [viewportName, viewport] of Object.entries(VIEWPORTS)) {

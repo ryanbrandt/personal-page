@@ -1,42 +1,29 @@
-/**
- * A date range for display, e.g. "April 2021 – September 2021", or
- * "September 2021 – Present" while it's ongoing (`end` is null).
- *
- * Takes the dates as stored and returns them as shown: the one place that
- * changes when the content moves to ISO dates (R8).
- *
- * R8: parse the ISO year and month yourself, or format with
- * `timeZone: "UTC"`. `new Date("2021-09")` is midnight UTC, which is still
- * August in US time zones, so formatting it in local time shows the
- * previous month.
- */
-export const formatDateRange = (start: string, end: string | null): string =>
-  `${start} – ${end ?? "Present"}`;
+import type { IsoMonth } from "@app/content/types";
 
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+// UTC: `new Date("2021-09")` is midnight UTC on September 1, which is still
+// August in US time zones, so formatting it in local time would show the
+// previous month.
+const MONTH_FORMAT = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
 
 /**
- * A stored date ("May 2022") as a number of months, for ordering: a later
- * month is a larger number. Undefined for a date in any other form.
- *
- * TODO(R8): ISO dates sort as strings (`localeCompare`); delete this then.
+ * An ISO month ("2021-09") for display: "September 2021". A month that
+ * doesn't parse (which the content check should have stopped) shows as it
+ * is rather than throwing during render.
  */
-export const toMonthNumber = (date: string): number | undefined => {
-  const [month = "", year = ""] = date.split(" ");
-  const monthIndex = MONTHS.indexOf(month);
-  if (monthIndex < 0 || !/^\d{4}$/.test(year)) return undefined;
-  return Number(year) * MONTHS.length + monthIndex;
+export const formatMonth = (isoMonth: IsoMonth): string => {
+  const date = new Date(isoMonth);
+  return Number.isNaN(date.getTime()) ? isoMonth : MONTH_FORMAT.format(date);
 };
+
+/**
+ * ISO months as a range for display, e.g. "April 2021 – September 2021",
+ * or "September 2021 – Present" while it's ongoing (`end` is null).
+ */
+export const formatDateRange = (
+  start: IsoMonth,
+  end: IsoMonth | null
+): string => `${formatMonth(start)} – ${end ? formatMonth(end) : "Present"}`;

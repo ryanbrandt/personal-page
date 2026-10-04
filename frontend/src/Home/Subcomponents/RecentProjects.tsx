@@ -2,14 +2,14 @@ import { type FunctionComponent, useRef } from "react";
 import { Heading } from "@ryanbrandt/react-quick-ui";
 
 import { useFocusReturnTarget } from "@app/common/hooks";
+import { useRecentProjects } from "@app/content/hooks";
 import MoreLink from "@app/Home/Subcomponents/MoreLink";
 import { BASE_ROUTES } from "@app/routes/constants";
-import { useAppSelector } from "@app/store/hooks";
 import {
   CARD_LINK_SELECTOR,
   type IWorkEntryLocationState,
+  RECENT_PROJECT_COUNT,
 } from "@app/Work/constants";
-import { selectRecentWorkEntries } from "@app/Work/memoizedSelectors";
 import ProjectGrid from "@app/Work/Subcomponents/ProjectGrid";
 
 // Closing a project opened here goes back to the home page. It remounts
@@ -25,7 +25,7 @@ const LINK_STATE = {
  * open a project's detail view on the projects page.
  */
 const RecentProjects: FunctionComponent = () => {
-  const projects = useAppSelector(selectRecentWorkEntries);
+  const projects = useRecentProjects(RECENT_PROJECT_COUNT);
   const sectionRef = useRef<HTMLElement>(null);
   useFocusReturnTarget(sectionRef, CARD_LINK_SELECTOR);
 

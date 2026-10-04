@@ -8,7 +8,8 @@ import {
   type Page,
 } from "@playwright/test";
 
-import { HOME_TITLE, toDocumentTitle } from "../src/common/utils/documentTitle";
+import { HOME_TITLE } from "../src/common/constants/site";
+import { toDocumentTitle } from "../src/common/utils/documentTitle";
 
 // The app switches to its mobile layout at widths <= 1040px (`mobile-only` in
 // src/styles/_mixins.scss), and the header moves its links into a menu below

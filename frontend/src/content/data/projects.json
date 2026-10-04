@@ -1,0 +1,60 @@
+[
+  {
+    "slug": "open-fec-graphql-server",
+    "title": "Open FEC GraphQL Server",
+    "description": "A GraphQL wrapper around the Open Federal Election Commission's REST API for simplifying the retrieval of complex and deeply nested data structures.",
+    "tags": ["GraphQL", "Python"],
+    "image": {
+      "src": "https://resume-work-images.s3.amazonaws.com/graphql_image.png",
+      "width": 1316,
+      "height": 829
+    },
+    "start": "2021-08",
+    "end": null,
+    "githubUrl": "https://github.com/ryanbrandt/open-fec-graphql"
+  },
+  {
+    "slug": "react-usesignalr",
+    "title": "React UseSignalR",
+    "description": "A React hooks interface for interacting with SignalR websockets.",
+    "tags": ["React", "SignalR"],
+    "image": null,
+    "start": "2021-11",
+    "end": null,
+    "githubUrl": "https://github.com/ryanbrandt/react-use-signalr"
+  },
+  {
+    "slug": "informed-voter",
+    "title": "Informed Voter",
+    "description": "A dashboard for analyzing data furnished by the Open Federal Election Commission API.",
+    "tags": ["React", "D3"],
+    "image": {
+      "src": "https://resume-work-images.s3.amazonaws.com/Screen+Shot+2021-01-11+at+11.30.39+PM.png",
+      "width": 2430,
+      "height": 1374
+    },
+    "start": "2019-10",
+    "end": null,
+    "githubUrl": "https://github.com/ryanbrandt/informed-voter"
+  },
+  {
+    "slug": "react-drag-selection",
+    "title": "React Drag Selection",
+    "description": "A React library to simplify the building of drag-to-select elements.",
+    "tags": ["React", "Library"],
+    "image": null,
+    "start": "2022-02",
+    "end": null,
+    "githubUrl": "https://github.com/ryanbrandt/react-drag-selection"
+  },
+  {
+    "slug": "react-testing-utils",
+    "title": "React Testing Utils",
+    "description": "Wrappers and common utilities for unit testing React applications with Jest and React Testing Library.",
+    "tags": ["React", "Testing"],
+    "image": null,
+    "start": "2022-05",
+    "end": null,
+    "githubUrl": "https://github.com/ryanbrandt/react-testing-utils"
+  }
+]

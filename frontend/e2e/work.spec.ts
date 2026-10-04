@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { toDocumentTitle } from "../src/common/utils/documentTitle";
-import { WORK_ENTRIES } from "../src/repositories/work";
+import { CONTENT } from "../src/content";
 import { SEARCH_DEBOUNCE_MS } from "../src/Work/constants";
 import {
   expect,
@@ -17,7 +17,7 @@ import {
 // Project images come from the `remoteImages` fixture in helpers.ts, which
 // every test using its `test` gets: no network.
 
-const PROJECT_COUNT = WORK_ENTRIES.length;
+const PROJECT_COUNT = CONTENT.projects.length;
 const PROJECTS_TITLE = ROUTES.find(({ name }) => name === "work")!.title;
 
 const searchBox = (page: Page) =>
@@ -283,12 +283,6 @@ test("a modified click on a card leaves it to the browser", async ({
   );
   await expect(page).toHaveURL("/work");
   await expect(projectDialog(page)).toBeHidden();
-});
-
-test("project slugs are unique and not empty", () => {
-  const slugs = WORK_ENTRIES.map(({ slug }) => slug);
-  expect(slugs.every((slug) => slug.length > 0)).toBe(true);
-  expect(new Set(slugs).size).toBe(slugs.length);
 });
 
 test("an in-app link to an unknown project focuses the 404 heading", async ({

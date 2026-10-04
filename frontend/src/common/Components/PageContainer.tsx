@@ -7,7 +7,7 @@ interface BaseProps {
   title: string;
 
   /**
-   * The page's browser tab title: `HOME_TITLE` or `toDocumentTitle(…)` from
+   * The page's browser tab title: `toDocumentTitle(…)` from
    * common/utils/documentTitle.ts
    */
   documentTitle: string;
