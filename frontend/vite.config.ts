@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { deprecations } from "sass";
@@ -42,5 +43,12 @@ export default defineConfig({
         ),
       },
     },
+  },
+  // Unit tests (Vitest) sit beside their modules; Playwright runs e2e/.
+  test: {
+    include: ["src/**/*.test.ts"],
+    // A US time zone, where an ISO month parsed as UTC midnight is still the
+    // previous month in local time (see common/utils/dates.ts).
+    env: { TZ: "America/New_York" },
   },
 });

@@ -1,0 +1,48 @@
+[
+  {
+    "name": "Languages",
+    "skills": [
+      "TypeScript",
+      "JavaScript",
+      "C#",
+      "Python",
+      "Java",
+      "SQL",
+      "NoSQL",
+      "C",
+      "HTML",
+      "CSS",
+      "SCSS"
+    ]
+  },
+  {
+    "name": "Frameworks & libraries",
+    "skills": [
+      "React",
+      "React Native",
+      "Serverless",
+      "Express",
+      "ASP.NET",
+      "Flask",
+      "GraphQL",
+      "Blazor",
+      "Maui"
+    ]
+  },
+  {
+    "name": "Cloud & infra",
+    "skills": [
+      "AWS",
+      "GCP",
+      "Docker",
+      "CircleCI",
+      "AWS CDK",
+      "CloudFormation",
+      "Terraform"
+    ]
+  },
+  {
+    "name": "Testing & tooling",
+    "skills": ["Vite", "Webpack", "Jest", "Cypress", "XUnit", "PyTest", "Git"]
+  }
+]
