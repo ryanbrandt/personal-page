@@ -1,7 +1,9 @@
-import { CONTENT, toNewestProjectsFirst, toProjectTags } from "@app/content";
+import { CONTENT } from "@app/content";
 import {
+  selectNewestWorkEntriesFirst,
   selectWorkEntries,
   selectWorkEntryBySlug,
+  selectWorkTags,
 } from "@app/content/workSlice";
 import { useAppSelector } from "@app/store/hooks";
 
@@ -12,8 +14,9 @@ import { useAppSelector } from "@app/store/hooks";
  * sites would change to handle them; these hooks are where those call
  * sites all go through.
  *
- * The projects are in the store (the Work slice), the one place RTK Query
- * would go first; the rest is read from the data module.
+ * Every project read goes through the store (the Work slice and its
+ * selectors), where RTK Query would go first; the résumé is read from the
+ * data module.
  */
 
 export const useExperience = () => CONTENT.experience;
@@ -30,12 +33,9 @@ export const useProject = (slug: string | undefined) =>
     slug ? selectWorkEntryBySlug(state, slug) : undefined
   );
 
-const PROJECT_TAGS = toProjectTags(CONTENT.projects);
-const NEWEST_PROJECTS_FIRST = toNewestProjectsFirst(CONTENT.projects);
-
 /** Every project tag, once each, in alphabetical order. */
-export const useProjectTags = () => PROJECT_TAGS;
+export const useProjectTags = () => useAppSelector(selectWorkTags);
 
 /** The `count` most recently started projects, newest first. */
 export const useRecentProjects = (count: number) =>
-  NEWEST_PROJECTS_FIRST.slice(0, count);
+  useAppSelector(selectNewestWorkEntriesFirst).slice(0, count);

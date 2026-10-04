@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 
 import { CONTENT } from "@app/content";
 import type { IWorkEntry } from "@app/content/types";
@@ -26,5 +26,20 @@ export const selectWorkEntries = (state: RootState) => state.work.entries;
 
 export const selectWorkEntryBySlug = (state: RootState, slug: string) =>
   state.work.entries.find((entry) => entry.slug === slug);
+
+/** Every project tag, once each, in alphabetical order. */
+export const selectWorkTags = createSelector([selectWorkEntries], (entries) =>
+  [...new Set(entries.flatMap(({ tags }) => tags))].sort((a, b) =>
+    a.localeCompare(b)
+  )
+);
+
+/** The projects, the most recently started first. */
+export const selectNewestWorkEntriesFirst = createSelector(
+  [selectWorkEntries],
+  (entries) =>
+    // ISO months ("2021-09") sort as text.
+    entries.toSorted((a, b) => b.start.localeCompare(a.start))
+);
 
 export default workSlice.reducer;
