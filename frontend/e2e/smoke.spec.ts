@@ -200,6 +200,14 @@ test.describe("résumé", () => {
     ).toHaveAttribute("href", RESUME_PDF_URL);
   });
 
+  test("opens the PDF in a new tab", async ({ page }) => {
+    const download = page
+      .getByRole("main")
+      .getByRole("link", { name: "Download PDF" });
+    await expect(download).toHaveAttribute("target", "_blank");
+    await expect(download).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
   test.describe("printed", () => {
     // Dark, to check printing doesn't follow the theme.
     test.use({ colorScheme: "dark" });
