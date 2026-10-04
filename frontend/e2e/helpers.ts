@@ -112,7 +112,7 @@ export const primaryNav = (page: Page) =>
 export const menuButton = (page: Page) =>
   page.getByRole("button", { name: "Menu" });
 
-export const themeOption = (page: Page, name: "Light" | "Dark" | "System") =>
+export const themeOption = (page: Page, name: "Light" | "Dark") =>
   page.getByRole("radiogroup", { name: "Theme" }).getByRole("radio", { name });
 
 const REMOTE_IMAGES = "https://resume-work-images.s3.amazonaws.com/**";
