@@ -6,6 +6,7 @@ import type { IComponentRoute } from "@app/routes/types";
 import HomePage from "@app/Home/Components/HomePage";
 import ResumePage from "@app/Resume/Components/ResumePage";
 import WorkPage from "@app/Work/Components/WorkPage";
+import ContactPage from "@app/Contact/Components/ContactPage";
 import NotFoundPage from "@app/NotFound/Components/NotFoundPage";
 
 const COMPONENT_ROUTES: Array<IComponentRoute> = [
@@ -22,8 +23,10 @@ const COMPONENT_ROUTES: Array<IComponentRoute> = [
     route: BASE_ROUTES.resumé,
     component: <ResumePage />,
   },
-  // Contact page is disabled until R9 (Netlify Forms):
-  // { route: BASE_ROUTES.contact, component: <ContactPage /> },
+  {
+    route: BASE_ROUTES.contact,
+    component: <ContactPage />,
+  },
 ];
 
 const ApplicationRoutes: FunctionComponent = () => (
@@ -31,7 +34,7 @@ const ApplicationRoutes: FunctionComponent = () => (
     {COMPONENT_ROUTES.map(({ route, component }) => (
       <Route key={route} path={route} element={component} />
     ))}
-    {/* Unknown paths (and /contact until R9) */}
+    {/* Unknown paths */}
     <Route path="*" element={<NotFoundPage />} />
   </Routes>
 );

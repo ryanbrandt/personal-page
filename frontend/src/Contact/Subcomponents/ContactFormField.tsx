@@ -1,0 +1,73 @@
+import {
+  type FunctionComponent,
+  type HTMLInputTypeAttribute,
+  useId,
+} from "react";
+
+import type { ContactField } from "@app/Contact/types";
+
+interface Props {
+  name: ContactField;
+  label: string;
+  placeholder?: string;
+  /** The field's error message, while its value isn't valid */
+  error?: string;
+  /** Renders a `<textarea>`, not an `<input>` */
+  multiline?: boolean;
+  type?: HTMLInputTypeAttribute;
+  autoComplete?: string;
+  /** Shows the value but blocks edits (e.g. while the form is sending) */
+  readOnly?: boolean;
+}
+
+// The library's TextInput and TextArea can't take a `name`, `type`,
+// `autoComplete`, `required` or ARIA attributes yet, so this renders native
+// controls in the library's input styles (its Sass input mixins).
+// TODO(L2c): replace with the library's TextInput and TextArea once they
+// pass `name`, `type`, `autoComplete`, `required` and ARIA attributes
+// through and link their `error` to the control.
+const ContactFormField: FunctionComponent<Props> = ({
+  name,
+  label,
+  placeholder,
+  error,
+  multiline = false,
+  type = "text",
+  autoComplete,
+  readOnly = false,
+}) => {
+  const id = useId();
+  const errorId = `${id}-error`;
+  const controlProps = {
+    id,
+    name,
+    placeholder,
+    required: true,
+    readOnly,
+    "aria-invalid": error ? true : undefined,
+    "aria-describedby": error ? errorId : undefined,
+    className: error
+      ? "contact-form__control contact-form__control--error"
+      : "contact-form__control",
+  };
+
+  return (
+    <div className="contact-form__field">
+      <label htmlFor={id} className="contact-form__label">
+        {label}
+      </label>
+      {multiline ? (
+        <textarea rows={6} {...controlProps} />
+      ) : (
+        <input type={type} autoComplete={autoComplete} {...controlProps} />
+      )}
+      {error && (
+        <p id={errorId} className="contact-form__error">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+};
+
+export default ContactFormField;

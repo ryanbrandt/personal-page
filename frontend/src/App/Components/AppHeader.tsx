@@ -13,7 +13,6 @@ import { BASE_ROUTES } from "@app/routes/constants";
 // choice, which the UI doesn't offer.
 const THEME_OPTIONS: ReadonlyArray<ShownTheme> = ["light", "dark"];
 
-// TODO(R9): add Contact (BASE_ROUTES.contact) once /contact has a page.
 const MENU_LINKS: Array<IAppHeaderMenuLink> = [
   {
     text: "Home",
@@ -26,6 +25,10 @@ const MENU_LINKS: Array<IAppHeaderMenuLink> = [
   {
     text: "Projects",
     route: BASE_ROUTES.work,
+  },
+  {
+    text: "Contact",
+    route: BASE_ROUTES.contact,
   },
 ];
 

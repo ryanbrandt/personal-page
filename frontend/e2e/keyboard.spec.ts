@@ -44,6 +44,7 @@ test.describe("desktop", () => {
       nav.getByRole("link", { name: "Home" }),
       nav.getByRole("link", { name: "Résumé" }),
       nav.getByRole("link", { name: "Projects" }),
+      nav.getByRole("link", { name: "Contact" }),
     ]) {
       await page.keyboard.press("Tab");
       await expect(link).toBeFocused();

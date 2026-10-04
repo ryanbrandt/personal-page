@@ -74,6 +74,12 @@ export const ROUTES: ReadonlyArray<AppRoute> = [
     documentTitle: toDocumentTitle("Projects"),
   },
   {
+    name: "contact",
+    path: "/contact",
+    title: "Get in Touch",
+    documentTitle: toDocumentTitle("Contact"),
+  },
+  {
     name: "not-found",
     path: "/does-not-exist",
     title: "Page not found",
@@ -125,14 +131,18 @@ const FIXTURES_DIR = path.join(import.meta.dirname, "fixtures");
  * Playwright's `test`, plus two automatic fixtures for every test: project
  * images are served from committed copies so S3 can't flake the suite, and
  * the test fails if the page logs a warning or error, or throws (unless it
- * sets `failOnConsoleProblems: false`).
+ * sets `failOnConsoleProblems: false`, or the problem, as "type: text",
+ * matches its `allowedConsoleProblems` pattern).
  */
 export const test = base.extend<{
   failOnConsoleProblems: boolean;
+  /** One pattern: `test.use` would read an array as [value, options]. */
+  allowedConsoleProblems: RegExp | undefined;
   remoteImages: void;
   consoleProblems: void;
 }>({
   failOnConsoleProblems: [true, { option: true }],
+  allowedConsoleProblems: [undefined, { option: true }],
   remoteImages: [
     async ({ page }, use) => {
       await page.route(REMOTE_IMAGES, (route) => {
@@ -146,7 +156,7 @@ export const test = base.extend<{
     { auto: true },
   ],
   consoleProblems: [
-    async ({ page, failOnConsoleProblems }, use) => {
+    async ({ page, failOnConsoleProblems, allowedConsoleProblems }, use) => {
       const problems: Array<string> = [];
       page.on("console", (message) => {
         if (message.type() === "warning" || message.type() === "error") {
@@ -156,7 +166,10 @@ export const test = base.extend<{
       page.on("pageerror", (error) => problems.push(`pageerror: ${error}`));
       await use();
       if (failOnConsoleProblems) {
-        expect(problems, "console warnings and errors").toEqual([]);
+        expect(
+          problems.filter((problem) => !allowedConsoleProblems?.test(problem)),
+          "console warnings and errors"
+        ).toEqual([]);
       }
     },
     { auto: true },
