@@ -3,9 +3,13 @@ import { Link, NavLink, useLocation } from "react-router";
 import { NavBar, ThemeToggle } from "@ryanbrandt/react-quick-ui";
 
 import type { IAppHeaderMenuLink } from "@app/App/types";
-import { useThemePreference } from "@app/App/hooks";
+import { type ShownTheme, useShownTheme } from "@app/App/hooks";
 import { OWNER_NAME } from "@app/common/constants/site";
 import { BASE_ROUTES } from "@app/routes/constants";
+
+// No "system" option: with nothing chosen, the page follows the OS, and the
+// toggle shows the theme it resolves to.
+const THEME_OPTIONS: ReadonlyArray<ShownTheme> = ["light", "dark"];
 
 // TODO(R9): add Contact (BASE_ROUTES.contact) once /contact has a page.
 const MENU_LINKS: Array<IAppHeaderMenuLink> = [
@@ -24,7 +28,7 @@ const MENU_LINKS: Array<IAppHeaderMenuLink> = [
 ];
 
 const AppHeader: FunctionComponent = () => {
-  const [theme, setTheme] = useThemePreference();
+  const [theme, setTheme] = useShownTheme();
   // NavBar closes its narrow-screen menu when a link in it is chosen, but
   // not on other navigation (e.g. back/forward). Keying it on the path's
   // first segment (the page) resets it whenever the page changes, and only
@@ -44,7 +48,13 @@ const AppHeader: FunctionComponent = () => {
           <span className="app-header__brand__name">{OWNER_NAME}</span>
         </Link>
       }
-      actions={<ThemeToggle value={theme} onChange={setTheme} />}
+      actions={
+        <ThemeToggle
+          value={theme}
+          onChange={setTheme}
+          options={THEME_OPTIONS}
+        />
+      }
     >
       {MENU_LINKS.map(({ text, route }) => (
         <NavLink key={route} to={route}>
