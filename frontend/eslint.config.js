@@ -21,6 +21,31 @@ const reactVersion = createRequire(import.meta.url)(
   "react/package.json"
 ).version;
 
+// Import through the `@app/*` alias instead of relative paths, and use the
+// typed Redux hooks.
+const RESTRICTED_IMPORTS = {
+  paths: [
+    {
+      name: "react-redux",
+      importNames: ["useDispatch", "useSelector"],
+      message: "Use useAppDispatch/useAppSelector from @app/store/hooks.",
+    },
+  ],
+  patterns: [
+    {
+      regex: "^\\.{1,2}/",
+      message: "Use the @app/* alias instead of a relative import.",
+    },
+  ],
+};
+
+// Only the content layer reads the data files; the app reads content through
+// its hooks (or the content source), so the data can move behind an API.
+const CONTENT_DATA_IMPORTS = {
+  regex: "^@app/content/data(/|$)",
+  message: "Read content with the hooks in @app/content/hooks.",
+};
+
 export default defineConfig(
   globalIgnores(["dist/", "playwright-report/", "test-results/", ".yarn/"]),
 
@@ -98,28 +123,18 @@ export default defineConfig(
       // Types replace prop-types.
       "react/prop-types": "off",
       "react/no-unescaped-entities": "off",
-      // Import through the `@app/*` alias instead of relative paths, and use
-      // the typed Redux hooks.
       "no-restricted-imports": [
         "error",
         {
-          paths: [
-            {
-              name: "react-redux",
-              importNames: ["useDispatch", "useSelector"],
-              message:
-                "Use useAppDispatch/useAppSelector from @app/store/hooks.",
-            },
-          ],
-          patterns: [
-            {
-              regex: "^\\.{1,2}/",
-              message: "Use the @app/* alias instead of a relative import.",
-            },
-          ],
+          ...RESTRICTED_IMPORTS,
+          patterns: [...RESTRICTED_IMPORTS.patterns, CONTENT_DATA_IMPORTS],
         },
       ],
     },
+  },
+  {
+    files: ["src/content/**"],
+    rules: { "no-restricted-imports": ["error", RESTRICTED_IMPORTS] },
   },
 
   // Turns off rules that conflict with Prettier; keep it after the rule sets.
