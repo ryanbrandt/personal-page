@@ -1,4 +1,4 @@
-import { CONTACT_FIELDS } from "@app/Contact/constants";
+import { CONTACT_FIELDS, CONTACT_FORM_PATH } from "@app/Contact/constants";
 import type { ContactField, ContactFormErrors } from "@app/Contact/types";
 
 // Something@something.something, with no spaces: enough to catch typos,
@@ -28,29 +28,24 @@ export const validateContactField = (
 export const validateContactForm = (data: FormData): ContactFormErrors => {
   const errors: ContactFormErrors = {};
   for (const field of CONTACT_FIELDS) {
-    const value = data.get(field);
-    const error = validateContactField(
-      field,
-      typeof value === "string" ? value : ""
-    );
+    // The form has no file inputs, so every value is a string.
+    const value = (data.get(field) as string | null) ?? "";
+    const error = validateContactField(field, value);
     if (error) errors[field] = error;
   }
   return errors;
 };
 
 /**
- * Sends the form to Netlify Forms, which takes a urlencoded POST to any
- * path on the site; the data must include the form's name (`form-name`).
+ * Sends the form to Netlify Forms as a urlencoded POST to the page that
+ * declares it; the data must include the form's name (`form-name`).
  * Resolves to whether Netlify accepted it.
  */
 export const postContactForm = async (data: FormData): Promise<boolean> => {
-  const body = new URLSearchParams();
-  for (const [field, value] of data) {
-    // The form has no file inputs, so every value is a string.
-    if (typeof value === "string") body.append(field, value);
-  }
+  // As above, every value is a string.
+  const body = new URLSearchParams(Array.from(data) as Array<[string, string]>);
   try {
-    const response = await fetch("/", {
+    const response = await fetch(CONTACT_FORM_PATH, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body,

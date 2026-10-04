@@ -1,7 +1,6 @@
 import {
   type FormEvent,
   type FunctionComponent,
-  useEffect,
   useRef,
   useState,
 } from "react";
@@ -26,45 +25,40 @@ import {
   validateContactForm,
 } from "@app/Contact/utils";
 
-const isContactField = (name: string): name is ContactField =>
-  (CONTACT_FIELDS as ReadonlyArray<string>).includes(name);
+// The submit button is disabled while sending, which drops its focus, so
+// the outcome's message takes it as it appears: keyboard users land there,
+// and screen readers read it out (once: it isn't a live region too).
+// Module-level, so React calls it only when the element mounts.
+const focusOnMount = (element: HTMLElement | null) => element?.focus();
 
 /**
  * The contact form, sent to Netlify Forms. It checks the fields itself
  * (noValidate) on submit, then re-checks a field with an error as it's
  * edited. A sent form is cleared; a failed one keeps its values to retry.
+ *
+ * While sending, the disabled submit button also blocks submitting with
+ * Enter (implicit submission), and Try again isn't shown.
  */
 const ContactForm: FunctionComponent = () => {
   const formRef = useRef<HTMLFormElement>(null);
-  const sentRef = useRef<HTMLParagraphElement>(null);
-  const failedRef = useRef<HTMLDivElement>(null);
   const [errors, setErrors] = useState<ContactFormErrors>({});
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const submitting = status === "submitting";
 
-  // The submit button is disabled while sending, which drops its focus:
-  // move it to the outcome, so keyboard and screen reader users land there.
-  useEffect(() => {
-    if (status === "sent") sentRef.current?.focus();
-    if (status === "failed") failedRef.current?.focus();
-  }, [status]);
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (submitting) return;
-
     const form = event.currentTarget;
     const data = new FormData(form);
     const newErrors = validateContactForm(data);
+
+    // Render the errors first, so the focused field announces its own.
+    flushSync(() => setErrors(newErrors));
     const firstInvalid = CONTACT_FIELDS.find((field) => newErrors[field]);
     if (firstInvalid) {
-      // Render the errors first, so the focused field announces its own.
-      flushSync(() => setErrors(newErrors));
       (form.elements.namedItem(firstInvalid) as HTMLElement).focus();
       return;
     }
 
-    setErrors({});
     setStatus("submitting");
     const sent = await postContactForm(data);
     if (sent) form.reset();
@@ -73,11 +67,13 @@ const ContactForm: FunctionComponent = () => {
 
   // Change events from every field bubble up to the form.
   const handleChange = (event: FormEvent<HTMLFormElement>) => {
-    const { name, value } = event.target as HTMLInputElement;
-    if (!isContactField(name) || !errors[name]) return;
+    const target = event.target as HTMLInputElement;
+    // The honeypot and form-name aren't fields, so they never have errors.
+    const name = target.name as ContactField;
+    if (!errors[name]) return;
     setErrors((current) => ({
       ...current,
-      [name]: validateContactField(name, value),
+      [name]: validateContactField(name, target.value),
     }));
   };
 
@@ -95,7 +91,7 @@ const ContactForm: FunctionComponent = () => {
         {/* The honeypot: out of sight and out of the accessibility tree. */}
         <label hidden>
           Don’t fill this out if you’re human:{" "}
-          <input name={HONEYPOT_FIELD} tabIndex={-1} autoComplete="off" />
+          <input name={HONEYPOT_FIELD} autoComplete="off" />
         </label>
         <ContactFormField
           name="name"
@@ -128,21 +124,16 @@ const ContactForm: FunctionComponent = () => {
           />
         </div>
       </form>
-      <div role="status" className="contact-form__status">
-        {status === "sent" && (
-          <p ref={sentRef} tabIndex={-1} className="contact-form__sent">
-            Thanks for getting in touch! Your message was sent.
-          </p>
-        )}
-      </div>
+      {status === "sent" && (
+        <p ref={focusOnMount} tabIndex={-1} className="contact-form__sent">
+          Thanks for getting in touch! Your message was sent.
+        </p>
+      )}
       {status === "failed" && (
-        <div
-          ref={failedRef}
-          role="alert"
-          tabIndex={-1}
-          className="contact-form__failed"
-        >
-          <p>Sorry, your message couldn’t be sent. Please try again.</p>
+        <div className="contact-form__failed">
+          <p ref={focusOnMount} tabIndex={-1}>
+            Sorry, your message couldn’t be sent. Please try again.
+          </p>
           <Button
             variant="secondary"
             size="xlg"

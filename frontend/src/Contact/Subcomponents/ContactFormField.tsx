@@ -21,6 +21,9 @@ interface Props {
 // The library's TextInput and TextArea can't take a `name`, `type`,
 // `autoComplete` or ARIA attributes yet, so this renders native controls in
 // the library's input styles (its Sass input mixins).
+// TODO(L2c): replace with the library's TextInput and TextArea once they
+// pass `name`, `type`, `autoComplete` and ARIA attributes through and link
+// their `error` to the control.
 const ContactFormField: FunctionComponent<Props> = ({
   name,
   label,

@@ -1,9 +1,16 @@
-/**
- * The contact form's name in Netlify Forms. public/__forms.html declares the
- * form under this name, with these fields, for Netlify to detect at deploy
- * time; keep the two in step.
- */
+// The contact form in Netlify Forms. Netlify finds forms in the deployed
+// HTML, not in the app's JavaScript, so the build writes a static copy of
+// the form from these constants (netlifyForms in vite.config.ts).
+
+/** The contact form's name in Netlify Forms */
 export const CONTACT_FORM_NAME = "contact";
+
+/**
+ * The static page declaring the form, which the app also posts to: Netlify
+ * takes a form's submissions at any path, and this one is always a static
+ * file, whatever rewrites the site's other paths get.
+ */
+export const CONTACT_FORM_PATH = "/__forms.html";
 
 /** The field Netlify Forms reads the form's name from */
 export const FORM_NAME_FIELD = "form-name";

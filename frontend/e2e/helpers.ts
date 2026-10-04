@@ -131,14 +131,17 @@ const FIXTURES_DIR = path.join(import.meta.dirname, "fixtures");
  * Playwright's `test`, plus two automatic fixtures for every test: project
  * images are served from committed copies so S3 can't flake the suite, and
  * the test fails if the page logs a warning or error, or throws (unless it
- * sets `failOnConsoleProblems: false`).
+ * sets `failOnConsoleProblems: false`, or the problem, as "type: text",
+ * matches one of its `allowedConsoleProblems`).
  */
 export const test = base.extend<{
   failOnConsoleProblems: boolean;
+  allowedConsoleProblems: ReadonlyArray<RegExp>;
   remoteImages: void;
   consoleProblems: void;
 }>({
   failOnConsoleProblems: [true, { option: true }],
+  allowedConsoleProblems: [[], { option: true }],
   remoteImages: [
     async ({ page }, use) => {
       await page.route(REMOTE_IMAGES, (route) => {
@@ -152,7 +155,7 @@ export const test = base.extend<{
     { auto: true },
   ],
   consoleProblems: [
-    async ({ page, failOnConsoleProblems }, use) => {
+    async ({ page, failOnConsoleProblems, allowedConsoleProblems }, use) => {
       const problems: Array<string> = [];
       page.on("console", (message) => {
         if (message.type() === "warning" || message.type() === "error") {
@@ -162,7 +165,13 @@ export const test = base.extend<{
       page.on("pageerror", (error) => problems.push(`pageerror: ${error}`));
       await use();
       if (failOnConsoleProblems) {
-        expect(problems, "console warnings and errors").toEqual([]);
+        expect(
+          problems.filter(
+            (problem) =>
+              !allowedConsoleProblems.some((allowed) => allowed.test(problem))
+          ),
+          "console warnings and errors"
+        ).toEqual([]);
       }
     },
     { auto: true },

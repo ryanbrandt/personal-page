@@ -46,9 +46,14 @@
     padding: var(--rq-space-4) var(--rq-space-5);
     border-radius: var(--rq-radius-control);
     text-align: center;
+  }
 
-    &:focus-visible {
-      @include focus-ring;
+  // The outcome's message takes focus when it appears, for screen readers
+  // (see ContactForm); like a page's heading, it isn't a control.
+  &__sent,
+  &__failed p {
+    &:focus {
+      outline: none;
     }
   }
 
