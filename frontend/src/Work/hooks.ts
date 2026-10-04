@@ -1,4 +1,3 @@
-import { type RefObject, useEffect, useEffectEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import type { IWorkFilters } from "@app/Work/types";
@@ -76,49 +75,4 @@ export const useWorkFilters = (): IWorkFiltersControls => {
         params.delete(TAG_PARAM);
       }),
   };
-};
-
-/**
- * Client-side navigation for the links matching `linkSelector` inside
- * `containerRef`: links rendered by components that only take an `href`
- * (e.g. the library's Card), not a router `<Link>`. Like `<Link>`, it leaves
- * to the browser modified clicks (new tab, …), links with a `target` other
- * than `_self` or a `download`, and links to other origins.
- *
- * TODO(L2c): library Card link render prop; then use a router <Link>.
- */
-export const useClientSideLinks = (
-  containerRef: RefObject<HTMLElement | null>,
-  linkSelector: string,
-  state?: unknown
-): void => {
-  const navigate = useNavigate();
-
-  const handleClick = useEffectEvent((event: MouseEvent) => {
-    const link = (event.target as Element).closest<HTMLAnchorElement>(
-      linkSelector
-    );
-    if (!link || event.defaultPrevented || event.button !== 0) return;
-    if (event.metaKey || event.altKey || event.ctrlKey || event.shiftKey) {
-      return;
-    }
-    if (
-      (link.target && link.target !== "_self") ||
-      link.hasAttribute("download")
-    ) {
-      return;
-    }
-    const url = new URL(link.href);
-    if (url.origin !== window.location.origin) return;
-
-    event.preventDefault();
-    void navigate(`${url.pathname}${url.search}${url.hash}`, { state });
-  });
-
-  useEffect(() => {
-    const container = containerRef.current!;
-    const listener = (event: MouseEvent) => handleClick(event);
-    container.addEventListener("click", listener);
-    return () => container.removeEventListener("click", listener);
-  }, [containerRef]);
 };

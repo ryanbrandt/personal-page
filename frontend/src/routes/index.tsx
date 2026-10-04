@@ -3,15 +3,15 @@ import { Route, Routes } from "react-router";
 
 import { BASE_ROUTES } from "@app/routes/constants";
 import type { IComponentRoute } from "@app/routes/types";
+import HomePage from "@app/Home/Components/HomePage";
 import ResumePage from "@app/Resume/Components/ResumePage";
-import LandingPage from "@app/Home/Components/LandingPage";
 import WorkPage from "@app/Work/Components/WorkPage";
 import NotFoundPage from "@app/NotFound/Components/NotFoundPage";
 
 const COMPONENT_ROUTES: Array<IComponentRoute> = [
   {
     route: BASE_ROUTES.home,
-    component: <LandingPage />,
+    component: <HomePage />,
   },
   {
     // One route, so opening a project's detail view keeps the grid mounted.
