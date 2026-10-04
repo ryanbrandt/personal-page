@@ -18,6 +18,8 @@
     --social-icon-size: 20px;
 
     // The icons, not their hit areas, line up with the gutter.
-    margin-right: calc((var(--social-icon-size) - #{$social-link-size}) / 2);
+    margin-right: calc(
+      (var(--social-icon-size, #{$social-icon-size}) - #{$social-link-size}) / 2
+    );
   }
 }

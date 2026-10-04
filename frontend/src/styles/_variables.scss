@@ -6,5 +6,7 @@ $default-column-gap: 1vw;
 // a menu and pads the bar with the mobile gutter.
 $navbar-narrow: 768px;
 
-// A social link's hit area (common/SocialLinks), around a smaller icon.
+// A social link's hit area (common/SocialLinks), and its icon's size unless
+// the container sets --social-icon-size.
 $social-link-size: 44px;
+$social-icon-size: 24px;

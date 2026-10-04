@@ -4,6 +4,10 @@ import { usePrevious } from "@ryanbrandt/react-quick-ui";
 
 import { CONTENT_ID } from "@app/App/constants";
 import PageContainer from "@app/common/Components/PageContainer";
+import {
+  rememberReturnTarget,
+  takeReturnTarget,
+} from "@app/common/returnFocus";
 import { toDocumentTitle } from "@app/common/utils/documentTitle";
 import NotFoundPage from "@app/NotFound/Components/NotFoundPage";
 import { BASE_ROUTES } from "@app/routes/constants";
@@ -52,6 +56,9 @@ const WorkPage: FunctionComponent = () => {
   const previousSlug = usePrevious(slug);
   useEffect(() => {
     if (slug || !previousSlug) return;
+    // Closed back onto this page, which stayed mounted: nothing remounts to
+    // take the return target closeDialog remembered.
+    takeReturnTarget();
 
     const focused = document.activeElement;
     const focusReturned =
@@ -71,7 +78,9 @@ const WorkPage: FunctionComponent = () => {
     const { returnOnClose, search } = (location.state ??
       {}) as IWorkEntryLocationState;
     if (returnOnClose && search === location.search) {
-      // Back to the page the card was on (this one, or e.g. the home page).
+      // Back to the page the card was on (this one, or e.g. the home page,
+      // which remounts and refocuses the card).
+      rememberReturnTarget(toWorkEntryPath(slug!));
       void navigate(-1);
     } else {
       // A link from elsewhere (or a new tab), or the filters changed since

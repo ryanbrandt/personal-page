@@ -116,32 +116,39 @@ test.describe("desktop", () => {
     ).toHaveAttribute("href", "/work");
   });
 
-  test("a recent project opens its dialog; closing goes back home", async ({
+  test("a recent project opens its dialog; closing refocuses its card", async ({
     page,
   }) => {
     const [project] = RECENT_PROJECTS;
+    const card = projectCardLink(page, project.title);
     const dialog = projectDialog(page);
 
-    await projectCardLink(page, project.title).click();
+    await card.click();
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAccessibleName(project.title);
     await expect(page).toHaveURL(`/work/${project.slug}`);
+    await expect(dialog.locator(":focus")).toHaveCount(1);
 
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();
     await expect(page).toHaveURL("/");
-    // The home page remounts, so its heading takes focus.
-    await expect(pageTitle(page, HOME_HEADING)).toBeFocused();
+    // The home page remounts with focus back on the card, where it was.
+    await expect(card).toBeFocused();
+    await expect(card).toBeInViewport();
+    await expect(pageTitle(page, HOME_HEADING)).not.toBeFocused();
   });
 
   test("the largest paint is the hero's text", async ({ page }) => {
-    await page.waitForLoadState("load");
     // Chromium only reports these entries to an observer
     // (getEntriesByType warns that it's deprecated for them); `buffered`
     // replays the ones already recorded.
     const lcp = await page.evaluate(
       () =>
-        new Promise<{ url: string; inHeading: boolean }>((resolve) => {
+        new Promise<{ url: string; inHeading: boolean }>((resolve, reject) => {
+          setTimeout(
+            () => reject(new Error("No largest-contentful-paint entry in 5s")),
+            5_000
+          );
           new PerformanceObserver((list) => {
             const entry = list.getEntries().at(-1) as LargestContentfulPaint;
             resolve({

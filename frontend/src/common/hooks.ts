@@ -1,15 +1,26 @@
-import { type RefObject, useEffect, useEffectEvent } from "react";
+import {
+  type RefObject,
+  useEffect,
+  useEffectEvent,
+  useLayoutEffect,
+} from "react";
 import { useNavigate } from "react-router";
 
-// The heading of the page the app loaded with. StrictMode's replayed
-// effect sees the same element, so it can't pass for a second page.
-let firstHeading: HTMLElement | undefined;
+import { hasReturnTarget, takeReturnTarget } from "@app/common/returnFocus";
+
+// The headings that leave scroll and focus alone: the page the app loaded
+// with, and a page that returns focus to a link of its own. StrictMode's
+// replayed effect sees the same element, so it leaves them alone too.
+let firstPageMounted = false;
+const headingsLeftAlone = new WeakSet<HTMLElement>();
 
 /**
  * Marks `headingRef`'s element (the page's `<h1>`, with tabIndex={-1}) as
  * its page's heading. A page that mounts after the first one scrolls to
  * the top and focuses it, so screen readers announce the new page; the
- * page the app loaded with keeps the browser's own scroll and focus.
+ * page the app loaded with keeps the browser's own scroll and focus, and
+ * so does a page mounting with a return target pending (returnFocus.ts),
+ * whose useFocusReturnTarget moves them instead.
  *
  * Every routed page must use it exactly once, as the first page to mount
  * is taken as the one the app loaded with. PageContainer does; a page that
@@ -17,18 +28,47 @@ let firstHeading: HTMLElement | undefined;
  *
  * A new path that keeps the page mounted (e.g. a project's dialog at
  * /work/:slug) moves neither scroll nor focus.
+ *
+ * A layout effect, so the page doesn't paint before scrolling, and so it
+ * runs before a later component's useFocusReturnTarget takes the target.
  */
 export const useFocusHeadingOnPageMount = (
   headingRef: RefObject<HTMLElement | null>
 ): void => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     const heading = headingRef.current!;
-    firstHeading ??= heading;
-    if (heading === firstHeading) return;
+    if (!firstPageMounted || hasReturnTarget()) {
+      firstPageMounted = true;
+      headingsLeftAlone.add(heading);
+    }
+    if (headingsLeftAlone.has(heading)) return;
 
     window.scrollTo(0, 0);
     heading.focus({ preventScroll: true });
   }, [headingRef]);
+};
+
+/**
+ * Focuses the pending return target (returnFocus.ts), if it's one of the
+ * links matching `linkSelector` in `containerRef`, and scrolls it into
+ * view, before the page paints. Its page's heading leaves focus alone (see
+ * useFocusHeadingOnPageMount), so the component using this must come after
+ * the heading.
+ */
+export const useFocusReturnTarget = (
+  containerRef: RefObject<HTMLElement | null>,
+  linkSelector: string
+): void => {
+  useLayoutEffect(() => {
+    const target = takeReturnTarget();
+    if (!target) return;
+
+    const link = Array.from(
+      containerRef.current!.querySelectorAll<HTMLAnchorElement>(linkSelector)
+    ).find(({ href }) => new URL(href).pathname === target);
+    link?.focus({ preventScroll: true });
+    link?.scrollIntoView({ block: "center" });
+  }, [containerRef, linkSelector]);
 };
 
 /**

@@ -95,7 +95,10 @@ $bio-max-width: 640px;
   &__social {
     // The icons, not their hit areas, line up with the text's start.
     @include mobile-only {
-      margin-left: calc((var(--social-icon-size) - #{$social-link-size}) / 2);
+      margin-left: calc(
+        (var(--social-icon-size, #{$social-icon-size}) - #{$social-link-size}) /
+          2
+      );
     }
   }
 }
@@ -107,7 +110,7 @@ $bio-max-width: 640px;
 }
 
 // D0's recent projects: across the page, with the link to the rest beside
-// the heading; below the cards on narrow screens.
+// the heading; below it on narrow screens.
 .recent-projects {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -118,18 +121,11 @@ $bio-max-width: 640px;
     grid-column: 1 / -1;
   }
 
-  > .more-link {
-    grid-row: 1;
-    grid-column: 2;
-  }
-
   @include mobile-only {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--rq-space-5);
 
     > .more-link {
-      grid-row: auto;
-      grid-column: auto;
       justify-self: start;
     }
   }

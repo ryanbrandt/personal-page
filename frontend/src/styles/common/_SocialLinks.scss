@@ -1,10 +1,8 @@
 @use "../tools" as *;
 
 // SocialLinks.tsx: a row of icon links, muted until hovered. A container
-// can resize the icons with --social-icon-size.
+// can resize the icons by setting --social-icon-size on its list.
 .social-links {
-  --social-icon-size: 24px;
-
   @include flex--align-center;
   gap: var(--rq-space-1);
   margin: 0;
@@ -29,8 +27,8 @@
   }
 
   svg {
-    width: var(--social-icon-size);
-    height: var(--social-icon-size);
+    width: var(--social-icon-size, #{$social-icon-size});
+    height: var(--social-icon-size, #{$social-icon-size});
     fill: currentColor;
   }
 }
