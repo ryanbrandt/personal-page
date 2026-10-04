@@ -6,6 +6,12 @@ import { prettifyError } from "zod";
 
 import { HOME_TITLE } from "./src/common/constants/site";
 import { applyTheme, THEME_STORAGE_KEY } from "./src/common/utils/theme";
+import {
+  CONTACT_FIELDS,
+  CONTACT_FORM_NAME,
+  CONTACT_FORM_PATH,
+  HONEYPOT_FIELD,
+} from "./src/Contact/constants";
 import education from "./src/content/data/education.json" with { type: "json" };
 import experience from "./src/content/data/experience.json" with { type: "json" };
 import projects from "./src/content/data/projects.json" with { type: "json" };
@@ -62,9 +68,47 @@ const contentCheck = (): Plugin => ({
   },
 });
 
+// Writes the static copy of the contact form that Netlify detects forms
+// from at deploy time (the app renders its form with JavaScript, which
+// Netlify doesn't run), from the same constants as the app's form.
+const netlifyForms = (): Plugin => {
+  const fields = [HONEYPOT_FIELD, ...CONTACT_FIELDS]
+    .map((name) => `<input name="${name}" />`)
+    .join("");
+  const source = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+    <title>Netlify Forms</title>
+  </head>
+  <body>
+    <form name="${CONTACT_FORM_NAME}" data-netlify="true" netlify-honeypot="${HONEYPOT_FIELD}" hidden>${fields}</form>
+  </body>
+</html>
+`;
+  return {
+    name: "netlify-forms",
+    apply: "build",
+    generateBundle() {
+      this.emitFile({
+        type: "asset",
+        fileName: CONTACT_FORM_PATH.slice(1),
+        source,
+      });
+    },
+  };
+};
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [contentCheck(), documentTitle(), themeScript(), react()],
+  plugins: [
+    contentCheck(),
+    documentTitle(),
+    themeScript(),
+    netlifyForms(),
+    react(),
+  ],
   server: {
     open: true,
   },
