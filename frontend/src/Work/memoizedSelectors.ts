@@ -1,16 +1,36 @@
 import { createSelector } from "@reduxjs/toolkit";
 
-import { selectWorkQuery, selectWorkEntries } from "@app/Work/selectors";
+import { toMonthNumber } from "@app/common/utils/dates";
+import type { IWorkEntry } from "@app/types/work";
+import { RECENT_PROJECT_COUNT } from "@app/Work/constants";
+import { selectWorkEntries } from "@app/Work/selectors";
 
-export const selectFilteredWorkEntries = createSelector(
-  [selectWorkEntries, selectWorkQuery],
-  (entries, query) => {
-    const cleanedQuery = query.toLowerCase();
+/** Every project tag, once each, in alphabetical order. */
+export const selectWorkTags = createSelector([selectWorkEntries], (entries) =>
+  [...new Set(entries.flatMap(({ tags }) => tags))].sort((a, b) =>
+    a.localeCompare(b)
+  )
+);
 
-    return entries.filter(
-      (e) =>
-        e.title.toLowerCase().includes(cleanedQuery) ||
-        e.description.toLowerCase().includes(cleanedQuery)
-    );
+// A project's start, for ordering; one that doesn't parse sorts last (and
+// warns in development).
+const toStartMonth = ({ title, start }: IWorkEntry): number => {
+  const month = toMonthNumber(start);
+  if (month === undefined && import.meta.env.DEV) {
+    console.warn(`${title}: its start isn't a "Month YYYY" date: ${start}`);
   }
+  return month ?? Number.MIN_SAFE_INTEGER;
+};
+
+/**
+ * The projects started most recently, newest first.
+ * TODO(R8): with ISO dates, compare with `localeCompare` (or store the data
+ * newest first) and drop toMonthNumber.
+ */
+export const selectRecentWorkEntries = createSelector(
+  [selectWorkEntries],
+  (entries) =>
+    entries
+      .toSorted((a, b) => toStartMonth(b) - toStartMonth(a))
+      .slice(0, RECENT_PROJECT_COUNT)
 );

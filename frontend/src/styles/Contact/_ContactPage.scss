@@ -9,12 +9,12 @@ $contact-page-default-row-col-gap: 50px;
   }
 
   @include mobile-only {
-    @include flex--col--align-center;
+    @include flex--column--align-center;
     row-gap: $contact-page-default-row-col-gap;
   }
 
   &__form {
-    @include flex--col;
+    @include flex--column;
     width: fit-content;
     row-gap: calc($contact-page-default-row-col-gap / 2);
 
@@ -24,14 +24,21 @@ $contact-page-default-row-col-gap: 50px;
   }
 
   &__social-links {
-    @include flex--col--justify-center;
+    @include flex--column--justify-center;
     row-gap: $contact-page-default-row-col-gap;
     padding: 50px;
     border-radius: 10px;
-    background: linear-gradient(135deg, $primary-blue, rgb($primary-blue, 0.3));
+    // Darkens from accent-fill, so on-accent text keeps AA contrast (4.5:1)
+    // across the whole gradient in both themes.
+    background: var(--rq-color-accent-fill);
+    background: linear-gradient(
+      135deg,
+      var(--rq-color-accent-fill),
+      color-mix(in srgb, var(--rq-color-accent-fill) 70%, black)
+    );
 
     h2 {
-      color: $white;
+      color: var(--rq-color-on-accent);
       font-weight: 400;
       align-self: center;
     }
@@ -40,14 +47,14 @@ $contact-page-default-row-col-gap: 50px;
       @include flex--align-center;
       column-gap: 10px;
       text-decoration: none;
-      color: $white;
+      color: var(--rq-color-on-accent);
 
       &:hover {
         text-decoration: underline;
       }
 
       svg {
-        fill: $white;
+        fill: var(--rq-color-on-accent);
       }
     }
   }

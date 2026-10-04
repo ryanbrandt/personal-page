@@ -1,14 +1,32 @@
 @use "../tools" as *;
 
+// Header, content and footer in flow; the content grows so the footer sits
+// at the bottom of short pages.
 .root-container {
-  position: relative;
-  margin: 0;
-  overflow-x: hidden;
-  width: 100vw;
+  @include flex--column;
   min-height: 100vh;
 
-  @include themed {
-    background-color: theme-get(primary-color);
-    color: theme-get(font-color);
+  // Off-screen until focused (the first Tab on the page).
+  &__skip-link {
+    position: absolute;
+    top: var(--rq-space-2);
+    left: var(--rq-space-2);
+    // Above the sticky header: tied to the library's NavBar z-index (10),
+    // which has no token yet.
+    z-index: 11;
+    padding: var(--rq-space-2) var(--rq-space-4);
+    border-radius: var(--rq-radius-control);
+    background-color: var(--rq-color-accent-fill);
+    color: var(--rq-color-on-accent);
+    font-weight: var(--rq-font-weight-medium);
+    text-decoration: none;
+
+    &:not(:focus) {
+      transform: translateY(-200%);
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
   }
 }

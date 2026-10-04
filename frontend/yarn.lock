@@ -12,6 +12,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@axe-core/playwright@npm:4.13.0":
+  version: 4.13.0
+  resolution: "@axe-core/playwright@npm:4.13.0"
+  dependencies:
+    axe-core: "npm:~4.13.0"
+  peerDependencies:
+    playwright-core: ">= 1.0.0"
+  checksum: 10/2400e309d6f6d96b3f3f12b00a80e32cb0213726fcfc3c457b36d17f7136a3361f02a7523286024d7e8ceba9045a5f9c18edd8bc352f76b549faedce298fada2
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.29.7":
   version: 7.29.7
   resolution: "@babel/code-frame@npm:7.29.7"
@@ -782,9 +793,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ryanbrandt/react-quick-ui@npm:0.6.0-next.0":
-  version: 0.6.0-next.0
-  resolution: "@ryanbrandt/react-quick-ui@npm:0.6.0-next.0"
+"@ryanbrandt/react-quick-ui@npm:1.0.0-next.1":
+  version: 1.0.0-next.1
+  resolution: "@ryanbrandt/react-quick-ui@npm:1.0.0-next.1"
   peerDependencies:
     "@types/react": ">=18.2.6"
     react: ^18.0.0 || ^19.0.0
@@ -793,7 +804,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10/0c12c78eab777472d84e4f09401d06dc047af9eb9704a415f856d7b84ccc04dea6eb6794d439797e5781a2151b25b12b4ee3bf922d66a0484cf85485b6ffee97
+  checksum: 10/9c4ba4a74f85ca3c508a192c182e0fd00cb9dd484aa69b7bded390281415a0992481d97eb0d3620364862f5e31bd814ea2ded73b57574cec52b263bd98a576d1
   languageName: node
   linkType: hard
 
@@ -1397,7 +1408,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axe-core@npm:^4.10.2":
+"axe-core@npm:^4.10.2, axe-core@npm:~4.13.0":
   version: 4.13.0
   resolution: "axe-core@npm:4.13.0"
   checksum: 10/b9319bedc705fde00e4abd981d8724202cc20102e4ae6d8edfde33cb5265e0fb8f67f32adcb4ad33fbd4a2c8d7ad7ef5af1d933d9ad859bed90e3eae0ee8c52f
@@ -3683,10 +3694,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "personal-page@workspace:."
   dependencies:
+    "@axe-core/playwright": "npm:4.13.0"
     "@eslint/js": "npm:^10.0.1"
     "@playwright/test": "npm:1.63.0"
     "@reduxjs/toolkit": "npm:^2.13.0"
-    "@ryanbrandt/react-quick-ui": "npm:0.6.0-next.0"
+    "@ryanbrandt/react-quick-ui": "npm:1.0.0-next.1"
     "@types/node": "npm:^24.19.0"
     "@types/react": "npm:^19.3.0"
     "@types/react-dom": "npm:^19.3.0"

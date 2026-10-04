@@ -1,0 +1,137 @@
+@use "../tools" as *;
+
+// D0's measure for the hero's bio.
+$bio-max-width: 640px;
+
+.home-page {
+  @include flex--column;
+  gap: var(--rq-space-section);
+
+  @include mobile-only {
+    gap: var(--rq-space-section-mobile);
+  }
+}
+
+// D0's hero: centred on wide screens; on narrow ones, aligned to the start
+// with the calls to action stacked.
+.home-hero {
+  @include flex--column--align-center;
+  gap: var(--rq-space-6);
+  text-align: center;
+
+  @include mobile-only {
+    align-items: flex-start;
+    gap: var(--rq-space-5);
+    text-align: start;
+  }
+
+  // The library's `hero` Heading type (see HomeHero.tsx for why it's a
+  // plain <h1>).
+  &__title {
+    margin: 0;
+    font-size: var(--rq-font-size-hero);
+    font-weight: var(--rq-font-weight-light);
+    line-height: var(--rq-line-height-tight);
+    letter-spacing: var(--rq-letter-spacing-tight);
+
+    strong {
+      font-weight: var(--rq-font-weight-semibold);
+      color: var(--rq-color-accent-text);
+    }
+
+    // The name gets its own line where there's room for it.
+    &__name {
+      @include desktop-only {
+        display: block;
+      }
+    }
+
+    // Focused when the page mounts after another, for screen readers; it
+    // isn't a control.
+    &:focus {
+      outline: none;
+    }
+  }
+
+  // Shown above the title; it comes after it in the markup.
+  &__eyebrow {
+    order: -1;
+    max-width: 100%;
+    margin: 0;
+
+    // Wraps rather than cutting the job short on the narrowest screens.
+    &__tag {
+      white-space: normal;
+    }
+  }
+
+  &__bio {
+    max-width: $bio-max-width;
+    margin: 0;
+    font-size: var(--rq-font-size-2xl);
+    line-height: var(--rq-line-height-body);
+    color: var(--rq-color-muted);
+
+    @include mobile-only {
+      font-size: var(--rq-font-size-lg);
+    }
+  }
+
+  &__actions {
+    @include flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--rq-space-4);
+    margin-top: var(--rq-space-2);
+
+    @media (width < $navbar-narrow) {
+      flex-direction: column;
+      align-self: stretch;
+      gap: var(--rq-space-3);
+      margin-top: 0;
+    }
+  }
+
+  &__social {
+    // The icons, not their hit areas, line up with the text's start.
+    @include mobile-only {
+      margin-left: calc(
+        (var(--social-icon-size, #{$social-icon-size}) - #{$social-link-size}) /
+          2
+      );
+    }
+  }
+}
+
+.home-experience {
+  @include flex--column;
+  align-items: flex-start;
+  gap: var(--rq-space-8);
+}
+
+// D0's recent projects: across the page, with the link to the rest beside
+// the heading; below it on narrow screens.
+.recent-projects {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--rq-space-8) var(--rq-space-4);
+
+  > .project-grid {
+    grid-column: 1 / -1;
+  }
+
+  @include mobile-only {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--rq-space-5);
+
+    > .more-link {
+      justify-self: start;
+    }
+  }
+}
+
+.more-link {
+  @include accent-text-link;
+  font-size: var(--rq-font-size-md);
+}
