@@ -39,11 +39,12 @@ const RESTRICTED_IMPORTS = {
   ],
 };
 
-// Only the content layer reads the data files; the app reads content through
-// its hooks (or the content source), so the data can move behind an API.
+// Only src/content reads the data files and the schemas: the app reads
+// content through its hooks, and zod (the schemas) stays out of the bundle.
 const CONTENT_DATA_IMPORTS = {
-  regex: "^@app/content/data(/|$)",
-  message: "Read content with the hooks in @app/content/hooks.",
+  regex: "^@app/content/(data|schemas)(/|$)",
+  message:
+    "Read content with the hooks in @app/content/hooks (types: @app/content/types).",
 };
 
 export default defineConfig(

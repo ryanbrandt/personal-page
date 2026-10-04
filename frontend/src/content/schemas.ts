@@ -1,62 +1,78 @@
-import { z } from "zod/mini";
+import { z } from "zod";
+
+import type { IsoMonth } from "@app/content/types";
 
 /**
- * The content's shape, checked when it loads: the contract a content API
- * would serve (see ContentSource). Zod Mini: the same schemas as Zod, a
- * quarter of its bundle size.
+ * The content's shape: the contract for content/data and for an API that
+ * may one day serve it. `vite build` checks the data against it (see
+ * vite.config.ts), so it runs at build time only and isn't in the app's
+ * bundle: the app takes its types (content/types.ts).
  */
 
+const ISO_MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
+
 /** A month as ISO "YYYY-MM", e.g. "2021-09"; formatted for display. */
-const isoMonthSchema = z
-  .string()
-  .check(
-    z.regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Expected an ISO month ("YYYY-MM")')
-  );
+const isoMonthSchema = z.custom<IsoMonth>(
+  (value) => typeof value === "string" && ISO_MONTH.test(value),
+  'Expected an ISO month ("YYYY-MM")'
+);
 
-const nonEmptyTextSchema = z.string().check(z.minLength(1));
+/** When something started, and ended (null while it's ongoing). */
+const periodShape = {
+  start: isoMonthSchema,
+  end: isoMonthSchema.nullable(),
+};
 
-const textListSchema = z.readonly(z.array(nonEmptyTextSchema));
+const textSchema = z.string().min(1);
 
-export const profileSchema = z.object({
-  name: nonEmptyTextSchema,
-  /** One or two sentences under the home page's heading */
-  bio: nonEmptyTextSchema,
-});
+const textListSchema = z.array(textSchema).readonly();
 
 /** A job, degree or certificate on the résumé. */
-export const resumeEntrySchema = z.object({
+const resumeEntrySchema = z.object({
   /** The role, degree or certificate */
-  title: nonEmptyTextSchema,
+  title: textSchema,
   /** The company or school */
-  organization: nonEmptyTextSchema,
-  description: nonEmptyTextSchema,
+  organization: textSchema,
+  description: textSchema,
   /** Shown as a bulleted list; empty for none */
   highlights: textListSchema,
-  start: isoMonthSchema,
-  /** null while it's ongoing */
-  end: z.nullable(isoMonthSchema),
+  ...periodShape,
 });
 
-export const resumeEntriesSchema = z.readonly(z.array(resumeEntrySchema));
+// Ongoing entries first, then by end month, latest first.
+const toEndKey = ({ end }: { end: IsoMonth | null }) => end ?? "9999-12";
 
-export const skillGroupSchema = z.object({
-  name: nonEmptyTextSchema,
+/** Résumé entries, newest (latest end) first, as they're shown. */
+const resumeEntriesSchema = z
+  .array(resumeEntrySchema)
+  .readonly()
+  .refine(
+    (entries) =>
+      entries.every(
+        (entry, index) =>
+          index === 0 ||
+          toEndKey(entries[index - 1]).localeCompare(toEndKey(entry)) >= 0
+      ),
+    "Entries must be newest first (by end month, ongoing first)"
+  );
+
+const skillGroupSchema = z.object({
+  name: textSchema,
   skills: textListSchema,
 });
-
-export const skillGroupsSchema = z.readonly(z.array(skillGroupSchema));
 
 /**
  * An image with its intrinsic size, so the page reserves its space.
  * TODO(images): processed variants: resized WebP/AVIF in a `srcset` (a
- * `<picture>` in ProjectImage), their sizes measured at build time, served
- * from cacheable URLs with a long Cache-Control. Today's S3 PNGs are full
- * size, with no Cache-Control.
+ * `<picture>` in ProjectImage), served from cacheable URLs with a long
+ * Cache-Control; today's S3 PNGs are full size, with no Cache-Control. The
+ * content check plugin in vite.config.ts is where they'd be made and
+ * measured.
  */
-export const workImageSchema = z.object({
+const workImageSchema = z.object({
   src: z.url(),
-  width: z.int().check(z.positive()),
-  height: z.int().check(z.positive()),
+  width: z.int().positive(),
+  height: z.int().positive(),
 });
 
 /**
@@ -66,37 +82,34 @@ export const workImageSchema = z.object({
  */
 const slugSchema = z
   .string()
-  .check(
-    z.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Expected a slug like project-name")
-  );
+  .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Expected a slug like project-name");
 
-export const workEntrySchema = z.object({
+const workEntrySchema = z.object({
   slug: slugSchema,
-  title: nonEmptyTextSchema,
+  title: textSchema,
   /** A one-sentence summary */
-  description: nonEmptyTextSchema,
+  description: textSchema,
   tags: textListSchema,
   /** A screenshot, or null for the designed fallback */
-  image: z.nullable(workImageSchema),
-  start: isoMonthSchema,
-  /** null while it's ongoing */
-  end: z.nullable(isoMonthSchema),
+  image: workImageSchema.nullable(),
   githubUrl: z.url(),
+  ...periodShape,
 });
 
-/** The projects, whose slugs are unique (each is a URL). */
-export const workEntriesSchema = z
-  .readonly(z.array(workEntrySchema))
-  .check(
-    z.refine(
-      (entries) =>
-        new Set(entries.map(({ slug }) => slug)).size === entries.length,
-      "Project slugs must be unique"
-    )
+/** The projects, in the order shown, with unique slugs (each is a URL). */
+const workEntriesSchema = z
+  .array(workEntrySchema)
+  .readonly()
+  .refine(
+    (entries) =>
+      new Set(entries.map(({ slug }) => slug)).size === entries.length,
+    "Project slugs must be unique"
   );
 
-export type IProfile = z.infer<typeof profileSchema>;
-export type IResumeEntry = z.infer<typeof resumeEntrySchema>;
-export type IResumeSkillGroup = z.infer<typeof skillGroupSchema>;
-export type IWorkImage = z.infer<typeof workImageSchema>;
-export type IWorkEntry = z.infer<typeof workEntrySchema>;
+/** All of the content (content/data). */
+export const contentSchema = z.object({
+  experience: resumeEntriesSchema,
+  education: resumeEntriesSchema,
+  skills: z.array(skillGroupSchema).readonly(),
+  projects: workEntriesSchema,
+});

@@ -1,5 +1,5 @@
 import { RESUME_PDF_URL } from "../src/common/constants/urls";
-import { contentSource } from "../src/content/source";
+import { CONTENT } from "../src/content";
 
 import {
   brandLink,
@@ -142,8 +142,8 @@ test.describe("résumé", () => {
   });
 
   for (const [name, entries] of [
-    ["Experience", contentSource.getExperience()],
-    ["Education", contentSource.getEducation()],
+    ["Experience", CONTENT.experience],
+    ["Education", CONTENT.education],
   ] as const) {
     test(`${name} is a timeline of entries with their highlights`, async ({
       page,
@@ -164,14 +164,19 @@ test.describe("résumé", () => {
     });
   }
 
-  // The one check on how dates are formatted (the data stores ISO months).
+  // The one check on how dates are formatted (the data stores ISO months),
+  // with its own formatting rather than the app's.
   test("the current role's dates end Present, above its title", async ({
     page,
   }) => {
-    const current = timelineEntries(pageSection(page, "Experience")).first();
-    const dates = current.getByText("September 2021 – Present", {
-      exact: true,
+    const { start } = CONTENT.experience.find(({ end }) => end === null)!;
+    const startText = new Date(start).toLocaleString("en-US", {
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
     });
+    const current = timelineEntries(pageSection(page, "Experience")).first();
+    const dates = current.getByText(`${startText} – Present`, { exact: true });
 
     await expect(dates).toBeVisible();
     // The dates come after the title in the markup but show above it.
@@ -182,7 +187,7 @@ test.describe("résumé", () => {
 
   test("skills are grouped by category", async ({ page }) => {
     const skills = pageSection(page, "Skills");
-    const groups = contentSource.getSkills();
+    const groups = CONTENT.skills;
 
     await expect(skills.getByRole("heading", { level: 3 })).toHaveText(
       groups.map(({ name }) => name)

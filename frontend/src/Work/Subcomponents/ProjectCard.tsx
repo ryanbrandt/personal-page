@@ -1,7 +1,7 @@
 import type { ComponentProps, FunctionComponent } from "react";
 import { Card } from "@ryanbrandt/react-quick-ui";
 
-import type { IWorkEntry } from "@app/content/schemas";
+import type { IWorkEntry } from "@app/content/types";
 import ProjectGitHubLink from "@app/Work/Subcomponents/ProjectGitHubLink";
 import ProjectImage from "@app/Work/Subcomponents/ProjectImage";
 

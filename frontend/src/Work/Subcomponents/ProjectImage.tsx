@@ -1,6 +1,6 @@
 import type { FunctionComponent } from "react";
 
-import type { IWorkEntry } from "@app/content/schemas";
+import type { IWorkEntry } from "@app/content/types";
 import { toInitials } from "@app/Work/utils";
 
 interface Props {

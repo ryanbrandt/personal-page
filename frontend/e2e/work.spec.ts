@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { toDocumentTitle } from "../src/common/utils/documentTitle";
-import { contentSource } from "../src/content/source";
+import { CONTENT } from "../src/content";
 import { SEARCH_DEBOUNCE_MS } from "../src/Work/constants";
 import {
   expect,
@@ -17,7 +17,7 @@ import {
 // Project images come from the `remoteImages` fixture in helpers.ts, which
 // every test using its `test` gets: no network.
 
-const PROJECT_COUNT = contentSource.getProjects().length;
+const PROJECT_COUNT = CONTENT.projects.length;
 const PROJECTS_TITLE = ROUTES.find(({ name }) => name === "work")!.title;
 
 const searchBox = (page: Page) =>

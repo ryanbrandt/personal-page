@@ -1,5 +1,5 @@
 import { formatDateRange, formatMonth } from "@app/common/utils/dates";
-import type { IWorkEntry } from "@app/content/schemas";
+import type { IWorkEntry } from "@app/content/types";
 import type { IWorkFilters } from "@app/Work/types";
 
 /**

@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 
-import workReducer, { WORK_SLICE_NAME } from "@app/Work/slice";
+import workReducer, { WORK_SLICE_NAME } from "@app/content/workSlice";
 
 const store = configureStore({
   reducer: combineReducers({

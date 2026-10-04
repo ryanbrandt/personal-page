@@ -2,6 +2,7 @@ import type { FunctionComponent } from "react";
 
 import PageSection from "@app/common/Components/PageSection";
 import Timeline from "@app/common/Components/Timeline";
+import { toEntryKey } from "@app/content";
 import { useEducation, useExperience, useSkills } from "@app/content/hooks";
 import ResumeEntry from "@app/Resume/Subcomponents/ResumeEntry";
 import ResumeSkillGroup from "@app/Resume/Subcomponents/ResumeSkillGroup";
@@ -21,10 +22,7 @@ const ResumeDisplay: FunctionComponent = () => {
         <PageSection key={title} title={title}>
           <Timeline>
             {entries.map((entry) => (
-              <ResumeEntry
-                key={`${entry.start} ${entry.title}`}
-                entry={entry}
-              />
+              <ResumeEntry key={toEntryKey(entry)} entry={entry} />
             ))}
           </Timeline>
         </PageSection>

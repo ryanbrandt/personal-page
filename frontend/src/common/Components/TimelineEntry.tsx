@@ -7,6 +7,7 @@ import {
 import { Heading } from "@ryanbrandt/react-quick-ui";
 
 import { formatDateRange } from "@app/common/utils/dates";
+import type { IsoMonth } from "@app/content/types";
 
 type HeadingLevel = NonNullable<ComponentProps<typeof Heading>["as"]>;
 
@@ -20,11 +21,10 @@ interface BaseProps {
   /** Where: the company, school or other organization */
   organization?: string;
 
-  /** An ISO month ("2021-09") */
-  start: string;
+  start: IsoMonth;
 
-  /** An ISO month, or null while it's ongoing ("Present") */
-  end: string | null;
+  /** null while it's ongoing ("Present") */
+  end: IsoMonth | null;
 }
 
 /** `children`, if any, are the entry's details, shown below its heading. */

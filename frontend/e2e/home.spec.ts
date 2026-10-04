@@ -1,5 +1,5 @@
 import { GITHUB_URL, LINKEDIN_URL } from "../src/common/constants/urls";
-import { contentSource } from "../src/content/source";
+import { CONTENT } from "../src/content";
 
 import {
   expect,
@@ -14,12 +14,11 @@ import {
   VIEWPORTS,
 } from "./helpers";
 
-const JOBS = contentSource.getExperience();
+const JOBS = CONTENT.experience;
 
 // The projects started most recently, newest first (by Date.parse, not the
 // app's own string comparison, so a bug there shows).
-const RECENT_PROJECTS = contentSource
-  .getProjects()
+const RECENT_PROJECTS = CONTENT.projects
   .toSorted((a, b) => Date.parse(b.start) - Date.parse(a.start))
   .slice(0, 3);
 const CURRENT_JOB = JOBS.find(({ end }) => end === null)!;

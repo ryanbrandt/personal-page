@@ -7,7 +7,7 @@ import {
   useClientSideLinks,
   useFocusHeadingOnPageMount,
 } from "@app/common/hooks";
-import { useExperience, useProfile } from "@app/content/hooks";
+import { useExperience } from "@app/content/hooks";
 import { BASE_ROUTES } from "@app/routes/constants";
 
 /**
@@ -24,7 +24,6 @@ import { BASE_ROUTES } from "@app/routes/constants";
  * heading starts the page for screen readers and heading navigation.
  */
 const HomeHero: FunctionComponent = () => {
-  const { bio } = useProfile();
   // The job without an end date, if there is one.
   const currentJob = useExperience().find(({ end }) => end === null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -51,7 +50,9 @@ const HomeHero: FunctionComponent = () => {
           />
         </p>
       )}
-      <p className="home-hero__bio">{bio}</p>
+      <p className="home-hero__bio">
+        I'm a Software Engineer based out of Philadelphia.
+      </p>
       <div ref={actionsRef} className="home-hero__actions">
         <Button
           href={BASE_ROUTES.resumé}

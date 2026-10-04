@@ -1,7 +1,7 @@
 import { type FunctionComponent, useRef } from "react";
 
 import { useClientSideLinks } from "@app/common/hooks";
-import type { IWorkEntry } from "@app/content/schemas";
+import type { IWorkEntry } from "@app/content/types";
 import ProjectCard, {
   type ProjectHeadingLevel,
 } from "@app/Work/Subcomponents/ProjectCard";

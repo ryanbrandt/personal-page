@@ -1,7 +1,7 @@
 import type { FunctionComponent } from "react";
 
 import TimelineEntry from "@app/common/Components/TimelineEntry";
-import type { IResumeEntry } from "@app/content/schemas";
+import type { IResumeEntry } from "@app/content/types";
 
 interface Props {
   entry: IResumeEntry;

@@ -3,6 +3,7 @@ import type { FunctionComponent } from "react";
 import PageSection from "@app/common/Components/PageSection";
 import Timeline from "@app/common/Components/Timeline";
 import TimelineEntry from "@app/common/Components/TimelineEntry";
+import { toEntryKey } from "@app/content";
 import { useExperience } from "@app/content/hooks";
 import MoreLink from "@app/Home/Subcomponents/MoreLink";
 import { BASE_ROUTES } from "@app/routes/constants";
@@ -15,13 +16,13 @@ const HomeExperience: FunctionComponent = () => {
     <PageSection title="Experience">
       <div className="home-experience">
         <Timeline>
-          {jobs.map(({ title, organization, start, end }) => (
+          {jobs.map((job) => (
             <TimelineEntry
-              key={`${start} ${title}`}
-              title={title}
-              organization={organization}
-              start={start}
-              end={end}
+              key={toEntryKey(job)}
+              title={job.title}
+              organization={job.organization}
+              start={job.start}
+              end={job.end}
             />
           ))}
         </Timeline>
