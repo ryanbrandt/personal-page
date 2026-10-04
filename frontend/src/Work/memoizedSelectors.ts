@@ -1,6 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 
 import { toMonthNumber } from "@app/common/utils/dates";
+import type { IWorkEntry } from "@app/types/work";
 import { RECENT_PROJECT_COUNT } from "@app/Work/constants";
 import { selectWorkEntries } from "@app/Work/selectors";
 
@@ -11,6 +12,16 @@ export const selectWorkTags = createSelector([selectWorkEntries], (entries) =>
   )
 );
 
+// A project's start, for ordering; one that doesn't parse sorts last (and
+// warns in development).
+const toStartMonth = ({ title, start }: IWorkEntry): number => {
+  const month = toMonthNumber(start);
+  if (month === undefined && import.meta.env.DEV) {
+    console.warn(`${title}: its start isn't a "Month YYYY" date: ${start}`);
+  }
+  return month ?? Number.MIN_SAFE_INTEGER;
+};
+
 /**
  * The projects started most recently, newest first.
  * TODO(R8): with ISO dates, compare with `localeCompare` (or store the data
@@ -20,6 +31,6 @@ export const selectRecentWorkEntries = createSelector(
   [selectWorkEntries],
   (entries) =>
     entries
-      .toSorted((a, b) => toMonthNumber(b.start) - toMonthNumber(a.start))
+      .toSorted((a, b) => toStartMonth(b) - toStartMonth(a))
       .slice(0, RECENT_PROJECT_COUNT)
 );

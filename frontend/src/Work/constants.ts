@@ -12,7 +12,7 @@ export const SEARCH_DEBOUNCE_MS = 250;
  */
 export const EAGER_IMAGE_COUNT = 2;
 
-/** How many projects the home page shows: one row of the grid */
+/** How many projects the home page shows (a full row at three columns) */
 export const RECENT_PROJECT_COUNT = 3;
 
 /** The path of a project's detail view */
